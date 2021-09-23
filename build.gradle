@@ -1,0 +1,278 @@
+import net.ltgt.gradle.errorprone.CheckSeverity
+import org.openstreetmap.josm.gradle.plugin.task.GeneratePluginList
+
+import java.nio.file.Files
+import java.nio.file.Paths
+
+plugins {
+  id "checkstyle"
+  id "eclipse"
+  id "jacoco"
+  id "java"
+  id "maven-publish"
+  id "pmd"
+  id "com.diffplug.spotless" version "5.12.5"
+  id "com.github.ben-manes.versions" version "0.38.0"
+  id "com.github.spotbugs" version "4.7.1"
+  id "net.ltgt.errorprone" version "2.0.1"
+  id "org.openstreetmap.josm" version "0.7.1"
+  id "org.sonarqube" version "3.2.0"
+  // id "de.aaschmid.cpd" version "2.0"
+}
+
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.targetCompatibility = JavaVersion.VERSION_1_8
+
+// Set up Errorprone
+tasks.withType(JavaCompile).configureEach {
+  options.errorprone {
+    check("ConstantField",  CheckSeverity.WARN)
+    check("DefaultCharset", CheckSeverity.ERROR)
+    check("FieldCanBeFinal", CheckSeverity.WARN)
+    check("LambdaFunctionalInterface", CheckSeverity.WARN)
+    check("MethodCanBeStatic", CheckSeverity.WARN)
+    check("MultiVariableDeclaration", CheckSeverity.WARN)
+    check("PrivateConstructorForUtilityClass", CheckSeverity.WARN)
+    check("StringEquality", CheckSeverity.ERROR)
+    check("UngroupedOverloads", CheckSeverity.WARN)
+    check("WildcardImport", CheckSeverity.WARN)
+  }
+}
+
+archivesBaseName = "mapwithai-streetlevel"
+def gitlabGroup = "gokaart"
+def gitlabRepositoryName = "JOSM_MapWithAI_StreetLevel"
+
+repositories {
+  mavenCentral()
+}
+
+sourceSets {
+  test {
+    java {
+      srcDirs = ["src/test/unit"]
+    }
+    resources {
+      srcDirs = ["src/test/data"]
+    }
+  }
+  intTest {
+    compileClasspath += sourceSets.main.output
+    compileClasspath += sourceSets.test.output
+    runtimeClasspath += sourceSets.main.output
+    runtimeClasspath += sourceSets.test.output
+    java {
+      srcDirs = ["src/test/integration"]
+    }
+    resources {
+      srcDirs = ["src/test/data"]
+    }
+  }
+}
+
+def versions = [
+  awaitility: "4.1.0",
+  errorprone: "2.4.0",
+  jacoco: "0.8.5",
+  jmockit: "1.49",
+  junit: "5.7.1",
+  pmd: "6.20.0",
+  spotbugs: "4.2.3",
+  wiremock: "2.27.2",
+  findsecbugs: "1.11.0",
+]
+
+dependencies {
+  if (!JavaVersion.current().isJava9Compatible()) {
+    errorproneJavac("com.google.errorprone:javac:9+181-r4173-1")
+  }
+  spotbugsPlugins "com.h3xstream.findsecbugs:findsecbugs-plugin:${versions.findsecbugs}"
+  errorprone("com.google.errorprone:error_prone_core:${versions.errorprone}")
+
+  testImplementation("org.junit.jupiter:junit-jupiter-api:${versions.junit}")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${versions.junit}")
+  testImplementation("org.junit.vintage:junit-vintage-engine:${versions.junit}")
+  testImplementation("org.junit.jupiter:junit-jupiter-params:${versions.junit}")
+  testImplementation("org.jmockit:jmockit:${versions.jmockit}")
+  testImplementation("com.github.spotbugs:spotbugs-annotations:${versions.spotbugs}")
+  testImplementation("org.openstreetmap.josm:josm-unittest:"){changing=true}
+  testImplementation("com.github.tomakehurst:wiremock:${versions.wiremock}")
+  testImplementation("org.awaitility:awaitility:${versions.awaitility}")
+}
+
+configurations {
+    intTestRuntimeOnly.extendsFrom testRuntimeOnly
+    intTestImplementation.extendsFrom testImplementation
+}
+
+test {
+  project.afterEvaluate {
+    jvmArgs("-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}")
+    jvmArgs("-Djunit.jupiter.extensions.autodetection.enabled=true")
+    jvmArgs("-Djava.awt.headless=true")
+  }
+  useJUnitPlatform()
+  ignoreFailures
+  testLogging {
+    exceptionFormat "full"
+    events "skipped", "failed"
+    info {
+      showStandardStreams true
+    }
+  }
+}
+
+task integrationTest(type: Test) {
+  description = "Run integration tests"
+  group = "verification"
+
+  testClassesDirs = sourceSets.intTest.output.classesDirs
+  classpath = sourceSets.intTest.runtimeClasspath
+  shouldRunAfter test
+  // Ignore failures -- servers may or may not be down
+  ignoreFailures = true
+}
+
+check.dependsOn integrationTest
+
+tasks.processResources {
+  // Note: src/${source_set}/resources is automatically copied
+  // processResources uses the `main` source set.
+  // https://docs.gradle.org/current/userguide/building_java_projects.html#sec:java_resources
+  from("$projectDir/LICENSE")
+  from("$projectDir/README.md")
+}
+
+jacocoTestCoverageVerification {
+  violationRules {
+    rule {
+      limit {
+        minimum = 1.00
+      }
+    }
+  }
+}
+
+spotless {
+  java {
+    licenseHeaderFile "config/licenseHeader.txt"
+    removeUnusedImports()
+    endWithNewline()
+    indentWithSpaces(4)
+    trimTrailingWhitespace()
+    importOrder('javax', 'java', 'org', 'com', '')
+    eclipse().configFile "config/josm_formatting.xml"
+    ratchetFrom "master"
+    // Use the same formatter syntax that JOSM uses
+    toggleOffOn('@formatter:off', '@formatter:on')
+  }
+}
+
+josm {
+  debugPort = 7055
+  i18n {
+    pathTransformer = getPathTransformer(project.projectDir, "gitlab.com/${gitlabGroup}/${gitlabRepositoryName}/blob")
+  }
+}
+
+tasks.withType(JavaCompile) {
+  options.compilerArgs += [
+    "-Xlint:all",
+    "-Xlint:-serial",
+  ]
+}
+
+// Set up JaCoCo
+jacoco {
+  toolVersion = "${versions.jacoco}"
+}
+jacocoTestReport {
+  dependsOn test
+  reports {
+    xml.enabled = true
+    html.enabled = true
+  }
+}
+check.dependsOn jacocoTestReport
+
+// Set up PMD
+pmd {
+  toolVersion = versions.pmd
+  ignoreFailures true
+  incrementalAnalysis = true
+  ruleSets = []
+  ruleSetConfig = resources.text.fromFile("$projectDir/config/pmd/ruleset.xml")
+  sourceSets = [sourceSets.main]
+}
+
+// Set up SpotBugs
+spotbugs {
+  toolVersion = versions.spotbugs
+  ignoreFailures = true
+}
+spotbugsMain {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+task generateSnapshotUpdateSite(type: GeneratePluginList) {
+  dependsOn(tasks.processResources)
+
+  outputFile = new File(project.buildDir, "snapshot-update-site")
+  versionSuffix = {a -> ""}
+  doFirst {
+    def pluginDownloadUrl = "https://${gitlabGroup}.gitlab.io/${gitlabRepositoryName}/snapshot/master/${archivesBaseName}-dev.jar"
+    it.iconBase64Provider = {
+      def file = new File(sourceSets.main.resources.srcDirs[0], it)
+      if (file.exists()) {
+        def contentType = file.name.endsWith(".svg") ? "svg+xml" : "png"
+        return "data:image/" + contentType + ";base64," + Base64.getEncoder().encodeToString(Files.readAllBytes(Paths.get(file.toURI())));
+      }
+    }
+    it.addPlugin("$archivesBaseName-dev.jar", project.josm.manifest.createJosmPluginJarManifest(), new URL(pluginDownloadUrl))
+  }
+}
+
+project.afterEvaluate {
+  publishing {
+    publications {
+      plugin(MavenPublication) {
+        groupId = "org.openstreetmap.josm.plugins"
+        artifactId = archivesBaseName
+        version = project.version
+
+        from components.java
+      }
+    }
+  }
+}
+
+def ciJobToken = System.getenv("CI_JOB_TOKEN")
+def projectId = System.getenv("CI_PROJECT_ID")
+if (ciJobToken != null && projectId!= null) {
+  publishing.repositories.maven {
+    url = "https://gitlab.com/api/v4/projects/$projectId/packages/maven"
+    name = "gitlab"
+    credentials(HttpHeaderCredentials.class) {
+      name = "Job-Token"
+      value = ciJobToken
+    }
+    authentication {
+      create("auth", HttpHeaderAuthentication.class)
+    }
+  }
+}
+
+sonarqube {
+  properties {
+    property "sonar.organization", "mapwithai"
+    property "sonar.projectKey", "mapwithai_testing"
+    property "sonar.forceAuthentication", "true"
+    property "sonar.host.url", "https://sonarcloud.io"
+    property "sonar.projectDescription", properties.get("plugin.description")
+    property "sonar.projectVersion", project.version
+    property "sonar.sources", ["src"]
+  }
+}

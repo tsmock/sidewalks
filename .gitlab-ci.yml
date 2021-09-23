@@ -1,0 +1,302 @@
+image: registry.gitlab.com/josm/docker-library/openjdk-8-josmplugin:latest
+
+before_script:
+- export GRADLE_USER_HOME=`pwd`/.gradle
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+#############################
+# Various additional Checks #
+#############################
+include:
+  - template: Code-Quality.gitlab-ci.yml
+  - template: SAST.gitlab-ci.yml
+  - template: Dependency-Scanning.gitlab-ci.yml
+#  - template: Container-Scanning.gitlab-ci.yml
+#  - template: DAST.gitlab-ci.yml
+#  - template: License-Management.gitlab-ci.yml
+
+sast:
+  variables: {}
+  variables:
+    GRADLE_PATH: "./gradlew"
+    FAIL_NEVER: 1
+#    CI_DEBUG_TRACE: "true"
+
+###############
+# Build stage #
+###############
+
+assemble:
+  stage: build
+  script:
+    - ./gradlew assemble --stacktrace
+  artifacts:
+    paths:
+    - build/
+    expire_in: 1 day
+  interruptible: true
+
+assemble with java 11:
+  stage: build
+  image: registry.gitlab.com/josm/docker-library/openjdk-11-josmplugin:latest
+  script:
+    - ./gradlew assemble --stacktrace
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1 day
+  interruptible: true
+
+assemble with java 15:
+  stage: build
+  image: registry.gitlab.com/josm/docker-library/openjdk-15-josmplugin:latest
+  script:
+    - ./gradlew assemble --stacktrace
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1 day
+  allow_failure: true
+  interruptible: true
+
+code_navigation:
+  stage: build
+  script:
+    - apk add --update curl bash
+    - curl -fLo coursier https://git.io/coursier-cli
+    - chmod +x coursier
+    - ./coursier launch com.sourcegraph:lsif-java_2.13:0.5.4 -- index --build-tool gradle
+  artifacts:
+    reports:
+      lsif: dump.lsif
+  rules:
+    - if: '$CI_PIPELINE_SOURCE != "schedule" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: always
+  allow_failure: true
+  interruptible: true
+
+##############
+# Test stage #
+##############
+
+build:
+  stage: test
+  script:
+  - ./gradlew build generatePot generateSnapshotUpdateSite --stacktrace
+  artifacts:
+    paths:
+    - build
+    expire_in: 1 day
+  needs: ["assemble"]
+  dependencies:
+    - assemble
+  interruptible: true
+
+test:
+  stage: test
+  script:
+  - ./gradlew check --stacktrace --continue #--info
+  - ./gradlew jacocoTestReport
+  - ./gradlew jacocoTestCoverageVerification
+  artifacts:
+    paths:
+    - build
+    reports:
+      junit: build/test-results/**/TEST-*.xml
+  needs: ["assemble"]
+  dependencies:
+    - assemble
+  interruptible: true
+
+coverage:
+  stage: deploy
+  needs: ["test"]
+  dependencies:
+    - test
+  image: haynes/jacoco2cobertura:1.0.7
+  script:
+    - 'python /opt/cover2cover.py build/reports/jacoco/test/jacocoTestReport.xml src/main/java > build/reports/jacoco/test/coverage.xml'
+    - 'python /opt/source2filename.py build/reports/jacoco/test/coverage.xml'
+  artifacts:
+    reports:
+      cobertura: "build/reports/jacoco/test/coverage.xml"
+  interruptible: true
+
+compile against min JOSM:
+  stage: test
+  script:
+    - ./gradlew compileJava_minJosm --stacktrace
+  needs: ["assemble"]
+  dependencies:
+    - assemble
+  interruptible: true
+
+compile against latest JOSM:
+  stage: test
+  script:
+    - ./gradlew compileJava_latestJosm --stacktrace
+  needs: ["assemble"]
+  dependencies:
+    - assemble
+  interruptible: true
+
+build with java 11:
+  stage: test
+  image: registry.gitlab.com/josm/docker-library/openjdk-11-josmplugin:latest
+  script:
+    - ./gradlew build --stacktrace
+  allow_failure: true # due to copy-paste-detection
+  needs: ["assemble with java 11"]
+  dependencies:
+    - assemble with java 11
+  interruptible: true
+
+build with java 15:
+  stage: test
+  image: registry.gitlab.com/josm/docker-library/openjdk-15-josmplugin:latest
+  script:
+    - ./gradlew build --stacktrace
+  needs: ["java 15 assemble"]
+  allow_failure: true
+  needs: ["assemble with java 15"]
+  dependencies:
+    - assemble with java 15
+  interruptible: true
+
+################
+# Deploy stage #
+################
+
+#upload to transifex:
+#  image: python:3.6-stretch
+#  stage: deploy
+#  environment:
+#    name: transifex
+#    url: https://www.transifex.com/josm/josm/josm-plugin_mapwithai_streetlevel/
+#  before_script:
+#  - apt-get update && apt-get install -yq gettext git
+#  - pip install git+https://github.com/transifex/transifex-client.git
+#  script:
+#  - TX_TOKEN="$TRANSIFEX_TOKEN" tx push -s --no-interactive
+# needs: ["assemble"]
+#  only:
+#  - master
+#  interruptible: true
+
+sonarcloud.io:
+  image: registry.gitlab.com/josm/docker-library/openjdk-11-josmplugin:latest
+  stage: deploy
+  environment:
+    name: sonarcloud.io
+    url: https://sonarcloud.io/dashboard?id=mapwithai-mapwithai-streetlevel
+  script:
+    - git fetch --unshallow
+    - ./gradlew -Dsonar.login=$SONAR_TOKEN sonarqube
+  needs: ["test"]
+  dependencies:
+    - test
+  only:
+    variables:
+      - $SONAR_TOKEN =~ /[0-9a-z]+/
+
+release:
+  stage: deploy
+  environment:
+    name: pages branch / dist directory
+    url: ${CI_PAGES_URL}/${CI_PROJECT_NAME}
+  script:
+  - &clone_pages_branch |
+    echo "$SSH_PRIVATE_DEPLOY_KEY" > ~/.ssh/id_rsa
+    chmod 600 ~/.ssh/id_rsa
+    git clone --depth 1 --branch pages git@${CI_SERVER_HOST}:${CI_PROJECT_PATH} pages
+  - &current_version |
+    version=`git describe --always --dirty`
+    longVersion=`git describe --always --long --dirty`
+    commitMessage="Release version $longVersion"
+  - |
+    #mkdir -pv "pages/public/dist/$version"
+    #cp -v "build/dist/"* "build/tmp/jar/MANIFEST.MF" "pages/public/dist/$version"
+    rm -fv "pages/public/dist/latest"
+    ln -s "./$version" "pages/public/dist/latest"
+  - &push_pages_branch |
+    cd pages/
+    git config user.name "Deploy with GitLab CI"
+    git config user.email "${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}@${CI_SERVER_HOST}"
+    git stage .
+    git commit -a -m "$commitMessage"
+    git push origin pages
+  needs: ["compile against min JOSM", "compile against latest JOSM", "build"]
+  dependencies:
+    - build
+  rules:
+    - if: '$SSH_PRIVATE_DEPLOY_KEY != null && $CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_TAG != null && $CI_PIPELINE_SOURCE != "schedule"'
+      when: manual
+
+release hotfix:
+  stage: deploy
+  environment:
+    name: pages branch / dist directory
+    url: ${CI_PAGES_URL}/${CI_PROJECT_NAME}
+  script:
+  - *clone_pages_branch
+  - *current_version
+  - |
+    mkdir -pv "pages/public/dist/$version"
+    cp -v "build/dist/"* "build/tmp/jar/MANIFEST.MF" "pages/public/dist/$version"
+  - *push_pages_branch
+  needs: ["compile against min JOSM", "compile against latest JOSM", "build"]
+  dependencies:
+    - build
+  rules:
+    - if: '$SSH_PRIVATE_DEPLOY_KEY != null && $CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_TAG != null && $CI_PIPELINE_SOURCE != "schedule" && $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
+      when: always
+
+publish update site:
+  stage: deploy
+  environment:
+    name: pages branch / snapshot update site
+    url: ${CI_PAGES_URL}/${CI_PROJECT_NAME}/snapshot/${CI_COMMIT_REF_NAME}/update-site
+  script:
+  - *clone_pages_branch
+  - |
+    commitHash=`git rev-parse HEAD`
+    commitMessage="Make latest commit from ${CI_COMMIT_REF_NAME} available via JOSM update site ($commitHash)"
+  - |
+    rm -vrf "pages/public/snapshot/${CI_COMMIT_REF_NAME}"
+    mkdir -pv "pages/public/snapshot/${CI_COMMIT_REF_NAME}"
+    cp -v "build/snapshot-update-site" "pages/public/snapshot/${CI_COMMIT_REF_NAME}/update-site"
+    cp -v "build/dist/"* "pages/public/snapshot/${CI_COMMIT_REF_NAME}"
+    cp -v "build/dist/mapwithai-streetlevel.jar" "pages/public/snapshot/${CI_COMMIT_REF_NAME}/mapwithai-streetlevel-dev.jar"
+  - *push_pages_branch
+  needs: ["compile against min JOSM", "compile against latest JOSM", "build"]
+  dependencies:
+    - build
+  rules:
+    - if: '$SSH_PRIVATE_DEPLOY_KEY != null && $CI_PIPELINE_SOURCE != "schedule" && $CI_COMMIT_REF_NAME != null'
+      when: always
+
+publish to / GitLab.com packages:
+  stage: deploy
+  environment:
+    name: GitLab.com / ${CI_PROJECT_NAME} packages
+    url: ${CI_PROJECT_URL}/-/packages
+  script:
+  - ./gradlew publishAllPublicationsToGitlabRepository
+  - ./gradlew releaseToGitlab
+  needs: ["compile against min JOSM", "compile against latest JOSM", "build"]
+  dependencies:
+    - build
+  rules:
+    - if: '$SSH_PRIVATE_DEPLOY_KEY != null && $CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_TAG != null && $CI_PIPELINE_SOURCE != "schedule"'
+      when: always
+
+reuse:
+  image:
+    name: fsfe/reuse:latest
+    entrypoint: [""]
+  script:
+    - reuse lint

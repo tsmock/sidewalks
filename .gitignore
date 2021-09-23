@@ -1,1 +1,4 @@
 /build
+.gradle
+build
+javadoc

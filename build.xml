@@ -1,36 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is a template build file for a JOSM  plugin.
-**
-** Maintaining versions
-** ====================
-** See README.template
-**
-** Usage
-** =====
-** Call "ant help" to get possible build targets.
-**
--->
-<project name="myPluginName" default="dist" basedir=".">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="mapwithai_streetlevel" default="dist" basedir=".">
+  <property name="plugin.src.dir" value="src/main/java"/>
+  <property name="plugin.test.dir" value="src/test"/>
 
-    <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Commit message"/>
-    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="10580"/>
+  <!-- edit the properties of this plugin in the file `gradle.properties` -->
+  <property file="${basedir}/gradle.properties"/>
 
-    <!-- Configure these properties (replace "..." accordingly).
-         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
-    -->
-    <property name="plugin.author" value="..."/>
-    <property name="plugin.class" value="..."/>
-    <property name="plugin.description" value="..."/>
-    <property name="plugin.icon" value="..."/>
-    <property name="plugin.link" value="..."/>
-    <!--<property name="plugin.early" value="..."/>-->
-    <!--<property name="plugin.requires" value="..."/>-->
-    <!--<property name="plugin.stage" value="..."/>-->
+  <!-- ** include targets that all plugins have in common ** -->
+  <import file="../build-common.xml"/>
 
-    <!-- ** include targets that all plugins have in common ** -->
-    <import file="../build-common.xml"/>
-  
+  <!-- Override the `setup-dist-default` task from build-common.xml -->
+  <target name="setup-dist-default">
+    <copy todir="${plugin.build.dir}" failonerror="no" includeemptydirs="no">
+      <fileset dir="src/main/resources"/>
+    </copy>
+    <copy todir="${plugin.build.dir}">
+      <fileset dir=".">
+        <include name="README"/>
+        <include name="LICENSE*"/>
+        <include name="*GPL*"/>
+        <include name="*.md"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
+    <include name="mapwithai.jar"/>
+  </fileset>
 </project>

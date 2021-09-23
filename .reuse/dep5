@@ -1,0 +1,24 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: MapWithAI-StreetLevel-Detections
+Upstream-Contact: Taylor Smock <tsmock@fb.com>
+Source: https://git.example.com/fixme/todo/repo
+
+Files: .settings/* .project .classpath
+Copyright: 2021 Taylor Smock <tsmock@fb.com>
+License: CC0-1.0
+Comment: Eclipse project settings
+
+Files: gradle/* gradlew
+Copyright: 2008-2021 The Gradle Project authors
+License: Apache-2.0
+Comment: Gradle build files
+
+Files: .gitlab-ci.yml .gitignore build.gradle gradle.properties build.xml
+Copyright: 2021 Taylor Smock <tsmock@fb.com>
+License: GPL-2.0-or-later
+Comment: Various extraneous files
+
+Files: config/checkstyle/checkstyle.xml config/josm_formatting.xml config/pmd/ruleset.xml
+Copyright: 2021 The JOSM Project authors
+License: GPL-2.0-or-later
+Comment: Files copied from JOSM for consistency in plugin
