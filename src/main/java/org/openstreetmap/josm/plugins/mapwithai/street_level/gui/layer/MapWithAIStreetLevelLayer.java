@@ -6,6 +6,9 @@ package org.openstreetmap.josm.plugins.mapwithai.street_level.gui.layer;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import javax.annotation.Nonnull;
+
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,12 +17,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadTask;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.coor.ILatLon;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxImageEntry;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DataSourceChangeEvent;
@@ -43,6 +48,70 @@ public class MapWithAIStreetLevelLayer extends OsmDataLayer implements DataSourc
     private final Collection<Suggestion<?, ?>> suggestions = new HashSet<>();
 
     /**
+     * Various conversion methods between latlon and tiles
+     */
+    private static class Conversions {
+        /* The tile zoom the api accepts */
+        private static final int TILE_ZOOM = 16;
+
+        /**
+         * Convert a latlon to a tile xy coordinate
+         *
+         * @param latLon the latlon to convert
+         * @return The tile xy point coordinate
+         */
+        static Point latLonToTileXY(final ILatLon latLon) {
+            final int x = (int) Math.floor(Math.pow(2, TILE_ZOOM) * (180 + latLon.lon()) / 360);
+            final int y = (int) Math.floor(Math.pow(2, TILE_ZOOM) * (1
+                    - (Math.log(Math.tan(Math.toRadians(latLon.lat())) + 1 / Math.cos(Math.toRadians(latLon.lat())))
+                            / Math.PI))
+                    / 2);
+            return new Point(x, y);
+        }
+
+        /**
+         * Convert a tile xy point to the NW latlon for that tile
+         *
+         * @param tileXY The tile point to conver
+         * @return The NW latlon of the tile
+         */
+        static LatLon pointToNWLatLon(final Point tileXY) {
+            final double latTemp = Math.PI - 2 * Math.PI * tileXY.y / Math.pow(2, TILE_ZOOM);
+            final double lat = 180 / Math.PI * Math.atan((Math.exp(latTemp) - Math.exp(-latTemp)) / 2);
+            final double lon = (tileXY.x / Math.pow(2, TILE_ZOOM)) * 360 - 180;
+            return new LatLon(lat, lon);
+        }
+
+        /**
+         * Convert a tile xy to a bounds
+         *
+         * @param tileXY The tile xy to convert
+         * @return The bounds
+         */
+        static Bounds tileXYToBounds(final Point tileXY) {
+            LatLon nw = pointToNWLatLon(tileXY);
+            LatLon se = pointToNWLatLon(new Point(tileXY.x + 1, tileXY.y + 1));
+            return new Bounds(nw, se);
+        }
+
+        /**
+         * Convert a bounds to a series of tile bounds
+         *
+         * @param bounds The bounds to convert
+         * @return The stream of the tile xy bounds
+         */
+        static Stream<Bounds> boundsToTile(final Bounds bounds) {
+            final Point minXMaxYPoint = latLonToTileXY(bounds.getMin());
+            final Point maxXMinYPoint = latLonToTileXY(bounds.getMax());
+
+            return IntStream.rangeClosed(minXMaxYPoint.x, maxXMinYPoint.x)
+                    .mapToObj(
+                            x -> IntStream.rangeClosed(maxXMinYPoint.y, minXMaxYPoint.y).mapToObj(y -> new Point(x, y)))
+                    .flatMap(stream -> stream).map(Conversions::tileXYToBounds);
+        }
+    }
+
+    /**
      * Construct a new {@code OsmDataLayer}.
      *
      * @param data         OSM data
@@ -53,7 +122,8 @@ public class MapWithAIStreetLevelLayer extends OsmDataLayer implements DataSourc
         super(data, name, null);
         osmDataLayer.getDataSet().addDataSourceListener(this);
         osmDataLayer.getDataSet().getDataSources().stream().map(dataSource -> dataSource.bounds)
-                .filter(b -> b.isValid() && !b.isCollapsed() && !b.isOutOfTheWorld()).forEach(this::download);
+                .filter(b -> b.isValid() && !b.isCollapsed() && !b.isOutOfTheWorld()).flatMap(Conversions::boundsToTile)
+                .distinct().parallel().forEach(this::download);
         this.getDataSet().setUploadPolicy(UploadPolicy.BLOCKED);
         this.getDataSet().setDownloadPolicy(DownloadPolicy.BLOCKED);
     }
@@ -105,8 +175,8 @@ public class MapWithAIStreetLevelLayer extends OsmDataLayer implements DataSourc
         if (event.getSelection().isEmpty()) {
             return;
         }
-        Optional<GeoImageLayer> layerOptional = MainApplication.getLayerManager().getLayersOfType(GeoImageLayer.class).stream()
-                .filter(layer -> tr(IMAGE_LAYER_NAME).equals(layer.getName())).findFirst();
+        Optional<GeoImageLayer> layerOptional = MainApplication.getLayerManager().getLayersOfType(GeoImageLayer.class)
+                .stream().filter(layer -> tr(IMAGE_LAYER_NAME).equals(layer.getName())).findFirst();
         final GeoImageLayer layer;
         if (!layerOptional.isPresent()) {
             layer = new GeoImageLayer(new ArrayList<>(), null);
@@ -115,14 +185,11 @@ public class MapWithAIStreetLevelLayer extends OsmDataLayer implements DataSourc
         } else {
             layer = layerOptional.get();
         }
-        final List<ImageEntry> images = event.getSelection().stream()
-                .filter(p -> p.hasKey("suggestion-id")).map(p -> p.get("suggestion-id"))
-                .filter(NUMBER_PATTERN.asPredicate()).mapToLong(Long::parseLong)
+        final List<ImageEntry> images = event.getSelection().stream().filter(p -> p.hasKey("suggestion-id"))
+                .map(p -> p.get("suggestion-id")).filter(NUMBER_PATTERN.asPredicate()).mapToLong(Long::parseLong)
                 .mapToObj(id -> this.suggestions.stream().filter(suggestion -> suggestion.getIdentifier() == id))
-                .flatMap(i -> i)
-                .flatMap(suggestion -> suggestion.getImageEntries().getCollection().stream())
-                .filter(ImageEntry.class::isInstance).map(ImageEntry.class::cast)
-                .collect(Collectors.toList());
+                .flatMap(i -> i).flatMap(suggestion -> suggestion.getImageEntries().getCollection().stream())
+                .filter(ImageEntry.class::isInstance).map(ImageEntry.class::cast).collect(Collectors.toList());
         // Remove images on layer
         new ArrayList<>(layer.getImageData().getImages()).forEach(layer.getImageData()::removeImage);
         layer.getImageData().getImages().addAll(images);
