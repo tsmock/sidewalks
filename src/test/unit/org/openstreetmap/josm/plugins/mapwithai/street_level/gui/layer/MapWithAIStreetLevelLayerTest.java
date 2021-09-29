@@ -29,7 +29,7 @@ import mockit.MockUp;
  * @author Taylor Smock
  */
 @BasicPreferences
-@MapWithAIStreetLevelConfigAnnotation(urlClass = MapWithAIStreetLevelConfigAnnotation.BadUrlClass.class)
+@MapWithAIStreetLevelConfigAnnotation
 class MapWithAIStreetLevelLayerTest {
     /**
      * A mock to ensure that download isn't called multiple times

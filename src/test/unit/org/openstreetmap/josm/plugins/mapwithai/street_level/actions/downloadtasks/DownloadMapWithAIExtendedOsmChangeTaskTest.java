@@ -195,7 +195,7 @@ class DownloadMapWithAIExtendedOsmChangeTaskTest {
         final DownloadMapWithAIExtendedOsmChangeTask task = new DownloadMapWithAIExtendedOsmChangeTask();
         assertNotNull(task.getPatterns());
 
-        assertEquals(tr("Download Cubitor Extended OSM Change"), task.getTitle());
+        assertEquals(tr("Download MapWithAI Extended OSM Change"), task.getTitle());
     }
 
     /**
