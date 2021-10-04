@@ -9,17 +9,17 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.openstreetmap.josm.data.cache.JCSCacheManager;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
 import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.date.DateUtils;
-
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
 
 /**
  * A remote image entry This class may be finalized, such that it is no longer
@@ -58,7 +58,8 @@ public class RemoteImageEntry extends ImageEntry {
         if (NUMBER_PATTERN.matcher(this.key).matches()) {
             // get Mapillary v4 url
             final HttpClient client = HttpClient.create(new URL("https://graph.mapillary.com/" + this.key
-                    + "?fields=altitude,captured_at,compass_angle,computed_altitude,computed_compass_angle,computed_geometry,computed_rotation,exif_orientation,geometry,height,width,thumb_2048_url"));
+                    + "?fields=altitude,captured_at,compass_angle,computed_altitude,computed_compass_angle,"
+                    + "computed_geometry,computed_rotation,exif_orientation,geometry,height,width,thumb_2048_url"));
             client.connect();
             HttpClient.Response response = client.getResponse();
             try (JsonReader jsonReader = Json.createReader(response.getContentReader())) {

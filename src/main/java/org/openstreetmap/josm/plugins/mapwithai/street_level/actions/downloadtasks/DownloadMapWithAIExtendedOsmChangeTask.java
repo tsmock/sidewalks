@@ -72,7 +72,9 @@ public class DownloadMapWithAIExtendedOsmChangeTask extends DownloadOsmChangeTas
         downloadTask = new MapWithAIExtendedOSCDownloadTask(settings, new MapWithAIStreetLevelServerLocationReader(url), progressMonitor, true,
                 Compression.byExtension(url));
         // Extract .osc filename from URL to set the new layer name
-        extractOsmFilename(settings, urlPattern.orElse(MapWithAIStreetLevelUrlPatterns.MapWithAIStreetLevelUrlPattern.EXTERNAL_OSC_FILE).pattern(), url);
+        extractOsmFilename(settings,
+                urlPattern.orElse(MapWithAIStreetLevelUrlPatterns.MapWithAIStreetLevelUrlPattern.EXTERNAL_OSC_FILE).pattern(),
+                url);
         return MainApplication.worker.submit(downloadTask);
     }
 

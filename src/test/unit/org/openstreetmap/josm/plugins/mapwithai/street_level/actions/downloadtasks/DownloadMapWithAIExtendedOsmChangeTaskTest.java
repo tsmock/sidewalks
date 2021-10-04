@@ -134,7 +134,8 @@ class DownloadMapWithAIExtendedOsmChangeTaskTest {
 
     static Stream<Arguments> testAddLayerIfRequired() {
         final Supplier<OsmDataLayer> osm = () -> new OsmDataLayer(new DataSet(), "", null);
-        final Function<OsmDataLayer, MapWithAIStreetLevelLayer> withAIStreetLevelLayerFunction = layer -> new MapWithAIStreetLevelLayer(new DataSet(), "", layer);
+        final Function<OsmDataLayer, MapWithAIStreetLevelLayer> withAIStreetLevelLayerFunction =
+                layer -> new MapWithAIStreetLevelLayer(new DataSet(), "", layer);
         return testValidXml().flatMap(arg -> {
             final List<Object> args = new ArrayList<>(Arrays.asList(arg.get()));
             return Stream.of(Arrays.asList(new DownloadParams().withLayerName(""), osm, null),
@@ -169,7 +170,8 @@ class DownloadMapWithAIExtendedOsmChangeTaskTest {
         assertFalse(MainApplication.getLayerManager().getLayers().isEmpty());
 
         assertEquals(
-                initialMapWithAIStreetLevelLayers.size() + ((downloadParams.isNewLayer() || initialMapWithAIStreetLevelLayers.isEmpty()) ? 1 : 0),
+                initialMapWithAIStreetLevelLayers.size()
+                        + ((downloadParams.isNewLayer() || initialMapWithAIStreetLevelLayers.isEmpty()) ? 1 : 0),
                 MainApplication.getLayerManager().getLayersOfType(MapWithAIStreetLevelLayer.class).size());
 
         final MapWithAIStreetLevelLayer mapWithAIStreetLevelLayer = MainApplication.getLayerManager().getLayersOfType(

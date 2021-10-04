@@ -24,12 +24,22 @@ import org.openstreetmap.josm.plugins.mapwithai.street_level.data.suggestions.Su
 import org.openstreetmap.josm.plugins.mapwithai.street_level.gui.layer.MapWithAIStreetLevelLayer;
 import org.openstreetmap.josm.tools.Shortcut;
 
+/**
+ * Apply suggestions from cubitor context
+ * @author Taylor Smock
+ */
 public class ApplySuggestion extends JosmAction {
     private static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9]+");
     private static final String SUGGESTION_ID = "suggestion-id";
 
+    /**
+     * Create a new {@link ApplySuggestion} action
+     */
     public ApplySuggestion() {
-        super(tr("MapWithAI StreetLevel: Apply suggestion"), null, tr("MapWithAI StreetLevel: Apply Suggestion to current data layer"), Shortcut.registerShortcut("mapwithai:streetlevel:apply_suggestion", tr("MapWithAI StreetLevel: Apply Suggestion"),
+        super(tr("MapWithAI StreetLevel: Apply suggestion"), null,
+                tr("MapWithAI StreetLevel: Apply Suggestion to current data layer"),
+                Shortcut.registerShortcut("mapwithai:streetlevel:apply_suggestion",
+                        tr("MapWithAI StreetLevel: Apply Suggestion"),
                 KeyEvent.CHAR_UNDEFINED, Shortcut.NONE), false, true);
     }
 
@@ -55,7 +65,9 @@ public class ApplySuggestion extends JosmAction {
                         .mapToObj(id -> mapWithAIStreetLevelLayer.getSuggestions().stream().filter(sug -> sug.getIdentifier() == id))
                         .flatMap(i -> i).collect(Collectors.toList());
                 // TODO finish merge
-                UndoRedoHandler.getInstance().add(new MapWithAIAddCommand(mapWithAIStreetLevelLayer.getDataSet(), dataSet, mapWithAIStreetLevelLayer.data.getSelected()));
+                final MapWithAIAddCommand mapwithAiAddCommand = new MapWithAIAddCommand(
+                        mapWithAIStreetLevelLayer.getDataSet(), dataSet, mapWithAIStreetLevelLayer.data.getSelected());
+                UndoRedoHandler.getInstance().add(mapwithAiAddCommand);
             }
         }
     }

@@ -8,6 +8,7 @@ import java.util.Collection;
 import javax.annotation.concurrent.Immutable;
 
 import org.openstreetmap.josm.data.gpx.GpxImageEntry;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * A collection of street view images
@@ -35,6 +36,7 @@ public class StreetViewImageSet<I extends GpxImageEntry, T extends Collection<I>
             throw new IllegalArgumentException("MapWithAI StreetLevel: collection is modifiable");
         } catch (UnsupportedOperationException e) {
             // This is expected. Don't do anything.
+            Logging.trace(e);
         }
     }
 
