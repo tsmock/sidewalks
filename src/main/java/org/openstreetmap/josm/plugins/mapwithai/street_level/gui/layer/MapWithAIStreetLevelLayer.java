@@ -9,6 +9,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import javax.annotation.Nonnull;
 
 import java.awt.Point;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,6 +26,8 @@ import java.util.stream.Stream;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadTask;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.ImageData;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.ILatLon;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxImageEntry;
@@ -36,7 +41,9 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
+import org.openstreetmap.josm.plugins.mapwithai.commands.MapWithAIAddCommand;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.actions.downloadtasks.DownloadMapWithAIExtendedOsmChangeTask;
+import org.openstreetmap.josm.plugins.mapwithai.street_level.data.suggestions.ImageSourceProvider;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.data.suggestions.Suggestion;
 
 /**
@@ -135,7 +142,7 @@ public class MapWithAIStreetLevelLayer extends OsmDataLayer implements DataSourc
      * @param <T>         The collection type
      * @param <I>         The image entry type
      */
-    public <I extends GpxImageEntry, T extends Collection<I>> void addSuggestions(
+    public <I extends GpxImageEntry & ImageSourceProvider, T extends Collection<I>> void addSuggestions(
             Collection<Suggestion<I, T>> suggestions) {
         this.suggestions.addAll(suggestions);
     }
@@ -191,14 +198,45 @@ public class MapWithAIStreetLevelLayer extends OsmDataLayer implements DataSourc
                 .flatMap(i -> i).flatMap(suggestion -> suggestion.getImageEntries().getCollection().stream())
                 .filter(ImageEntry.class::isInstance).map(ImageEntry.class::cast).collect(Collectors.toList());
         // Remove images on layer
-        new ArrayList<>(layer.getImageData().getImages()).forEach(layer.getImageData()::removeImage);
-        layer.getImageData().getImages().addAll(images);
+        removeImages(layer.getImageData(), new ArrayList<>(layer.getImageData().getImages()));
+        addImages(layer.getImageData(), images);
         if (!images.isEmpty()) {
             layer.getImageData().setSelectedImage(images.get(0));
-            images.forEach(layer.getImageData()::fireNodeMoved);
         } else {
             layer.getImageData().clearSelectedImage();
         }
         layer.getImageData().notifyImageUpdate();
+    }
+
+    private static void removeImages(ImageData data, Collection<ImageEntry> imageEntries) {
+        for (ImageEntry imageEntry : imageEntries) {
+            data.removeImage(imageEntry);
+            data.fireNodeMoved(imageEntry);
+            imageEntry.setDataSet(null);
+        }
+    }
+
+    private static void addImages(ImageData data, Collection<ImageEntry> imageEntries) {
+        for (ImageEntry imageEntry : imageEntries) {
+            imageEntry.setDataSet(data);
+            data.getImages().add(imageEntry);
+            data.fireNodeMoved(imageEntry);
+        }
+    }
+
+    @Override
+    public boolean autosave(File file) throws IOException {
+        Files.deleteIfExists(file.toPath());
+        return false;
+    }
+
+    @Override
+    public String getChangesetSourceTag() {
+        if (UndoRedoHandler.getInstance().getUndoCommands().stream().filter(MapWithAIAddCommand.class::isInstance)
+                .map(MapWithAIAddCommand.class::cast)
+                .anyMatch(command -> this.data.equals(command.getAffectedDataSet()))) {
+            return "MapWithAI StreetLevel";
+        }
+        return null;
     }
 }

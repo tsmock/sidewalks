@@ -5,6 +5,9 @@ package org.openstreetmap.josm.plugins.mapwithai.street_level.data.io;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -13,9 +16,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -207,13 +207,13 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
             }
         }
         streetViewImageSets.addAll(streetViewImageSet);
-        Suggestion<RemoteImageEntry, Collection<RemoteImageEntry>> suggestion = new Suggestion<>(identifier, primitiveData,
-                streetViewImageSet.get(0));
+        Suggestion<RemoteImageEntry, Collection<RemoteImageEntry>> suggestion = new Suggestion<>(identifier,
+                primitiveData, streetViewImageSet.get(0));
         suggestionCollection.add(suggestion);
     }
 
     private RemoteImageEntry parseStreetViewImage() throws XMLStreamException, IOException {
-        final String key = parser.getAttributeValue(null, "key");
+        final String id = parser.getAttributeValue(null, "id");
         final double ca = Double.parseDouble(parser.getAttributeValue(null, "ca"));
         final double lat = Double.parseDouble(parser.getAttributeValue(null, "lat"));
         final double lon = Double.parseDouble(parser.getAttributeValue(null, "lon"));
@@ -222,7 +222,7 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
         imageEntry.setPos(new LatLon(lat, lon));
         imageEntry.setExifCoor(imageEntry.getExifCoor());
         imageEntry.setExifImgDir(ca);
-        imageEntry.setKey(key);
+        imageEntry.setKey(id);
         return imageEntry;
     }
 

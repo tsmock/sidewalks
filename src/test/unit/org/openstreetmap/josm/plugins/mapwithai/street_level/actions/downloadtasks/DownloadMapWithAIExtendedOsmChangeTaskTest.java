@@ -103,8 +103,8 @@ class DownloadMapWithAIExtendedOsmChangeTaskTest {
         Awaitility.await().atMost(Durations.ONE_SECOND).until(future::isDone);
         assertFalse(MainApplication.getLayerManager().getLayers().isEmpty());
         assertEquals(1, MainApplication.getLayerManager().getLayersOfType(MapWithAIStreetLevelLayer.class).size());
-        final MapWithAIStreetLevelLayer mapWithAIStreetLevelLayer = MainApplication.getLayerManager().getLayersOfType(
-                MapWithAIStreetLevelLayer.class).get(0);
+        final MapWithAIStreetLevelLayer mapWithAIStreetLevelLayer = MainApplication.getLayerManager()
+                .getLayersOfType(MapWithAIStreetLevelLayer.class).get(0);
 
         final Collection<Suggestion<?, ?>> suggestions = mapWithAIStreetLevelLayer.getSuggestions();
         assertEquals(suggestionCount, suggestions.size());
@@ -134,17 +134,21 @@ class DownloadMapWithAIExtendedOsmChangeTaskTest {
 
     static Stream<Arguments> testAddLayerIfRequired() {
         final Supplier<OsmDataLayer> osm = () -> new OsmDataLayer(new DataSet(), "", null);
-        final Function<OsmDataLayer, MapWithAIStreetLevelLayer> withAIStreetLevelLayerFunction =
-                layer -> new MapWithAIStreetLevelLayer(new DataSet(), "", layer);
+        final Function<OsmDataLayer, MapWithAIStreetLevelLayer> withAIStreetLevelLayerFunction = layer -> new MapWithAIStreetLevelLayer(
+                new DataSet(), "", layer);
         return testValidXml().flatMap(arg -> {
             final List<Object> args = new ArrayList<>(Arrays.asList(arg.get()));
-            return Stream.of(Arrays.asList(new DownloadParams().withLayerName(""), osm, null),
-                    Arrays.asList(new DownloadParams().withNewLayer(true).withLayerName("Test layer"), osm, null),
-                    Arrays.asList(new DownloadParams().withLayerName(""), osm, withAIStreetLevelLayerFunction),
-                    Arrays.asList(new DownloadParams().withNewLayer(true).withLayerName("  "), osm, withAIStreetLevelLayerFunction),
-                    Arrays.asList(new DownloadParams().withLayerName("Test layer").withNewLayer(true), osm,
-                            withAIStreetLevelLayerFunction),
-                    Arrays.asList(new DownloadParams().withLayerName(null).withNewLayer(true), osm, withAIStreetLevelLayerFunction))
+            return Stream
+                    .of(Arrays.asList(new DownloadParams().withLayerName(""), osm, null),
+                            Arrays.asList(new DownloadParams().withNewLayer(true).withLayerName("Test layer"), osm,
+                                    null),
+                            Arrays.asList(new DownloadParams().withLayerName(""), osm, withAIStreetLevelLayerFunction),
+                            Arrays.asList(new DownloadParams().withNewLayer(true).withLayerName("  "), osm,
+                                    withAIStreetLevelLayerFunction),
+                            Arrays.asList(new DownloadParams().withLayerName("Test layer").withNewLayer(true), osm,
+                                    withAIStreetLevelLayerFunction),
+                            Arrays.asList(new DownloadParams().withLayerName(null).withNewLayer(true), osm,
+                                    withAIStreetLevelLayerFunction))
                     .map(ArrayList::new).filter(list -> list.addAll(args)).map(ArrayList::toArray);
         }).map(Arguments::of);
     }
@@ -152,8 +156,8 @@ class DownloadMapWithAIExtendedOsmChangeTaskTest {
     @ParameterizedTest
     @MethodSource
     void testAddLayerIfRequired(DownloadParams downloadParams, Supplier<OsmDataLayer> osmDataLayerSupplier,
-            Function<OsmDataLayer, MapWithAIStreetLevelLayer> mapWithAIStreetLevelLayerFunction, String xml, int suggestionCount,
-            int streetViewImageSetCount, int streetViewImageCount) {
+            Function<OsmDataLayer, MapWithAIStreetLevelLayer> mapWithAIStreetLevelLayerFunction, String xml,
+            int suggestionCount, int streetViewImageSetCount, int streetViewImageCount) {
         wireMockServer.addStubMapping(wireMockServer.stubFor(get(urlEqualTo("/test"))
                 .willReturn(aResponse().withHeader("content-type", "text/xml; charset=UTF-8").withBody(xml))));
         final OsmDataLayer osmDataLayer = osmDataLayerSupplier.get();
@@ -161,8 +165,8 @@ class DownloadMapWithAIExtendedOsmChangeTaskTest {
         if (mapWithAIStreetLevelLayerFunction != null) {
             MainApplication.getLayerManager().addLayer(mapWithAIStreetLevelLayerFunction.apply(osmDataLayer));
         }
-        final Collection<MapWithAIStreetLevelLayer> initialMapWithAIStreetLevelLayers = MainApplication.getLayerManager()
-                .getLayersOfType(MapWithAIStreetLevelLayer.class);
+        final Collection<MapWithAIStreetLevelLayer> initialMapWithAIStreetLevelLayers = MainApplication
+                .getLayerManager().getLayersOfType(MapWithAIStreetLevelLayer.class);
         final DownloadMapWithAIExtendedOsmChangeTask task = new DownloadMapWithAIExtendedOsmChangeTask();
 
         final Future<?> future = task.download(downloadParams, new Bounds(0, 0, 0, 0), NullProgressMonitor.INSTANCE);
@@ -174,9 +178,10 @@ class DownloadMapWithAIExtendedOsmChangeTaskTest {
                         + ((downloadParams.isNewLayer() || initialMapWithAIStreetLevelLayers.isEmpty()) ? 1 : 0),
                 MainApplication.getLayerManager().getLayersOfType(MapWithAIStreetLevelLayer.class).size());
 
-        final MapWithAIStreetLevelLayer mapWithAIStreetLevelLayer = MainApplication.getLayerManager().getLayersOfType(
-                        MapWithAIStreetLevelLayer.class).stream()
-                .filter(l -> !downloadParams.isNewLayer() || !initialMapWithAIStreetLevelLayers.contains(l)).findAny().orElse(null);
+        final MapWithAIStreetLevelLayer mapWithAIStreetLevelLayer = MainApplication.getLayerManager()
+                .getLayersOfType(MapWithAIStreetLevelLayer.class).stream()
+                .filter(l -> !downloadParams.isNewLayer() || !initialMapWithAIStreetLevelLayers.contains(l)).findAny()
+                .orElse(null);
         assertNotNull(mapWithAIStreetLevelLayer);
 
         final Collection<Suggestion<?, ?>> suggestions = mapWithAIStreetLevelLayer.getSuggestions();
@@ -186,8 +191,8 @@ class DownloadMapWithAIExtendedOsmChangeTaskTest {
                 .mapToLong(set -> set.getCollection().size()).sum());
 
         if (!initialMapWithAIStreetLevelLayers.contains(mapWithAIStreetLevelLayer)) {
-            assertEquals(Utils.isStripEmpty(downloadParams.getLayerName()) ? "MapWithAI StreetLevel" : downloadParams.getLayerName(),
-                    mapWithAIStreetLevelLayer.getName());
+            assertEquals(Utils.isStripEmpty(downloadParams.getLayerName()) ? "MapWithAI StreetLevel"
+                    : downloadParams.getLayerName(), mapWithAIStreetLevelLayer.getName());
         }
         assertEquals(1, wireMockServer.countRequestsMatching(RequestPattern.everything()).getCount());
     }

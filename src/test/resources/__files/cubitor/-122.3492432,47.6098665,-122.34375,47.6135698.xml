@@ -1,0 +1,1392 @@
+<?xml version="1.0" encoding="utf-8"?>
+<osmChange version="0.6" generator="cubitor sidewalk suggestion generator">
+  <cubitor-context>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="143014891" version="20" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="192005426" version="10" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-1820722744035416622">
+      <osm-road way-id="371427803" version="17" sidewalk-tag="both"/>
+      <street-view-image-set id="-2163180715448831864">
+        <street-view-image id="279549150548311" ca="258.255745018146" lat="47.60871421894772" lon="-122.3436019054279" detection_key="1glc70ftnede1vtxl8qtlz"/>
+        <street-view-image id="859564624903204" ca="240.2238239411333" lat="47.60867896192385" lon="-122.34368013994654" detection_key="9aov4qrt8fdovs5x3kwqhb"/>
+        <street-view-image id="125088422927587" ca="255.12868653508508" lat="47.60874127989312" lon="-122.34363370507683" detection_key="nlfmmm0lmwiny65lzmmwff"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-3734150959097683299">
+      <osm-road way-id="621319686" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set id="-4323983446304513148">
+        <street-view-image id="187550139885468" ca="222.19157641578204" lat="47.612121" lon="-122.343651" detection_key="sowd4k5xy8pcnd3yd5o6lq"/>
+        <street-view-image id="4143921055701677" ca="309.97963276889084" lat="47.6116725727029" lon="-122.34357958963545" detection_key="3cvq4so67fav5qlg4g2lrvd019"/>
+        <street-view-image id="155735143177698" ca="222.4373334949347" lat="47.612057" lon="-122.343699" detection_key="oq6pk343d1hq450c25t2o9"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="617436201" version="6" sidewalk-tag="both"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-2419108822407083538">
+      <osm-road way-id="617436201" version="6" sidewalk-tag="both"/>
+      <street-view-image-set id="-2624272897846560909">
+        <street-view-image id="582925706443342" ca="221.4599938708696" lat="47.61259653" lon="-122.34319336916667" detection_key="3z667xci6o2dgvd8rudq9p"/>
+        <street-view-image id="290827842529221" ca="130.07431148666592" lat="47.612775" lon="-122.343513" detection_key="btpdpvcqyxy0r3jsorlmfl"/>
+        <street-view-image id="321623492683351" ca="133.68662376097274" lat="47.61277656639118" lon="-122.34354498682347" detection_key="cqrdmgglivz091hv0ngzbn"/>
+        <street-view-image id="1795713757275100" ca="134.3435098670251" lat="47.61279923569075" lon="-122.34357903934352" detection_key="i7olpoe26r9iyel0lnt5k1"/>
+        <street-view-image id="2960662827546904" ca="222.36837039601244" lat="47.61252766366065" lon="-122.34307585971942" detection_key="q1ishucpyxi1dzbt61mkaw"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-1525117079845510313">
+      <osm-road way-id="533546297" version="5" sidewalk-tag="both"/>
+      <street-view-image-set id="-2966661295864154618">
+        <street-view-image id="916019522308046" ca="221.0345658006595" lat="47.6139443029362" lon="-122.3434828778092" detection_key="iyweohhpc1fo4i0qhippwr"/>
+        <street-view-image id="152247320242743" ca="222.66677237655688" lat="47.61394857959252" lon="-122.34350154076756" detection_key="o4gvqfrjzl8jygccojfj60"/>
+        <street-view-image id="898696770976378" ca="222.20604107286374" lat="47.613956879274994" lon="-122.34346411387995" detection_key="lp72hyca0w8e4z6knnaqgj"/>
+        <street-view-image id="545890186602807" ca="223.66023290670776" lat="47.61393921316546" lon="-122.3435292909813" detection_key="9nku5i2uzk0los2sqnrzwf"/>
+        <street-view-image id="168512635273745" ca="219.2279924816342" lat="47.61395699077759" lon="-122.34348183031972" detection_key="mcly7pldd0z9j244pibiot"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-3976803158824711479">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set id="-2117955144951583553">
+        <street-view-image id="4143921055701677" ca="309.97963276889084" lat="47.6116725727029" lon="-122.34357958963545" detection_key="3cvq4so67fav5qlg4g2lrvd019"/>
+        <street-view-image id="261734832317474" ca="309.98006324499187" lat="47.6116725727029" lon="-122.34357958963545" detection_key="deagdi0sjj8h3gqrct1d9ah0u6"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-50801230349534491">
+      <osm-road way-id="621319686" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set id="-2224324398600886559">
+        <street-view-image id="517775399247102" ca="311.2289410682748" lat="47.611882" lon="-122.343634" detection_key="bbe1lkqr2o8a9lp29cssee"/>
+        <street-view-image id="809002746488589" ca="323.0396190790563" lat="47.611827" lon="-122.343712" detection_key="f788ojdnceuwm6dpwic7n3"/>
+        <street-view-image id="792676551452279" ca="294.0150325151431" lat="47.611838" lon="-122.343431" detection_key="rp30ta3eg6vdow3cm79szq"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-2358277680376061057">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set id="-687905676934105702">
+        <street-view-image id="3990787964311713" ca="130.12718278145758" lat="47.611697542184864" lon="-122.34371628647335" detection_key="ssb9e480eous1mt5uf82bkaeda"/>
+        <street-view-image id="844173396445134" ca="131.84599155194087" lat="47.611455" lon="-122.343259" detection_key="6c0j2k4oozy3cqbxn7mjf9"/>
+        <street-view-image id="496549805118426" ca="46.32695255261808" lat="47.610955791042294" lon="-122.34271887529138" detection_key="xf2r2lyabfikedbrioy3rv"/>
+        <street-view-image id="2898512110406581" ca="42.42051008887893" lat="47.611037" lon="-122.342659" detection_key="qq470gofrbhicbbhr8fcrg"/>
+        <street-view-image id="1481978402142906" ca="321.26559546981844" lat="47.6110718977063" lon="-122.34239809049048" detection_key="js93uelnr7ap40q88ruke1"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="533546297" version="5" sidewalk-tag="both"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="192005426" version="10" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="143014891" version="20" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-4382134623558655563">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set id="-2587164082233323703">
+        <street-view-image id="1443317036018595" ca="308.97314834693157" lat="47.61097935755845" lon="-122.34241561622895" detection_key="cfr9hhdceq9ghn118a4jhc128r"/>
+        <street-view-image id="261734832317474" ca="309.98006324499187" lat="47.6116725727029" lon="-122.34357958963545" detection_key="deagdi0sjj8h3gqrct1d9ah0u6"/>
+        <street-view-image id="162633725718716" ca="276.96428603366235" lat="47.61111190490835" lon="-122.34253879735975" detection_key="rru3klfqt8syaovln620d3"/>
+        <street-view-image id="827709364619514" ca="267.88454391067035" lat="47.611103907952256" lon="-122.34248591500408" detection_key="ov3blfvw6igdqtpzw2ml5e"/>
+        <street-view-image id="241213124422553" ca="256.07427051379454" lat="47.61111093733409" lon="-122.34246035096132" detection_key="o8ic2uw3b16sgi1s8sg6wy"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-2636265460704057492">
+      <osm-road way-id="533546297" version="5" sidewalk-tag="both"/>
+      <street-view-image-set id="-1952518640686272697">
+        <street-view-image id="916019522308046" ca="221.0345658006595" lat="47.6139443029362" lon="-122.3434828778092" detection_key="iyweohhpc1fo4i0qhippwr"/>
+        <street-view-image id="484980202808091" ca="311.23028120470417" lat="47.613737659231475" lon="-122.34313718003777" detection_key="1qxqg5usvn43n7d925q3u1"/>
+        <street-view-image id="1140504596434280" ca="223.97657135227763" lat="47.61392799651874" lon="-122.34351064304828" detection_key="plktvc1qvdfpwwujhteqte"/>
+        <street-view-image id="164059802259633" ca="217.9179531207889" lat="47.613980096563495" lon="-122.34351815882881" detection_key="qqr0qt23xsmowdiabjxidj"/>
+        <street-view-image id="2838490933057327" ca="310.8351000484086" lat="47.61364417570729" lon="-122.34304266467034" detection_key="hznv89gnh4830fh8um1i0y"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-696192495222090952">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set id="-1873325811295937264">
+        <street-view-image id="5937561579617145" ca="310.36906547003395" lat="47.6115057363852" lon="-122.34327726600515" detection_key="qmmd3drrabsn5ubung6vgo7i24"/>
+        <street-view-image id="1163713984050843" ca="310.3714882593234" lat="47.6115057363852" lon="-122.34327726600515" detection_key="mmm2sngmfj2mvhjno26an7t1pq"/>
+        <street-view-image id="183787683505687" ca="45.164609932020085" lat="47.610882" lon="-122.342742" detection_key="gtmhmns9jav086vhth0ms4"/>
+        <street-view-image id="317456656595207" ca="312.32339879274105" lat="47.610760667692624" lon="-122.34208608365293" detection_key="nola0hsa0hyoheyjzxonjt"/>
+        <street-view-image id="813467605944589" ca="316.0922487540868" lat="47.61093618603197" lon="-122.34237715556306" detection_key="u473ism3d41rknrtkmxb04"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-2035810519116860255">
+      <osm-road way-id="68665998" version="20" sidewalk-tag="separate"/>
+      <street-view-image-set id="-3246709252693762844">
+        <street-view-image id="323792889331213" ca="312.02104572492703" lat="47.60980767281489" lon="-122.34288114838816" detection_key="9xwep2m3ynu2w4va6cy4e8"/>
+        <street-view-image id="518755065798034" ca="318.05518865515455" lat="47.609738" lon="-122.342797" detection_key="5mtw52o2u5jzgb6lll4vil"/>
+        <street-view-image id="314244076756693" ca="309.2687687632196" lat="47.61007038927738" lon="-122.34335233166833" detection_key="e8usodnwty0wqilgsmm0qu"/>
+        <street-view-image id="268621608291919" ca="327.5065570513585" lat="47.610268148" lon="-122.34359209833335" detection_key="9jn0dl0j6ot959jfez6yy3"/>
+        <street-view-image id="1095972660884059" ca="313.9354577940162" lat="47.609618" lon="-122.342591" detection_key="eipylie9wjkbsbe2xgv1cj"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="621319686" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="192005426" version="10" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-1914298353408808926">
+      <osm-road way-id="68665998" version="20" sidewalk-tag="separate"/>
+      <street-view-image-set id="-2634980006902613704">
+        <street-view-image id="211145717175774" ca="165.17222989859738" lat="47.60996086601335" lon="-122.34322428985416" detection_key="bk4vm07kel2mfuqfjoltp4flib"/>
+        <street-view-image id="1616797725186139" ca="133.5512883817641" lat="47.610137" lon="-122.343382" detection_key="geegeixmm1d3oiruemnff0"/>
+        <street-view-image id="370240531079064" ca="327.41064359353805" lat="47.610276" lon="-122.343546" detection_key="jege3olvd6ilxvkpuw8htx"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="621319686" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="192005426" version="10" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="621319686" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="671443614" version="3" sidewalk-tag="both"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="143014891" version="20" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="192005426" version="10" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="671443614" version="3" sidewalk-tag="both"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-2341670336572372009">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set id="-2131324592564930521">
+        <street-view-image id="3866503006732302" ca="138.89853878411213" lat="47.6113074" lon="-122.3429499" detection_key="v0f42wqf64fyofk6e7gc14"/>
+        <street-view-image id="291548512647972" ca="245.09766749134633" lat="47.6110649" lon="-122.3424686" detection_key="ipy4hgtv9svcvjawrcqyxq"/>
+        <street-view-image id="158409466232748" ca="131.83626378806582" lat="47.6112929" lon="-122.3429874" detection_key="0oq4om9oeh25dl79r4hvh5"/>
+        <street-view-image id="940465756705136" ca="236.79896178067003" lat="47.611068" lon="-122.3424619" detection_key="mo3l4ih1ul4iwa7p425f9s"/>
+        <street-view-image id="315290796875950" ca="241.93829159145022" lat="47.6110579" lon="-122.3424652" detection_key="v3425vh445nch8xs8xa5cv"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-937184729162645581">
+      <osm-road way-id="68665998" version="20" sidewalk-tag="separate"/>
+      <street-view-image-set id="-828671300502316733">
+        <street-view-image id="3991018840974436" ca="308.74889274805696" lat="47.61009777855478" lon="-122.34340161571761" detection_key="04rxkf2h58ye8vvi5952us"/>
+        <street-view-image id="4189004057787217" ca="312.01400662131766" lat="47.610053" lon="-122.34333" detection_key="0diyeajl712gm155uvc4n6"/>
+        <street-view-image id="335746167894368" ca="328.62184177567457" lat="47.61030454833333" lon="-122.34362467133333" detection_key="w3r8wkt888o51o2m2zf4ze"/>
+        <street-view-image id="321201439394260" ca="310.3650722878986" lat="47.610012099099094" lon="-122.34324567584251" detection_key="a980fmvgxjy2t3edpirhhk"/>
+        <street-view-image id="316254546786424" ca="310.9342200991554" lat="47.609980640280554" lon="-122.3431873249833" detection_key="qyjttr6d7e3i3j8f3jd7sc"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-2025814743787844207">
+      <osm-road way-id="192005426" version="10" sidewalk-tag="separate"/>
+      <street-view-image-set id="-3120354699968917027">
+        <street-view-image id="885500932034044" ca="222.50779057554092" lat="47.61247342284569" lon="-122.34333476235804" detection_key="obamhk3dq1g7rtta5nau01"/>
+        <street-view-image id="1318133388588068" ca="223.14965070639178" lat="47.61218879804506" lon="-122.34372873161034" detection_key="jpvnaq5l8g3fa58j3cqhc3"/>
+        <street-view-image id="809002746488589" ca="323.0396190790563" lat="47.611827" lon="-122.343712" detection_key="f788ojdnceuwm6dpwic7n3"/>
+        <street-view-image id="4124620980917828" ca="223.00937963879122" lat="47.61225520370371" lon="-122.34362877777778" detection_key="devlkg8irznpz0owsv9azo"/>
+        <street-view-image id="196686988951564" ca="223.03452308820994" lat="47.61222102137177" lon="-122.34367803578529" detection_key="3ktiw3sad8pa0ry7rjcfb7"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-3343905619235906295">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set id="-1683761398045548632">
+        <street-view-image id="4143921055701677" ca="309.97963276889084" lat="47.6116725727029" lon="-122.34357958963545" detection_key="3cvq4so67fav5qlg4g2lrvd019"/>
+        <street-view-image id="261734832317474" ca="309.98006324499187" lat="47.6116725727029" lon="-122.34357958963545" detection_key="deagdi0sjj8h3gqrct1d9ah0u6"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="192005426" version="10" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-859365536141565435">
+      <osm-road way-id="192005426" version="10" sidewalk-tag="separate"/>
+      <street-view-image-set id="-2988723694870678745">
+        <street-view-image id="809002746488589" ca="323.0396190790563" lat="47.611827" lon="-122.343712" detection_key="f788ojdnceuwm6dpwic7n3"/>
+        <street-view-image id="885500932034044" ca="222.50779057554092" lat="47.61247342284569" lon="-122.34333476235804" detection_key="obamhk3dq1g7rtta5nau01"/>
+        <street-view-image id="4124620980917828" ca="223.00937963879122" lat="47.61225520370371" lon="-122.34362877777778" detection_key="devlkg8irznpz0owsv9azo"/>
+        <street-view-image id="296733022177376" ca="223.35658132709005" lat="47.612334940913605" lon="-122.34353757315458" detection_key="1prht63bjnq20p79zvh8x7"/>
+        <street-view-image id="918502428929735" ca="222.74096550600785" lat="47.61243764726369" lon="-122.34338298059703" detection_key="r3kvig0e2rll20s5vmme79"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="192005426" version="10" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="533546297" version="5" sidewalk-tag="both"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="671443614" version="3" sidewalk-tag="both"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="192005426" version="10" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="143014891" version="20" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="621319686" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-3368761265404883402">
+      <osm-road way-id="617436201" version="6" sidewalk-tag="both"/>
+      <street-view-image-set id="-782648383577638766">
+        <street-view-image id="4191252177563535" ca="131.18856185256982" lat="47.612605" lon="-122.343254" detection_key="f92jhvmwgyhc3i0a6wr8n2"/>
+        <street-view-image id="207137104355555" ca="217.69189591201774" lat="47.612625" lon="-122.342987" detection_key="yn4i738g5fw4bo7114gv84"/>
+        <street-view-image id="584242806301884" ca="130.2671667567608" lat="47.612821" lon="-122.34362" detection_key="ae4lt02xinhm8ezqwnfq4c"/>
+        <street-view-image id="1795713757275100" ca="134.3435098670251" lat="47.61279923569075" lon="-122.34357903934352" detection_key="i7olpoe26r9iyel0lnt5k1"/>
+        <street-view-image id="318903889604719" ca="222.2646709483651" lat="47.61263997055889" lon="-122.34299051047903" detection_key="lmh5ze7m09mhqrpxbpv1ym"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-3794379251871255193">
+      <osm-road way-id="192005426" version="10" sidewalk-tag="separate"/>
+      <street-view-image-set id="-3027136725603092122">
+        <street-view-image id="489803612453894" ca="206.22597846345815" lat="47.612533" lon="-122.343119" detection_key="odc4m4vawsx4k1fue1z3f4"/>
+        <street-view-image id="4252205198206076" ca="219.4421975664591" lat="47.61241558974359" lon="-122.34321714102565" detection_key="gcz7b50zlcat0wbbnxk5c0"/>
+        <street-view-image id="177071787658629" ca="219.0100040848909" lat="47.6122606489646" lon="-122.34343228690713" detection_key="2ai96n0dzk723q34yjyhud"/>
+        <street-view-image id="2564136347066537" ca="221.64787032445957" lat="47.612556" lon="-122.343034" detection_key="nyla5tecqcdkeo7m84xkc8"/>
+        <street-view-image id="517479826297952" ca="223.22342237170736" lat="47.612065" lon="-122.343617" detection_key="68wbd5hydyq6e7lr2vcbmz"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-2123761637591512465">
+      <osm-road way-id="621319686" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set id="-2109254159195915835">
+        <street-view-image id="809002746488589" ca="323.0396190790563" lat="47.611827" lon="-122.343712" detection_key="f788ojdnceuwm6dpwic7n3"/>
+        <street-view-image id="792676551452279" ca="294.0150325151431" lat="47.611838" lon="-122.343431" detection_key="rp30ta3eg6vdow3cm79szq"/>
+        <street-view-image id="517775399247102" ca="311.2289410682748" lat="47.611882" lon="-122.343634" detection_key="bbe1lkqr2o8a9lp29cssee"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="617436201" version="6" sidewalk-tag="both"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-2963279336102228864">
+      <osm-road way-id="371427803" version="17" sidewalk-tag="both"/>
+      <street-view-image-set id="-816860410950474612">
+        <street-view-image id="1217154185395616" ca="241.14488896798173" lat="47.60867999494949" lon="-122.3436670949495" detection_key="ncigbasxfztylekbcfi0mb"/>
+        <street-view-image id="279549150548311" ca="258.255745018146" lat="47.60871421894772" lon="-122.3436019054279" detection_key="1glc70ftnede1vtxl8qtlz"/>
+        <street-view-image id="125088422927587" ca="255.12868653508508" lat="47.60874127989312" lon="-122.34363370507683" detection_key="nlfmmm0lmwiny65lzmmwff"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-4604552417475996989">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set id="-1723049041806513282">
+        <street-view-image id="4143921055701677" ca="309.97963276889084" lat="47.6116725727029" lon="-122.34357958963545" detection_key="3cvq4so67fav5qlg4g2lrvd019"/>
+        <street-view-image id="261734832317474" ca="309.98006324499187" lat="47.6116725727029" lon="-122.34357958963545" detection_key="deagdi0sjj8h3gqrct1d9ah0u6"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-810918928023860156">
+      <osm-road way-id="371427803" version="17" sidewalk-tag="both"/>
+      <street-view-image-set id="-1721531767845853092">
+        <street-view-image id="489915355676890" ca="310.294994630692" lat="47.60845084001024" lon="-122.34358853462828" detection_key="bavci8vycri41t10mk15x9"/>
+        <street-view-image id="534102124268049" ca="248.20504707989846" lat="47.6086602245" lon="-122.34373000413801" detection_key="qv9ikpgzrtdtmwlyazb2z9"/>
+        <street-view-image id="620168206050510" ca="242.9640890602324" lat="47.608687897897894" lon="-122.3436543978979" detection_key="epyfeuj2oay3v3kwvsf58t"/>
+        <street-view-image id="808961639737338" ca="246.95344021891304" lat="47.608671839529634" lon="-122.34368341348149" detection_key="5wszt42ez78yrl87qkt7w4"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="671443614" version="3" sidewalk-tag="both"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="617436201" version="6" sidewalk-tag="both"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-3887942944712094245">
+      <osm-road way-id="533546297" version="5" sidewalk-tag="both"/>
+      <street-view-image-set id="-2544967540042494884">
+        <street-view-image id="1815135862000752" ca="222.7259171472631" lat="47.613927463561666" lon="-122.34346498019616" detection_key="ol77j19si4coi9iq0a8w3q"/>
+        <street-view-image id="924251971749510" ca="218.61879857400461" lat="47.61393826077176" lon="-122.34350103003806" detection_key="cvvyye6je3w5mf3wcnlmz3"/>
+        <street-view-image id="3045859579028667" ca="221.75500100500642" lat="47.613923680832244" lon="-122.3434506435569" detection_key="a26a4dfzjewzwz033xpl6y"/>
+        <street-view-image id="287044206473631" ca="221.52779683418618" lat="47.61393028328031" lon="-122.34346114513419" detection_key="qqccc5gtgvdn13wtzujmg2"/>
+        <street-view-image id="152564893517665" ca="220.82562299176078" lat="47.61395179383491" lon="-122.3434938598713" detection_key="pdzm4mukmbppae84iyvalr"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="143014891" version="20" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-4300267287465338864">
+      <osm-road way-id="371427803" version="17" sidewalk-tag="both"/>
+      <street-view-image-set id="-4417249079095360390">
+        <street-view-image id="534102124268049" ca="248.20504707989846" lat="47.6086602245" lon="-122.34373000413801" detection_key="qv9ikpgzrtdtmwlyazb2z9"/>
+        <street-view-image id="3961521877216795" ca="245.4138330851162" lat="47.608705404287136" lon="-122.3436093027584" detection_key="5m8r0kcwegg1mgl18kzmf4"/>
+        <street-view-image id="338943194318320" ca="243.29876002762393" lat="47.60869029953379" lon="-122.34364188261738" detection_key="e69preyxavvoztb0flbk47"/>
+        <street-view-image id="328721192095767" ca="313.9205659302243" lat="47.60852162545879" lon="-122.3437225577244" detection_key="bhn5pqhp8u3v9hzt3zd66b"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-2257799632820517823">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set id="-3454647134968156800">
+        <street-view-image id="2917631715173533" ca="130.98695696468667" lat="47.61174559705965" lon="-122.34342461315553" detection_key="jakq3arc88btg1icrd0m5cmbhl"/>
+        <street-view-image id="978773156196850" ca="128.5586660349893" lat="47.61129108400591" lon="-122.34299534736937" detection_key="p8h35c7qjnjpvg5uilrjd8b6jt"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-732420607313992413">
+      <osm-road way-id="68665998" version="20" sidewalk-tag="separate"/>
+      <street-view-image-set id="-2150997732642903389">
+        <street-view-image id="4490533694307411" ca="313.7464253250894" lat="47.609849" lon="-122.343003" detection_key="g0e4d3ptlyscieoiauu0fa"/>
+        <street-view-image id="357381232472843" ca="311.4963648398619" lat="47.61024410445906" lon="-122.34347922572334" detection_key="gt3budf8yts17ca52m3bb5"/>
+        <street-view-image id="335746167894368" ca="328.62184177567457" lat="47.61030454833333" lon="-122.34362467133333" detection_key="qkdcmissmkt5nvvk4wenwv"/>
+        <street-view-image id="1464543053890578" ca="334.7246082293638" lat="47.610268" lon="-122.343607" detection_key="fqqagz2te2dk4e09x6v7ey"/>
+        <street-view-image id="3875395489241031" ca="329.3725477897094" lat="47.610324845023385" lon="-122.34364208350034" detection_key="l2xfv3voxs6l5jeny8s0bb"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="192005426" version="10" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-2810128963710285193">
+      <osm-road way-id="617436201" version="6" sidewalk-tag="both"/>
+      <street-view-image-set id="-1033788350068574153">
+        <street-view-image id="183511006877293" ca="129.0618282568107" lat="47.61268802431307" lon="-122.34340736748291" detection_key="1pftxhuzc97nnx80471s43"/>
+        <street-view-image id="313294533785047" ca="134.53759877334073" lat="47.612882692547146" lon="-122.34370465266383" detection_key="r51d0837zxq95ajfcqg38h"/>
+        <street-view-image id="455890665510869" ca="134.49781572293034" lat="47.61282421737989" lon="-122.34361646608951" detection_key="dmr2tsam15uybunos8lkka"/>
+        <street-view-image id="296025095547925" ca="221.02190816454504" lat="47.612721258943495" lon="-122.343047684888" detection_key="2kcqomrirvcnc3rghfkory"/>
+        <street-view-image id="375714430433174" ca="130.00534597755933" lat="47.612808" lon="-122.34358" detection_key="njdqu1c64u2ylznnv1hgjq"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-1293411470871869833">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set id="-1173947479013591432">
+        <street-view-image id="978773156196850" ca="128.5586660349893" lat="47.61129108400591" lon="-122.34299534736937" detection_key="lvlp02fd51ipsesmltioanubio"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-979875140323677324">
+      <osm-road way-id="68665998" version="20" sidewalk-tag="separate"/>
+      <street-view-image-set id="-2715623024009559622">
+        <street-view-image id="324759829220899" ca="314.46145077384864" lat="47.610154" lon="-122.3434" detection_key="3o4hujxa9xlnaaoxf2p5i0"/>
+        <street-view-image id="375444337135488" ca="316.34724163423795" lat="47.609595" lon="-122.342493" detection_key="g9u6zogr57dbtbazye724c"/>
+        <street-view-image id="181675757072354" ca="311.9548328247627" lat="47.609697321999995" lon="-122.34269532466666" detection_key="zzg51hx7szn4uo0nx9y74t"/>
+        <street-view-image id="1896459927172834" ca="336.1881767180731" lat="47.61044" lon="-122.343716" detection_key="q8pma6mznux9ll61ue0d3q"/>
+        <street-view-image id="831290630820635" ca="324.784729681315" lat="47.610357968133016" lon="-122.34359445963061" detection_key="g2rd1kir8jx85dctuy79mv"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-820166902675653505">
+      <osm-road way-id="693449123" version="4" sidewalk-tag="separate"/>
+      <street-view-image-set id="-843971863647384214">
+        <street-view-image id="499540578160603" ca="261.9791925839152" lat="47.61112" lon="-122.3424555" detection_key="8wq73im1v37sdlrwqqh951"/>
+        <street-view-image id="289441359405015" ca="314.88572381043446" lat="47.6109772" lon="-122.3425476" detection_key="6t91dte4gojs1b46q20ntkkegf"/>
+        <street-view-image id="543398443732170" ca="265.5589823273908" lat="47.6111302" lon="-122.3424649" detection_key="7deggwmxeoqdmkh57i1yw5"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-778421616463291900">
+      <osm-road way-id="533546297" version="5" sidewalk-tag="both"/>
+      <street-view-image-set id="-2599440553755631776">
+        <street-view-image id="465556021401844" ca="222.6647860001172" lat="47.61395935315478" lon="-122.34351972566256" detection_key="nnb1nhl6g5ikddw2kcgp75"/>
+        <street-view-image id="867674980794186" ca="223.7978780515875" lat="47.61393350431359" lon="-122.34351986736327" detection_key="zl0t2312fc4a8idu36q32s"/>
+        <street-view-image id="844939849565255" ca="218.5802965393106" lat="47.613947432560174" lon="-122.34351694197832" detection_key="qiig56o7msutpn6z73b75e"/>
+        <street-view-image id="952405412213882" ca="224.2406536900206" lat="47.61391735773437" lon="-122.34349296762551" detection_key="rp5r25cmyv8sizhwryb2d6"/>
+        <street-view-image id="810268129864315" ca="313.54372958053057" lat="47.61367334792635" lon="-122.34302703263128" detection_key="z2trmceqmri0segkw3j4ah"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="192005426" version="10" sidewalk-tag="separate"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <crosswalk-suggestion type="geometry">
+      <osm-road way-id="533546297" version="5" sidewalk-tag="both"/>
+      <street-view-image-set/>
+    </crosswalk-suggestion>
+    <sidewalk-suggestion type="geometry" id="-2342537880602760980">
+      <osm-road way-id="617436201" version="6" sidewalk-tag="both"/>
+      <street-view-image-set id="-3855371906208189006">
+        <street-view-image id="313294533785047" ca="134.53759877334073" lat="47.612882692547146" lon="-122.34370465266383" detection_key="rf8gvihweo6gf2upiamfyz"/>
+        <street-view-image id="1183886115419792" ca="129.70255569201117" lat="47.612709708378944" lon="-122.3434418659413" detection_key="03q461lzyfvfbnmrgs7t3d"/>
+        <street-view-image id="183511006877293" ca="129.0618282568107" lat="47.61268802431307" lon="-122.34340736748291" detection_key="1pftxhuzc97nnx80471s43"/>
+        <street-view-image id="375714430433174" ca="130.00534597755933" lat="47.612808" lon="-122.34358" detection_key="njdqu1c64u2ylznnv1hgjq"/>
+        <street-view-image id="476763103438652" ca="130.56449960874613" lat="47.612749" lon="-122.343487" detection_key="0duw8gp5pbz5kvlqm8loj0"/>
+      </street-view-image-set>
+    </sidewalk-suggestion>
+  </cubitor-context>
+  <create>
+    <way id="-1017374519002501" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-341384190736021"/>
+      <nd ref="-504878434279188"/>
+    </way>
+    <node id="-341384190736021" version="1" source="fb_footway" lat="47.61326" lon="-122.34448"/>
+    <node id="-504878434279188" version="1" source="fb_footway" lat="47.61335" lon="-122.34438"/>
+    <way id="-1087439705340752" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-172238888429948"/>
+      <nd ref="-606717510722700"/>
+    </way>
+    <node id="-172238888429948" version="1" source="fb_footway" lat="47.61191" lon="-122.34389"/>
+    <node id="-606717510722700" version="1" source="fb_footway" lat="47.61186" lon="-122.3438"/>
+    <way id="-1124843844685520" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-940923753407781"/>
+      <nd ref="-313654456787530"/>
+    </way>
+    <node id="-940923753407781" version="1" source="fb_footway" lat="47.61185" lon="-122.3438"/>
+    <node id="-313654456787530" version="1" source="fb_footway" lat="47.61179" lon="-122.34388"/>
+    <way id="-1137908786701630" version="1" suggestion-id="-1820722744035416622" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-296915335499331"/>
+      <nd ref="-103468625226013"/>
+      <nd ref="-192979742695214"/>
+      <nd ref="-511600643296844"/>
+      <nd ref="-182691120545114"/>
+      <nd ref="-1156730841508068"/>
+      <nd ref="-982516968958722"/>
+      <nd ref="-541615686845298"/>
+      <nd ref="-4505480939480680"/>
+      <nd ref="-286987476415174"/>
+      <nd ref="-471502610623834"/>
+      <nd ref="-172919934667702"/>
+      <nd ref="-310575323841724"/>
+      <nd ref="-3098426820444234"/>
+      <nd ref="-376872777099507"/>
+      <nd ref="-228022202101022"/>
+      <nd ref="-1754691178044122"/>
+      <nd ref="-914939572683606"/>
+      <nd ref="-314973566759249"/>
+      <nd ref="-4143624759050607"/>
+      <nd ref="-480496113259600"/>
+      <nd ref="-2876016115997116"/>
+      <nd ref="-182576523755364"/>
+      <nd ref="-384412079561801"/>
+      <nd ref="-179928740703854"/>
+      <nd ref="-1623694938021429"/>
+      <nd ref="-321287479707775"/>
+      <nd ref="-228034639085000"/>
+      <nd ref="-2732656390376371"/>
+      <nd ref="-1788791641281764"/>
+      <nd ref="-2978782725679831"/>
+      <nd ref="-499065064767338"/>
+      <nd ref="-150135323701285"/>
+      <nd ref="-1386500891721109"/>
+      <nd ref="-171557928307721"/>
+      <nd ref="-252720066279550"/>
+      <nd ref="-243613970677715"/>
+    </way>
+    <node id="-296915335499331" version="1" source="fb_footway" lat="47.60853" lon="-122.34383"/>
+    <node id="-103468625226013" version="1" source="fb_footway" lat="47.60888" lon="-122.34444"/>
+    <node id="-192979742695214" version="1" source="fb_footway" lat="47.60908" lon="-122.34478"/>
+    <node id="-511600643296844" version="1" source="fb_footway" lat="47.60916" lon="-122.34492"/>
+    <node id="-182691120545114" version="1" source="fb_footway" lat="47.60947" lon="-122.34548"/>
+    <node id="-1156730841508068" version="1" source="fb_footway" lat="47.60993" lon="-122.34629"/>
+    <node id="-982516968958722" version="1" source="fb_footway" lat="47.60997" lon="-122.34637"/>
+    <node id="-541615686845298" version="1" source="fb_footway" lat="47.61067" lon="-122.34755"/>
+    <node id="-4505480939480680" version="1" source="fb_footway" lat="47.61073" lon="-122.34765"/>
+    <node id="-286987476415174" version="1" source="fb_footway" lat="47.61146" lon="-122.3489"/>
+    <node id="-471502610623834" version="1" source="fb_footway" lat="47.61149" lon="-122.34894"/>
+    <node id="-172919934667702" version="1" source="fb_footway" lat="47.61154" lon="-122.34903"/>
+    <node id="-310575323841724" version="1" source="fb_footway" lat="47.61167" lon="-122.34925"/>
+    <node id="-3098426820444234" version="1" source="fb_footway" lat="47.6117" lon="-122.34931"/>
+    <node id="-376872777099507" version="1" source="fb_footway" lat="47.61199" lon="-122.34979"/>
+    <node id="-228022202101022" version="1" source="fb_footway" lat="47.61224" lon="-122.35021"/>
+    <node id="-1754691178044122" version="1" source="fb_footway" lat="47.61237" lon="-122.35045"/>
+    <node id="-914939572683606" version="1" source="fb_footway" lat="47.6125" lon="-122.3507"/>
+    <node id="-314973566759249" version="1" source="fb_footway" lat="47.61269" lon="-122.35109"/>
+    <node id="-4143624759050607" version="1" source="fb_footway" lat="47.61274" lon="-122.35119"/>
+    <node id="-480496113259600" version="1" source="fb_footway" lat="47.61282" lon="-122.35132"/>
+    <node id="-2876016115997116" version="1" source="fb_footway" lat="47.61321" lon="-122.35208"/>
+    <node id="-182576523755364" version="1" source="fb_footway" lat="47.61328" lon="-122.3522"/>
+    <node id="-384412079561801" version="1" source="fb_footway" lat="47.61336" lon="-122.35234"/>
+    <node id="-179928740703854" version="1" source="fb_footway" lat="47.61367" lon="-122.35288"/>
+    <node id="-1623694938021429" version="1" source="fb_footway" lat="47.61411" lon="-122.35361"/>
+    <node id="-321287479707775" version="1" source="fb_footway" lat="47.61426" lon="-122.35387"/>
+    <node id="-228034639085000" version="1" source="fb_footway" lat="47.61433" lon="-122.35397"/>
+    <node id="-2732656390376371" version="1" source="fb_footway" lat="47.61439" lon="-122.35407"/>
+    <node id="-1788791641281764" version="1" source="fb_footway" lat="47.61446" lon="-122.35419"/>
+    <node id="-2978782725679831" version="1" source="fb_footway" lat="47.61484" lon="-122.35483"/>
+    <node id="-499065064767338" version="1" source="fb_footway" lat="47.61484" lon="-122.35484"/>
+    <node id="-150135323701285" version="1" source="fb_footway" lat="47.61491" lon="-122.35491"/>
+    <node id="-1386500891721109" version="1" source="fb_footway" lat="47.61494" lon="-122.35493"/>
+    <node id="-171557928307721" version="1" source="fb_footway" lat="47.61499" lon="-122.35494"/>
+    <node id="-252720066279550" version="1" source="fb_footway" lat="47.615" lon="-122.35494"/>
+    <node id="-243613970677715" version="1" source="fb_footway" lat="47.61506" lon="-122.35494"/>
+    <way id="-118408367282058" version="1" suggestion-id="-3734150959097683299" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-1726279807558767"/>
+      <nd ref="-1372972429740693"/>
+      <nd ref="-1152124431921892"/>
+      <nd ref="-4241133489315015"/>
+      <nd ref="-511917953331617"/>
+      <nd ref="-185295983539757"/>
+      <nd ref="-3372445392858591"/>
+    </way>
+    <node id="-1726279807558767" version="1" source="fb_footway" lat="47.61178" lon="-122.34396"/>
+    <node id="-1372972429740693" version="1" source="fb_footway" lat="47.61183" lon="-122.34404"/>
+    <node id="-1152124431921892" version="1" source="fb_footway" lat="47.61222" lon="-122.3447"/>
+    <node id="-4241133489315015" version="1" source="fb_footway" lat="47.61223" lon="-122.34471"/>
+    <node id="-511917953331617" version="1" source="fb_footway" lat="47.61233" lon="-122.34489"/>
+    <node id="-185295983539757" version="1" source="fb_footway" lat="47.6125" lon="-122.34518"/>
+    <node id="-3372445392858591" version="1" source="fb_footway" lat="47.61252" lon="-122.34522"/>
+    <way id="-1218407348667329" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-4407742219244186"/>
+      <nd ref="-470145384245691"/>
+    </way>
+    <node id="-4407742219244186" version="1" source="fb_footway" lat="47.61318" lon="-122.34436"/>
+    <node id="-470145384245691" version="1" source="fb_footway" lat="47.6132" lon="-122.34439"/>
+    <way id="-1224246958050308" version="1" suggestion-id="-2419108822407083538" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-121017390140014"/>
+      <nd ref="-884809309105877"/>
+      <nd ref="-117328227147438"/>
+      <nd ref="-4080583508684904"/>
+      <nd ref="-4407742219244186"/>
+    </way>
+    <node id="-121017390140014" version="1" source="fb_footway" lat="47.61248" lon="-122.34319"/>
+    <node id="-884809309105877" version="1" source="fb_footway" lat="47.61249" lon="-122.3432"/>
+    <node id="-117328227147438" version="1" source="fb_footway" lat="47.61282" lon="-122.34376"/>
+    <node id="-4080583508684904" version="1" source="fb_footway" lat="47.61316" lon="-122.34433"/>
+    <way id="-1275929796165437" version="1" suggestion-id="-1525117079845510313" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-1783021205214465"/>
+      <nd ref="-584641029177737"/>
+      <nd ref="-900804143799922"/>
+      <nd ref="-172285084900568"/>
+      <nd ref="-760420094645691"/>
+      <nd ref="-128039469393367"/>
+    </way>
+    <node id="-1783021205214465" version="1" source="fb_footway" lat="47.61385" lon="-122.34349"/>
+    <node id="-584641029177737" version="1" source="fb_footway" lat="47.61356" lon="-122.34387"/>
+    <node id="-900804143799922" version="1" source="fb_footway" lat="47.61331" lon="-122.34423"/>
+    <node id="-172285084900568" version="1" source="fb_footway" lat="47.61331" lon="-122.34424"/>
+    <node id="-760420094645691" version="1" source="fb_footway" lat="47.61328" lon="-122.34425"/>
+    <node id="-128039469393367" version="1" source="fb_footway" lat="47.61328" lon="-122.34426"/>
+    <way id="-1381050618919952" version="1" suggestion-id="-3976803158824711479" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-519054896079466"/>
+      <nd ref="-1726279807558767"/>
+    </way>
+    <node id="-519054896079466" version="1" source="fb_footway" lat="47.61178" lon="-122.34395"/>
+    <way id="-1407615862966382" version="1" suggestion-id="-50801230349534491" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-121183476783878"/>
+      <nd ref="-290786762723080"/>
+      <nd ref="-1800704953432858"/>
+      <nd ref="-365110368369721"/>
+      <nd ref="-495117305157553"/>
+      <nd ref="-479067756712010"/>
+    </way>
+    <node id="-121183476783878" version="1" source="fb_footway" lat="47.61262" lon="-122.3451"/>
+    <node id="-290786762723080" version="1" source="fb_footway" lat="47.61246" lon="-122.34482"/>
+    <node id="-1800704953432858" version="1" source="fb_footway" lat="47.61235" lon="-122.34464"/>
+    <node id="-365110368369721" version="1" source="fb_footway" lat="47.61234" lon="-122.34463"/>
+    <node id="-495117305157553" version="1" source="fb_footway" lat="47.61196" lon="-122.34397"/>
+    <node id="-479067756712010" version="1" source="fb_footway" lat="47.61193" lon="-122.34392"/>
+    <way id="-145897411094168" version="1" suggestion-id="-2358277680376061057" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-307819127572661"/>
+      <nd ref="-552723685712399"/>
+      <nd ref="-466882397744326"/>
+      <nd ref="-171276535001080"/>
+      <nd ref="-380046830066151"/>
+      <nd ref="-948162489273702"/>
+    </way>
+    <node id="-307819127572661" version="1" source="fb_footway" lat="47.61186" lon="-122.3438"/>
+    <node id="-552723685712399" version="1" source="fb_footway" lat="47.61185" lon="-122.34379"/>
+    <node id="-466882397744326" version="1" source="fb_footway" lat="47.61175" lon="-122.34361"/>
+    <node id="-171276535001080" version="1" source="fb_footway" lat="47.61158" lon="-122.34333"/>
+    <node id="-380046830066151" version="1" source="fb_footway" lat="47.61119" lon="-122.34267"/>
+    <node id="-948162489273702" version="1" source="fb_footway" lat="47.61115" lon="-122.34261"/>
+    <way id="-1528225097513293" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-264775412249374"/>
+      <nd ref="-504878434279188"/>
+    </way>
+    <node id="-264775412249374" version="1" source="fb_footway" lat="47.6133" lon="-122.34441"/>
+    <way id="-162966632431516" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-940923753407781"/>
+      <nd ref="-313654456787530"/>
+    </way>
+    <way id="-180243394197837" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-418987199745146"/>
+      <nd ref="-504878434279188"/>
+    </way>
+    <node id="-418987199745146" version="1" source="fb_footway" lat="47.61326" lon="-122.34448"/>
+    <way id="-1925560437618212" version="1" suggestion-id="-4382134623558655563" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-321846949517154"/>
+      <nd ref="-205656951386285"/>
+      <nd ref="-1198149900655345"/>
+      <nd ref="-161795832502624"/>
+      <nd ref="-497853418085859"/>
+      <nd ref="-468902450842364"/>
+    </way>
+    <node id="-321846949517154" version="1" source="fb_footway" lat="47.61101" lon="-122.34264"/>
+    <node id="-205656951386285" version="1" source="fb_footway" lat="47.61106" lon="-122.34274"/>
+    <node id="-1198149900655345" version="1" source="fb_footway" lat="47.61145" lon="-122.3434"/>
+    <node id="-161795832502624" version="1" source="fb_footway" lat="47.61162" lon="-122.34369"/>
+    <node id="-497853418085859" version="1" source="fb_footway" lat="47.61173" lon="-122.34386"/>
+    <node id="-468902450842364" version="1" source="fb_footway" lat="47.61176" lon="-122.34393"/>
+    <way id="-2078625742280485" version="1" suggestion-id="-2636265460704057492" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-1783021205214465"/>
+      <nd ref="-584641029177737"/>
+      <nd ref="-900804143799922"/>
+      <nd ref="-172285084900568"/>
+      <nd ref="-760420094645691"/>
+      <nd ref="-128039469393367"/>
+    </way>
+    <way id="-212318014216833" version="1" suggestion-id="-696192495222090952" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-321846949517154"/>
+      <nd ref="-205656951386285"/>
+      <nd ref="-1198149900655345"/>
+      <nd ref="-161795832502624"/>
+      <nd ref="-497853418085859"/>
+      <nd ref="-468902450842364"/>
+    </way>
+    <way id="-2140873139414864" version="1" suggestion-id="-2035810519116860255" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-1757038977834315"/>
+      <nd ref="-858156728246586"/>
+      <nd ref="-210123300784468"/>
+      <nd ref="-777119529836347"/>
+      <nd ref="-1420316281662022"/>
+      <nd ref="-265020775405976"/>
+      <nd ref="-334450908254488"/>
+      <nd ref="-845088632882503"/>
+      <nd ref="-3030505093894804"/>
+      <nd ref="-110854994532572"/>
+      <nd ref="-468507734207587"/>
+      <nd ref="-832138884071322"/>
+    </way>
+    <node id="-1757038977834315" version="1" source="fb_footway" lat="47.61082" lon="-122.34402"/>
+    <node id="-858156728246586" version="1" source="fb_footway" lat="47.61079" lon="-122.34396"/>
+    <node id="-210123300784468" version="1" source="fb_footway" lat="47.61078" lon="-122.34395"/>
+    <node id="-777119529836347" version="1" source="fb_footway" lat="47.61072" lon="-122.3439"/>
+    <node id="-1420316281662022" version="1" source="fb_footway" lat="47.6107" lon="-122.34388"/>
+    <node id="-265020775405976" version="1" source="fb_footway" lat="47.6107" lon="-122.34387"/>
+    <node id="-334450908254488" version="1" source="fb_footway" lat="47.61047" lon="-122.34368"/>
+    <node id="-845088632882503" version="1" source="fb_footway" lat="47.61039" lon="-122.34361"/>
+    <node id="-3030505093894804" version="1" source="fb_footway" lat="47.61032" lon="-122.34355"/>
+    <node id="-110854994532572" version="1" source="fb_footway" lat="47.61027" lon="-122.3435"/>
+    <node id="-468507734207587" version="1" source="fb_footway" lat="47.61006" lon="-122.34318"/>
+    <node id="-832138884071322" version="1" source="fb_footway" lat="47.60974" lon="-122.34264"/>
+    <way id="-2183162325157072" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-479067756712010"/>
+      <nd ref="-151385823647594"/>
+    </way>
+    <node id="-151385823647594" version="1" source="fb_footway" lat="47.61191" lon="-122.34389"/>
+    <way id="-219822746271708" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-282167700207585"/>
+      <nd ref="-121593993276061"/>
+    </way>
+    <node id="-282167700207585" version="1" source="fb_footway" lat="47.61191" lon="-122.34396"/>
+    <node id="-121593993276061" version="1" source="fb_footway" lat="47.61193" lon="-122.34394"/>
+    <way id="-2333961823407127" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-988711805208480"/>
+      <nd ref="-1756385034545084"/>
+    </way>
+    <node id="-988711805208480" version="1" source="fb_footway" lat="47.61176" lon="-122.34393"/>
+    <node id="-1756385034545084" version="1" source="fb_footway" lat="47.61178" lon="-122.34395"/>
+    <way id="-234924148537998" version="1" suggestion-id="-1914298353408808926" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-564465744939721"/>
+      <nd ref="-218970216424919"/>
+      <nd ref="-170728438309748"/>
+      <nd ref="-305598751047022"/>
+      <nd ref="-749084409121089"/>
+      <nd ref="-167411921985454"/>
+      <nd ref="-3925782770805013"/>
+      <nd ref="-986242318579787"/>
+      <nd ref="-4031349590247273"/>
+      <nd ref="-963373774415337"/>
+      <nd ref="-4025079097599454"/>
+      <nd ref="-190863602908077"/>
+    </way>
+    <node id="-564465744939721" version="1" source="fb_footway" lat="47.60962" lon="-122.34272"/>
+    <node id="-218970216424919" version="1" source="fb_footway" lat="47.60994" lon="-122.34325"/>
+    <node id="-170728438309748" version="1" source="fb_footway" lat="47.60994" lon="-122.34326"/>
+    <node id="-305598751047022" version="1" source="fb_footway" lat="47.61015" lon="-122.34359"/>
+    <node id="-749084409121089" version="1" source="fb_footway" lat="47.61016" lon="-122.3436"/>
+    <node id="-167411921985454" version="1" source="fb_footway" lat="47.61023" lon="-122.34366"/>
+    <node id="-3925782770805013" version="1" source="fb_footway" lat="47.6103" lon="-122.34372"/>
+    <node id="-986242318579787" version="1" source="fb_footway" lat="47.61038" lon="-122.34379"/>
+    <node id="-4031349590247273" version="1" source="fb_footway" lat="47.6106" lon="-122.34398"/>
+    <node id="-963373774415337" version="1" source="fb_footway" lat="47.61062" lon="-122.344"/>
+    <node id="-4025079097599454" version="1" source="fb_footway" lat="47.61067" lon="-122.34404"/>
+    <node id="-190863602908077" version="1" source="fb_footway" lat="47.6107" lon="-122.3441"/>
+    <way id="-239169688268549" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-606717510722700"/>
+      <nd ref="-172238888429948"/>
+    </way>
+    <way id="-241734194664792" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-606717510722700"/>
+      <nd ref="-988711805208480"/>
+    </way>
+    <way id="-2557674767861794" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-2714771118821483"/>
+      <nd ref="-286646889907444"/>
+    </way>
+    <node id="-2714771118821483" version="1" source="fb_footway" lat="47.61253" lon="-122.34522"/>
+    <node id="-286646889907444" version="1" source="fb_footway" lat="47.61254" lon="-122.34525"/>
+    <way id="-2572825733014292" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-484807286177882"/>
+      <nd ref="-339072061336699"/>
+    </way>
+    <node id="-484807286177882" version="1" source="fb_footway" lat="47.61336" lon="-122.34437"/>
+    <node id="-339072061336699" version="1" source="fb_footway" lat="47.61332" lon="-122.34432"/>
+    <way id="-265918605466521" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-3372445392858591"/>
+      <nd ref="-121183476783878"/>
+    </way>
+    <way id="-267207828520164" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-568687224130752"/>
+      <nd ref="-2914112488876985"/>
+    </way>
+    <node id="-568687224130752" version="1" source="fb_footway" lat="47.6119" lon="-122.34397"/>
+    <node id="-2914112488876985" version="1" source="fb_footway" lat="47.61193" lon="-122.34394"/>
+    <way id="-2684688898321723" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-484807286177882"/>
+      <nd ref="-558823448856385"/>
+    </way>
+    <node id="-558823448856385" version="1" source="fb_footway" lat="47.61332" lon="-122.34432"/>
+    <way id="-286296959895626" version="1" suggestion-id="-2341670336572372009" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-460299821889058"/>
+      <nd ref="-128806985957147"/>
+      <nd ref="-114970170733442"/>
+      <nd ref="-100683608850143"/>
+      <nd ref="-1278652189204043"/>
+      <nd ref="-291062579157612"/>
+    </way>
+    <node id="-460299821889058" version="1" source="fb_footway" lat="47.61101" lon="-122.34264"/>
+    <node id="-128806985957147" version="1" source="fb_footway" lat="47.61106" lon="-122.34274"/>
+    <node id="-114970170733442" version="1" source="fb_footway" lat="47.61145" lon="-122.3434"/>
+    <node id="-100683608850143" version="1" source="fb_footway" lat="47.61162" lon="-122.34369"/>
+    <node id="-1278652189204043" version="1" source="fb_footway" lat="47.61173" lon="-122.34386"/>
+    <node id="-291062579157612" version="1" source="fb_footway" lat="47.61176" lon="-122.34393"/>
+    <way id="-2933089666909347" version="1" suggestion-id="-937184729162645581" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-1757038977834315"/>
+      <nd ref="-858156728246586"/>
+      <nd ref="-210123300784468"/>
+      <nd ref="-777119529836347"/>
+      <nd ref="-1420316281662022"/>
+      <nd ref="-265020775405976"/>
+      <nd ref="-334450908254488"/>
+      <nd ref="-845088632882503"/>
+      <nd ref="-3030505093894804"/>
+      <nd ref="-110854994532572"/>
+      <nd ref="-468507734207587"/>
+      <nd ref="-832138884071322"/>
+    </way>
+    <way id="-296327448822450" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-596545907971970"/>
+      <nd ref="-370783180976118"/>
+    </way>
+    <node id="-596545907971970" version="1" source="fb_footway" lat="47.61191" lon="-122.34389"/>
+    <node id="-370783180976118" version="1" source="fb_footway" lat="47.61186" lon="-122.3438"/>
+    <way id="-2963720570581993" version="1" suggestion-id="-2025814743787844207" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-2914112488876985"/>
+      <nd ref="-914129719162729"/>
+      <nd ref="-117449953804150"/>
+      <nd ref="-884809309105877"/>
+      <nd ref="-3304000723036394"/>
+    </way>
+    <node id="-914129719162729" version="1" source="fb_footway" lat="47.61198" lon="-122.34387"/>
+    <node id="-117449953804150" version="1" source="fb_footway" lat="47.61223" lon="-122.34353"/>
+    <node id="-3304000723036394" version="1" source="fb_footway" lat="47.61249" lon="-122.34319"/>
+    <way id="-3073809002855102" version="1" suggestion-id="-3343905619235906295" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-519054896079466"/>
+      <nd ref="-1726279807558767"/>
+    </way>
+    <way id="-308519204213558" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-940923753407781"/>
+      <nd ref="-313654456787530"/>
+    </way>
+    <way id="-309101470594174" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-291062579157612"/>
+      <nd ref="-926275831540545"/>
+    </way>
+    <node id="-926275831540545" version="1" source="fb_footway" lat="47.61178" lon="-122.34395"/>
+    <way id="-311886686992282" version="1" suggestion-id="-859365536141565435" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-2914112488876985"/>
+      <nd ref="-914129719162729"/>
+      <nd ref="-117449953804150"/>
+      <nd ref="-884809309105877"/>
+      <nd ref="-3304000723036394"/>
+    </way>
+    <way id="-312924653680873" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-291062579157612"/>
+      <nd ref="-926275831540545"/>
+    </way>
+    <way id="-338847760998137" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-282167700207585"/>
+      <nd ref="-121593993276061"/>
+    </way>
+    <way id="-341544814024768" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-596545907971970"/>
+      <nd ref="-370783180976118"/>
+    </way>
+    <way id="-374280134438016" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-128039469393367"/>
+      <nd ref="-4080583508684904"/>
+    </way>
+    <way id="-383942710124947" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-484807286177882"/>
+      <nd ref="-404216707938299"/>
+    </way>
+    <node id="-404216707938299" version="1" source="fb_footway" lat="47.61332" lon="-122.34432"/>
+    <way id="-389632026197016" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-988711805208480"/>
+      <nd ref="-606717510722700"/>
+    </way>
+    <way id="-390324555969107" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-153867180108917"/>
+      <nd ref="-4407742219244186"/>
+    </way>
+    <node id="-153867180108917" version="1" source="fb_footway" lat="47.6132" lon="-122.34431"/>
+    <way id="-407014457759370" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-3372445392858591"/>
+      <nd ref="-222072633213094"/>
+    </way>
+    <node id="-222072633213094" version="1" source="fb_footway" lat="47.61254" lon="-122.34524"/>
+    <way id="-415485753516482" version="1" suggestion-id="-3368761265404883402" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-121017390140014"/>
+      <nd ref="-884809309105877"/>
+      <nd ref="-117328227147438"/>
+      <nd ref="-4080583508684904"/>
+      <nd ref="-4407742219244186"/>
+    </way>
+    <way id="-4221836987895512" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-479067756712010"/>
+      <nd ref="-307819127572661"/>
+    </way>
+    <way id="-4249912041786477" version="1" suggestion-id="-3794379251871255193" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-223097422690676"/>
+      <nd ref="-1020445188492159"/>
+      <nd ref="-1661667557360374"/>
+      <nd ref="-1923223714494994"/>
+      <nd ref="-539351187224094"/>
+    </way>
+    <node id="-223097422690676" version="1" source="fb_footway" lat="47.61241" lon="-122.34306"/>
+    <node id="-1020445188492159" version="1" source="fb_footway" lat="47.61237" lon="-122.34311"/>
+    <node id="-1661667557360374" version="1" source="fb_footway" lat="47.61211" lon="-122.34345"/>
+    <node id="-1923223714494994" version="1" source="fb_footway" lat="47.61186" lon="-122.34378"/>
+    <node id="-539351187224094" version="1" source="fb_footway" lat="47.61185" lon="-122.3438"/>
+    <way id="-438243091023558" version="1" suggestion-id="-2123761637591512465" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-121183476783878"/>
+      <nd ref="-290786762723080"/>
+      <nd ref="-1800704953432858"/>
+      <nd ref="-365110368369721"/>
+      <nd ref="-495117305157553"/>
+      <nd ref="-479067756712010"/>
+    </way>
+    <way id="-4387092298032982" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-4407742219244186"/>
+      <nd ref="-470145384245691"/>
+    </way>
+    <way id="-4455260071228127" version="1" suggestion-id="-2963279336102228864" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-296915335499331"/>
+      <nd ref="-103468625226013"/>
+      <nd ref="-192979742695214"/>
+      <nd ref="-511600643296844"/>
+      <nd ref="-1078319649583597"/>
+      <nd ref="-1156730841508068"/>
+      <nd ref="-982516968958722"/>
+      <nd ref="-541615686845298"/>
+      <nd ref="-4505480939480680"/>
+      <nd ref="-286987476415174"/>
+      <nd ref="-471502610623834"/>
+      <nd ref="-172919934667702"/>
+      <nd ref="-310575323841724"/>
+      <nd ref="-3098426820444234"/>
+      <nd ref="-376872777099507"/>
+      <nd ref="-228022202101022"/>
+      <nd ref="-1754691178044122"/>
+      <nd ref="-914939572683606"/>
+      <nd ref="-314973566759249"/>
+      <nd ref="-4143624759050607"/>
+      <nd ref="-480496113259600"/>
+      <nd ref="-2876016115997116"/>
+      <nd ref="-182576523755364"/>
+      <nd ref="-384412079561801"/>
+      <nd ref="-179928740703854"/>
+      <nd ref="-1623694938021429"/>
+      <nd ref="-321287479707775"/>
+      <nd ref="-228034639085000"/>
+      <nd ref="-2732656390376371"/>
+      <nd ref="-1788791641281764"/>
+      <nd ref="-2978782725679831"/>
+      <nd ref="-499065064767338"/>
+      <nd ref="-150135323701285"/>
+      <nd ref="-1386500891721109"/>
+      <nd ref="-171557928307721"/>
+      <nd ref="-1078704059534111"/>
+      <nd ref="-217719586988807"/>
+    </way>
+    <node id="-1078319649583597" version="1" source="fb_footway" lat="47.60947" lon="-122.34548"/>
+    <node id="-1078704059534111" version="1" source="fb_footway" lat="47.615" lon="-122.35494"/>
+    <node id="-217719586988807" version="1" source="fb_footway" lat="47.61506" lon="-122.35494"/>
+    <way id="-451893169830493" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-468902450842364"/>
+      <nd ref="-519054896079466"/>
+    </way>
+    <way id="-462832111784365" version="1" suggestion-id="-4604552417475996989" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-519054896079466"/>
+      <nd ref="-1726279807558767"/>
+    </way>
+    <way id="-472137110738768" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-291062579157612"/>
+      <nd ref="-926275831540545"/>
+    </way>
+    <way id="-555916785468811" version="1" suggestion-id="-810918928023860156" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-868138910461196"/>
+      <nd ref="-1456920777977331"/>
+      <nd ref="-2896151517368340"/>
+      <nd ref="-136235088566671"/>
+      <nd ref="-1096572110865021"/>
+      <nd ref="-143614701132539"/>
+      <nd ref="-774752689904827"/>
+      <nd ref="-513886473039838"/>
+      <nd ref="-311870943768179"/>
+      <nd ref="-490860408902019"/>
+      <nd ref="-162833412466506"/>
+      <nd ref="-178777964169650"/>
+      <nd ref="-929109061216130"/>
+      <nd ref="-1473877382958865"/>
+      <nd ref="-2964909707083224"/>
+      <nd ref="-1920148704808823"/>
+      <nd ref="-1190340438054190"/>
+      <nd ref="-269123921619354"/>
+      <nd ref="-3074769592751910"/>
+      <nd ref="-1422325091459002"/>
+      <nd ref="-1668624076665232"/>
+      <nd ref="-158114222999122"/>
+      <nd ref="-1108081689688658"/>
+      <nd ref="-378976496858986"/>
+      <nd ref="-518900479142955"/>
+      <nd ref="-812566086060871"/>
+      <nd ref="-497988878118544"/>
+      <nd ref="-286412406536581"/>
+      <nd ref="-852101858747123"/>
+      <nd ref="-2918643115049289"/>
+      <nd ref="-848327585890606"/>
+      <nd ref="-205103668113483"/>
+      <nd ref="-306627567759180"/>
+      <nd ref="-814577009189984"/>
+      <nd ref="-751929208836507"/>
+      <nd ref="-217007023359243"/>
+      <nd ref="-1123088868175515"/>
+      <nd ref="-4415612401816958"/>
+    </way>
+    <node id="-868138910461196" version="1" source="fb_footway" lat="47.61506" lon="-122.3548"/>
+    <node id="-1456920777977331" version="1" source="fb_footway" lat="47.61501" lon="-122.3548"/>
+    <node id="-2896151517368340" version="1" source="fb_footway" lat="47.615" lon="-122.3548"/>
+    <node id="-136235088566671" version="1" source="fb_footway" lat="47.61496" lon="-122.35475"/>
+    <node id="-1096572110865021" version="1" source="fb_footway" lat="47.61459" lon="-122.35412"/>
+    <node id="-143614701132539" version="1" source="fb_footway" lat="47.61458" lon="-122.35412"/>
+    <node id="-774752689904827" version="1" source="fb_footway" lat="47.61451" lon="-122.35399"/>
+    <node id="-513886473039838" version="1" source="fb_footway" lat="47.61445" lon="-122.3539"/>
+    <node id="-311870943768179" version="1" source="fb_footway" lat="47.61439" lon="-122.35379"/>
+    <node id="-490860408902019" version="1" source="fb_footway" lat="47.61424" lon="-122.35354"/>
+    <node id="-162833412466506" version="1" source="fb_footway" lat="47.6138" lon="-122.35281"/>
+    <node id="-178777964169650" version="1" source="fb_footway" lat="47.61348" lon="-122.35227"/>
+    <node id="-929109061216130" version="1" source="fb_footway" lat="47.6134" lon="-122.35213"/>
+    <node id="-1473877382958865" version="1" source="fb_footway" lat="47.61334" lon="-122.35202"/>
+    <node id="-2964909707083224" version="1" source="fb_footway" lat="47.61294" lon="-122.35126"/>
+    <node id="-1920148704808823" version="1" source="fb_footway" lat="47.61287" lon="-122.35112"/>
+    <node id="-1190340438054190" version="1" source="fb_footway" lat="47.61282" lon="-122.35102"/>
+    <node id="-269123921619354" version="1" source="fb_footway" lat="47.61263" lon="-122.35064"/>
+    <node id="-3074769592751910" version="1" source="fb_footway" lat="47.61263" lon="-122.35063"/>
+    <node id="-1422325091459002" version="1" source="fb_footway" lat="47.6126" lon="-122.35059"/>
+    <node id="-1668624076665232" version="1" source="fb_footway" lat="47.61249" lon="-122.35038"/>
+    <node id="-158114222999122" version="1" source="fb_footway" lat="47.61236" lon="-122.35014"/>
+    <node id="-1108081689688658" version="1" source="fb_footway" lat="47.61211" lon="-122.34972"/>
+    <node id="-378976496858986" version="1" source="fb_footway" lat="47.61183" lon="-122.34924"/>
+    <node id="-518900479142955" version="1" source="fb_footway" lat="47.61179" lon="-122.34918"/>
+    <node id="-812566086060871" version="1" source="fb_footway" lat="47.61166" lon="-122.34895"/>
+    <node id="-497988878118544" version="1" source="fb_footway" lat="47.61161" lon="-122.34887"/>
+    <node id="-286412406536581" version="1" source="fb_footway" lat="47.61159" lon="-122.34883"/>
+    <node id="-852101858747123" version="1" source="fb_footway" lat="47.61085" lon="-122.34758"/>
+    <node id="-2918643115049289" version="1" source="fb_footway" lat="47.61079" lon="-122.34748"/>
+    <node id="-848327585890606" version="1" source="fb_footway" lat="47.61037" lon="-122.34676"/>
+    <node id="-205103668113483" version="1" source="fb_footway" lat="47.6101" lon="-122.3463"/>
+    <node id="-306627567759180" version="1" source="fb_footway" lat="47.61005" lon="-122.34622"/>
+    <node id="-814577009189984" version="1" source="fb_footway" lat="47.61004" lon="-122.3462"/>
+    <node id="-751929208836507" version="1" source="fb_footway" lat="47.60929" lon="-122.34485"/>
+    <node id="-217007023359243" version="1" source="fb_footway" lat="47.6092" lon="-122.34471"/>
+    <node id="-1123088868175515" version="1" source="fb_footway" lat="47.60901" lon="-122.34437"/>
+    <node id="-4415612401816958" version="1" source="fb_footway" lat="47.60867" lon="-122.34378"/>
+    <way id="-562063758226992" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-4407742219244186"/>
+      <nd ref="-1994321050720493"/>
+    </way>
+    <node id="-1994321050720493" version="1" source="fb_footway" lat="47.61325" lon="-122.34448"/>
+    <way id="-564633214615769" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-484807286177882"/>
+      <nd ref="-335964258149846"/>
+    </way>
+    <node id="-335964258149846" version="1" source="fb_footway" lat="47.61329" lon="-122.34426"/>
+    <way id="-577086133542415" version="1" suggestion-id="-3887942944712094245" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-504878434279188"/>
+      <nd ref="-484807286177882"/>
+      <nd ref="-908429233335954"/>
+      <nd ref="-185802373437503"/>
+      <nd ref="-112540227695525"/>
+      <nd ref="-227269165517138"/>
+      <nd ref="-832246820745398"/>
+      <nd ref="-470683687366376"/>
+    </way>
+    <node id="-908429233335954" version="1" source="fb_footway" lat="47.61339" lon="-122.34436"/>
+    <node id="-185802373437503" version="1" source="fb_footway" lat="47.61341" lon="-122.34434"/>
+    <node id="-112540227695525" version="1" source="fb_footway" lat="47.61342" lon="-122.34433"/>
+    <node id="-227269165517138" version="1" source="fb_footway" lat="47.61343" lon="-122.34432"/>
+    <node id="-832246820745398" version="1" source="fb_footway" lat="47.61367" lon="-122.34395"/>
+    <node id="-470683687366376" version="1" source="fb_footway" lat="47.61393" lon="-122.34363"/>
+    <way id="-584519592788188" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-479067756712010"/>
+      <nd ref="-307819127572661"/>
+    </way>
+    <way id="-606639040371795" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-121183476783878"/>
+      <nd ref="-185295983539757"/>
+    </way>
+    <way id="-683715106348313" version="1" suggestion-id="-4300267287465338864" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-868138910461196"/>
+      <nd ref="-1456920777977331"/>
+      <nd ref="-2896151517368340"/>
+      <nd ref="-136235088566671"/>
+      <nd ref="-1096572110865021"/>
+      <nd ref="-143614701132539"/>
+      <nd ref="-774752689904827"/>
+      <nd ref="-513886473039838"/>
+      <nd ref="-311870943768179"/>
+      <nd ref="-490860408902019"/>
+      <nd ref="-162833412466506"/>
+      <nd ref="-178777964169650"/>
+      <nd ref="-929109061216130"/>
+      <nd ref="-1473877382958865"/>
+      <nd ref="-2964909707083224"/>
+      <nd ref="-1920148704808823"/>
+      <nd ref="-1190340438054190"/>
+      <nd ref="-269123921619354"/>
+      <nd ref="-3074769592751910"/>
+      <nd ref="-1422325091459002"/>
+      <nd ref="-1668624076665232"/>
+      <nd ref="-158114222999122"/>
+      <nd ref="-1108081689688658"/>
+      <nd ref="-378976496858986"/>
+      <nd ref="-518900479142955"/>
+      <nd ref="-812566086060871"/>
+      <nd ref="-497988878118544"/>
+      <nd ref="-286412406536581"/>
+      <nd ref="-852101858747123"/>
+      <nd ref="-2918643115049289"/>
+      <nd ref="-848327585890606"/>
+      <nd ref="-205103668113483"/>
+      <nd ref="-306627567759180"/>
+      <nd ref="-814577009189984"/>
+      <nd ref="-751929208836507"/>
+      <nd ref="-217007023359243"/>
+      <nd ref="-1123088868175515"/>
+      <nd ref="-4415612401816958"/>
+    </way>
+    <way id="-716072559310983" version="1" suggestion-id="-2257799632820517823" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-606717510722700"/>
+      <nd ref="-342645117201476"/>
+      <nd ref="-299567598453115"/>
+      <nd ref="-219114526414104"/>
+      <nd ref="-307591774158666"/>
+      <nd ref="-119340273621054"/>
+    </way>
+    <node id="-342645117201476" version="1" source="fb_footway" lat="47.61185" lon="-122.34379"/>
+    <node id="-299567598453115" version="1" source="fb_footway" lat="47.61175" lon="-122.34361"/>
+    <node id="-219114526414104" version="1" source="fb_footway" lat="47.61158" lon="-122.34333"/>
+    <node id="-307591774158666" version="1" source="fb_footway" lat="47.61119" lon="-122.34267"/>
+    <node id="-119340273621054" version="1" source="fb_footway" lat="47.61115" lon="-122.34261"/>
+    <way id="-824743581735941" version="1" suggestion-id="-732420607313992413" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-155653779802123"/>
+      <nd ref="-251501930099849"/>
+      <nd ref="-389500475631416"/>
+      <nd ref="-1235281906905569"/>
+      <nd ref="-517256195971920"/>
+      <nd ref="-409582626664256"/>
+      <nd ref="-1593057790890714"/>
+      <nd ref="-212712174015967"/>
+      <nd ref="-3021772201388492"/>
+      <nd ref="-326165985801932"/>
+      <nd ref="-233368101473999"/>
+      <nd ref="-176719134372122"/>
+    </way>
+    <node id="-155653779802123" version="1" source="fb_footway" lat="47.60962" lon="-122.34272"/>
+    <node id="-251501930099849" version="1" source="fb_footway" lat="47.60994" lon="-122.34325"/>
+    <node id="-389500475631416" version="1" source="fb_footway" lat="47.60994" lon="-122.34326"/>
+    <node id="-1235281906905569" version="1" source="fb_footway" lat="47.61015" lon="-122.34359"/>
+    <node id="-517256195971920" version="1" source="fb_footway" lat="47.61016" lon="-122.3436"/>
+    <node id="-409582626664256" version="1" source="fb_footway" lat="47.61023" lon="-122.34366"/>
+    <node id="-1593057790890714" version="1" source="fb_footway" lat="47.6103" lon="-122.34372"/>
+    <node id="-212712174015967" version="1" source="fb_footway" lat="47.61038" lon="-122.34379"/>
+    <node id="-3021772201388492" version="1" source="fb_footway" lat="47.6106" lon="-122.34398"/>
+    <node id="-326165985801932" version="1" source="fb_footway" lat="47.61062" lon="-122.344"/>
+    <node id="-233368101473999" version="1" source="fb_footway" lat="47.61067" lon="-122.34404"/>
+    <node id="-176719134372122" version="1" source="fb_footway" lat="47.6107" lon="-122.3441"/>
+    <way id="-839113926816210" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-282167700207585"/>
+      <nd ref="-121593993276061"/>
+    </way>
+    <way id="-847975092456119" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-596545907971970"/>
+      <nd ref="-370783180976118"/>
+    </way>
+    <way id="-885368225442357" version="1" suggestion-id="-2810128963710285193" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-335964258149846"/>
+      <nd ref="-475288593701805"/>
+      <nd ref="-150471827100588"/>
+      <nd ref="-261264025794793"/>
+    </way>
+    <node id="-475288593701805" version="1" source="fb_footway" lat="47.61294" lon="-122.34368"/>
+    <node id="-150471827100588" version="1" source="fb_footway" lat="47.61261" lon="-122.34313"/>
+    <node id="-261264025794793" version="1" source="fb_footway" lat="47.61258" lon="-122.34307"/>
+    <way id="-897406487551061" version="1" suggestion-id="-1293411470871869833" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-560881251564294"/>
+      <nd ref="-495246428354058"/>
+      <nd ref="-505390030501983"/>
+      <nd ref="-390977785393062"/>
+      <nd ref="-469610877652160"/>
+      <nd ref="-988711805208480"/>
+    </way>
+    <node id="-560881251564294" version="1" source="fb_footway" lat="47.61101" lon="-122.34264"/>
+    <node id="-495246428354058" version="1" source="fb_footway" lat="47.61106" lon="-122.34274"/>
+    <node id="-505390030501983" version="1" source="fb_footway" lat="47.61145" lon="-122.3434"/>
+    <node id="-390977785393062" version="1" source="fb_footway" lat="47.61162" lon="-122.34369"/>
+    <node id="-469610877652160" version="1" source="fb_footway" lat="47.61173" lon="-122.34386"/>
+    <way id="-907366850185502" version="1" suggestion-id="-979875140323677324" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-155653779802123"/>
+      <nd ref="-251501930099849"/>
+      <nd ref="-389500475631416"/>
+      <nd ref="-1235281906905569"/>
+      <nd ref="-517256195971920"/>
+      <nd ref="-409582626664256"/>
+      <nd ref="-1593057790890714"/>
+      <nd ref="-212712174015967"/>
+      <nd ref="-3021772201388492"/>
+      <nd ref="-326165985801932"/>
+      <nd ref="-233368101473999"/>
+      <nd ref="-176719134372122"/>
+    </way>
+    <way id="-912128662960264" version="1" suggestion-id="-820166902675653505" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-370783180976118"/>
+      <nd ref="-812785146309078"/>
+      <nd ref="-594839661396618"/>
+      <nd ref="-4020794768010565"/>
+      <nd ref="-4205637779499681"/>
+      <nd ref="-299054731682019"/>
+    </way>
+    <node id="-812785146309078" version="1" source="fb_footway" lat="47.61185" lon="-122.34379"/>
+    <node id="-594839661396618" version="1" source="fb_footway" lat="47.61175" lon="-122.34361"/>
+    <node id="-4020794768010565" version="1" source="fb_footway" lat="47.61158" lon="-122.34333"/>
+    <node id="-4205637779499681" version="1" source="fb_footway" lat="47.61119" lon="-122.34267"/>
+    <node id="-299054731682019" version="1" source="fb_footway" lat="47.61115" lon="-122.34261"/>
+    <way id="-925127644717384" version="1" suggestion-id="-778421616463291900" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-1783021205214465"/>
+      <nd ref="-584641029177737"/>
+      <nd ref="-900804143799922"/>
+      <nd ref="-172285084900568"/>
+      <nd ref="-760420094645691"/>
+      <nd ref="-128039469393367"/>
+    </way>
+    <way id="-931384700786764" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-539351187224094"/>
+      <nd ref="-468902450842364"/>
+    </way>
+    <way id="-945724179555152" version="1" suggestion-id="N/A" source="fb_footway">
+      <tag k="footway" v="crossing"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-479971179958169"/>
+      <nd ref="-504878434279188"/>
+    </way>
+    <node id="-479971179958169" version="1" source="fb_footway" lat="47.6133" lon="-122.34441"/>
+    <way id="-975420613036539" version="1" suggestion-id="-2342537880602760980" source="fb_footway">
+      <tag k="footway" v="sidewalk"/>
+      <tag k="highway" v="footway"/>
+      <nd ref="-335964258149846"/>
+      <nd ref="-475288593701805"/>
+      <nd ref="-150471827100588"/>
+      <nd ref="-261264025794793"/>
+    </way>
+  </create>
+</osmChange>

@@ -56,12 +56,15 @@ class MapWithAIStreetLevelLayerTest {
     @MethodSource
     void testDataSourceChange(final int expectedCalls, final OsmDataLayer osmDataLayer) {
         final MapWithAIStreetLevelLayerMock mapWithAIStreetLevelLayerMock = new MapWithAIStreetLevelLayerMock();
-        final MapWithAIStreetLevelLayer mapWithAIStreetLevelLayer = new MapWithAIStreetLevelLayer(new DataSet(), "", osmDataLayer);
-        assertEquals(osmDataLayer.getData().getDataSources().size(), mapWithAIStreetLevelLayer.getData().getDataSources().size());
+        final MapWithAIStreetLevelLayer mapWithAIStreetLevelLayer = new MapWithAIStreetLevelLayer(new DataSet(), "",
+                osmDataLayer);
+        assertEquals(osmDataLayer.getData().getDataSources().size(),
+                mapWithAIStreetLevelLayer.getData().getDataSources().size());
         assertEquals(expectedCalls, mapWithAIStreetLevelLayerMock.downloadCalled);
 
         osmDataLayer.getDataSet().addDataSource(new DataSource(new Bounds(-1, -1, 1, 1), ""));
         assertEquals(expectedCalls + 1, mapWithAIStreetLevelLayerMock.downloadCalled);
-        assertEquals(osmDataLayer.getData().getDataSources().size(), mapWithAIStreetLevelLayer.getData().getDataSources().size());
+        assertEquals(osmDataLayer.getData().getDataSources().size(),
+                mapWithAIStreetLevelLayer.getData().getDataSources().size());
     }
 }

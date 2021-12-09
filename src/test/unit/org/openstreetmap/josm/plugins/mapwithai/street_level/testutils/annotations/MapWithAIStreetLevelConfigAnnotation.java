@@ -12,7 +12,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,7 +30,12 @@ import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.data.preferences.MapWithAIStreetLevelConfig;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.spi.preferences.IUrls;
+import org.openstreetmap.josm.plugins.mapwithai.testutils.annotations.Wiremock;
 import org.openstreetmap.josm.tools.Logging;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.matching.StringValuePattern;
 
 /**
  * An annotation to ensure that the config class is appropriately set
@@ -100,8 +108,8 @@ public @interface MapWithAIStreetLevelConfigAnnotation {
 
         @Override
         public void afterEach(ExtensionContext context) throws Exception {
-            final Optional<MapWithAIStreetLevelConfigAnnotation> annotation = AnnotationSupport.findAnnotation(context.getElement(),
-                    MapWithAIStreetLevelConfigAnnotation.class);
+            final Optional<MapWithAIStreetLevelConfigAnnotation> annotation = AnnotationSupport
+                    .findAnnotation(context.getElement(), MapWithAIStreetLevelConfigAnnotation.class);
             if (annotation.isPresent()) {
                 this.afterAll(context);
             }
@@ -109,18 +117,18 @@ public @interface MapWithAIStreetLevelConfigAnnotation {
 
         @Override
         public void beforeAll(ExtensionContext context) throws Exception {
-            Optional<MapWithAIStreetLevelConfigAnnotation> annotation = AnnotationSupport.findAnnotation(context.getElement(),
-                    MapWithAIStreetLevelConfigAnnotation.class);
+            Optional<MapWithAIStreetLevelConfigAnnotation> annotation = AnnotationSupport
+                    .findAnnotation(context.getElement(), MapWithAIStreetLevelConfigAnnotation.class);
             if (annotation.isPresent()) {
                 Class<? extends IUrls> clazz = annotation.get().urlClass();
-                MapWithAIStreetLevelConfig.setUrls(createBestObject(clazz, context));
+                MapWithAIStreetLevelConfig.setUrls(clazz.getConstructor(ExtensionContext.class).newInstance(context));
             }
         }
 
         @Override
         public void beforeEach(ExtensionContext context) throws Exception {
-            final Optional<MapWithAIStreetLevelConfigAnnotation> annotation = AnnotationSupport.findAnnotation(context.getElement(),
-                    MapWithAIStreetLevelConfigAnnotation.class);
+            final Optional<MapWithAIStreetLevelConfigAnnotation> annotation = AnnotationSupport
+                    .findAnnotation(context.getElement(), MapWithAIStreetLevelConfigAnnotation.class);
             if (MapWithAIStreetLevelConfig.getUrls() == null || (annotation.isPresent()
                     && !annotation.get().urlClass().equals(MapWithAIStreetLevelConfig.getUrls().getClass()))) {
                 this.beforeAll(context);
@@ -131,17 +139,30 @@ public @interface MapWithAIStreetLevelConfigAnnotation {
     /**
      * This is used to ensure that URLs are mocked
      */
-    class WiremockUrlClass implements IUrls {
+    class WiremockUrlClass extends Wiremock.WiremockExtension implements IUrls {
         private final String wiremockUrl;
 
-        WiremockUrlClass(final ExtensionContext context) {
-            throw new UnsupportedOperationException("Wiremock not currently implemented");
+        public WiremockUrlClass(final ExtensionContext context) {
+            final WireMockServer wireMockServer = Objects.requireNonNull(getWiremock(context), "Is @Wiremock used?");
+            this.wiremockUrl = wireMockServer.baseUrl();
+            final Map<String, StringValuePattern> queryParams = new HashMap<>(9);
+            queryParams.put("result_type", WireMock.equalTo("extended_osc"));
+            queryParams.put("conflate_with_osm", WireMock.equalTo("true"));
+            queryParams.put("theme", WireMock.equalTo("streetview_ai_suggestion"));
+            queryParams.put("collaborator", WireMock.equalTo("rapid"));
+            queryParams.put("token", WireMock.equalTo(
+                    "ASbYX8wITNCWnU1XMF1V-d2_iRiBMKmW2nT85IhjS4TOQXie-YJMCOGppe-DiCxUSfQ4hG4MDxyfXIprF5YO3QNR"));
+            queryParams.put("hash", WireMock.equalTo("ASaPD6M5i29Nf8jGGb0"));
+            queryParams.put("ext", WireMock.equalTo("1918681607"));
+            queryParams.put("sources", WireMock.equalTo("fb_footway"));
+            queryParams.put("bbox", WireMock.matching("([0-9-.]+,?){4}"));
+            wireMockServer.stubFor(WireMock.get("/cubitor").withQueryParams(queryParams).willReturn(
+                    WireMock.aResponse().withBodyFile("cubitor/-122.3492432,47.6098665,-122.34375,47.6135698.xml")));
         }
 
         @Override
         public String getMapWithAIStreetLevelUrl() {
-            // FIXME
-            return wiremockUrl + "/cubitor";
+            return wiremockUrl + "/cubitor?bbox={0}";
         }
     }
 

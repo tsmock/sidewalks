@@ -3,8 +3,6 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.mapwithai.street_level.data.osm;
 
-import static org.openstreetmap.josm.data.projection.Ellipsoid.WGS84;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -139,15 +137,11 @@ public final class ParallelSidewalkCreation {
      * @return The new latlon
      */
     private static LatLon getLatLon(final ILatLon original, final double angle, final float offset) {
-        final double deltaLongitudeDegree = (Math.PI * WGS84.a * Math.cos(Math.toRadians(original.lat())))
-                / (180 * Math.sqrt(1 - WGS84.e2 * Math.pow(Math.sin(Math.toRadians(original.lat())), 2)));
-        final double deltaLatitudeDegree = (Math.PI * WGS84.a * (1 - WGS84.e2))
-                / (180 * Math.pow(1 - WGS84.e2 * Math.pow(Math.sin(original.lat()), 2), 1.5));
-        final double dx = offset * Math.sin(angle);
-        final double dy = offset * Math.cos(angle);
-        final double dLon = dx / deltaLongitudeDegree;
-        final double dLat = dy / deltaLatitudeDegree;
-        return new LatLon(original.lat() + dLat, original.lon() + dLon);
+        ILatLon iLatLon = Geometry.getLatLonFrom(original, angle, offset);
+        if (iLatLon instanceof LatLon) {
+            return (LatLon) iLatLon;
+        }
+        return new LatLon(iLatLon);
     }
 
     /**

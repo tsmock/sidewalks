@@ -21,7 +21,7 @@ import org.openstreetmap.josm.data.osm.IPrimitive;
  * @author Taylor Smock
  */
 @Immutable
-public final class Suggestion<I extends GpxImageEntry, T extends Collection<I>> {
+public final class Suggestion<I extends GpxImageEntry & ImageSourceProvider, T extends Collection<I>> {
     private final long identifier;
     private final Set<IPrimitive> primitives;
     private final StreetViewImageSet<I, T> streetViewImageSet;

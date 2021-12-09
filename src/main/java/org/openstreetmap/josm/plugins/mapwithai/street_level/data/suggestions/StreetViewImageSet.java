@@ -3,9 +3,9 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.mapwithai.street_level.data.suggestions;
 
-import java.util.Collection;
-
 import javax.annotation.concurrent.Immutable;
+
+import java.util.Collection;
 
 import org.openstreetmap.josm.data.gpx.GpxImageEntry;
 import org.openstreetmap.josm.tools.Logging;

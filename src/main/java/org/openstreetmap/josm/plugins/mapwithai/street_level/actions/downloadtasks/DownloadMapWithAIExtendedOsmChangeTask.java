@@ -5,15 +5,15 @@ package org.openstreetmap.josm.plugins.mapwithai.street_level.actions.downloadta
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Future;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmChangeTask;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
@@ -36,7 +36,8 @@ import org.openstreetmap.josm.tools.Utils;
 
 /**
  * Task allowing to download OsmChange data
- * (http://wiki.openstreetmap.org/wiki/OsmChange) with MapWithAI StreetLevel extensions
+ * (http://wiki.openstreetmap.org/wiki/OsmChange) with MapWithAI StreetLevel
+ * extensions
  *
  * @author Taylor Smock
  */
@@ -46,9 +47,8 @@ public class DownloadMapWithAIExtendedOsmChangeTask extends DownloadOsmChangeTas
     @Override
     public Future<?> download(final DownloadParams settings, final Bounds downloadArea,
             final ProgressMonitor progressMonitor) {
-        return loadUrl(settings,
-                MessageFormat.format(MapWithAIStreetLevelConfig.getUrls().getMapWithAIStreetLevelUrl(), downloadArea.toBBox().toStringCSV(",")),
-                progressMonitor);
+        return loadUrl(settings, MessageFormat.format(MapWithAIStreetLevelConfig.getUrls().getMapWithAIStreetLevelUrl(),
+                downloadArea.toBBox().toStringCSV(",")), progressMonitor);
     }
 
     @Nonnull
@@ -66,14 +66,14 @@ public class DownloadMapWithAIExtendedOsmChangeTask extends DownloadOsmChangeTas
     @Nonnull
     @Override
     public Future<?> loadUrl(final DownloadParams settings, final String url, final ProgressMonitor progressMonitor) {
-        final Optional<MapWithAIStreetLevelUrlPatterns.MapWithAIStreetLevelUrlPattern> urlPattern = Arrays.stream(
-                        MapWithAIStreetLevelUrlPatterns.MapWithAIStreetLevelUrlPattern.values())
+        final Optional<MapWithAIStreetLevelUrlPatterns.MapWithAIStreetLevelUrlPattern> urlPattern = Arrays
+                .stream(MapWithAIStreetLevelUrlPatterns.MapWithAIStreetLevelUrlPattern.values())
                 .filter(p -> p.matches(url)).findFirst();
-        downloadTask = new MapWithAIExtendedOSCDownloadTask(settings, new MapWithAIStreetLevelServerLocationReader(url), progressMonitor, true,
-                Compression.byExtension(url));
+        downloadTask = new MapWithAIExtendedOSCDownloadTask(settings, new MapWithAIStreetLevelServerLocationReader(url),
+                progressMonitor, true, Compression.byExtension(url));
         // Extract .osc filename from URL to set the new layer name
-        extractOsmFilename(settings,
-                urlPattern.orElse(MapWithAIStreetLevelUrlPatterns.MapWithAIStreetLevelUrlPattern.EXTERNAL_OSC_FILE).pattern(),
+        extractOsmFilename(settings, urlPattern
+                .orElse(MapWithAIStreetLevelUrlPatterns.MapWithAIStreetLevelUrlPattern.EXTERNAL_OSC_FILE).pattern(),
                 url);
         return MainApplication.worker.submit(downloadTask);
     }
@@ -94,8 +94,9 @@ public class DownloadMapWithAIExtendedOsmChangeTask extends DownloadOsmChangeTas
          *                          after download
          * @param compression       compression to use
          */
-        public MapWithAIExtendedOSCDownloadTask(DownloadParams settings, MapWithAIStreetLevelServerLocationReader reader,
-                ProgressMonitor progressMonitor, boolean zoomAfterDownload, Compression compression) {
+        public MapWithAIExtendedOSCDownloadTask(DownloadParams settings,
+                MapWithAIStreetLevelServerLocationReader reader, ProgressMonitor progressMonitor,
+                boolean zoomAfterDownload, Compression compression) {
             super(settings, reader, progressMonitor, zoomAfterDownload, compression);
         }
 
@@ -125,8 +126,8 @@ public class DownloadMapWithAIExtendedOsmChangeTask extends DownloadOsmChangeTas
          * @return The layer
          */
         protected MapWithAIStreetLevelLayer getMapWithAIStreetLevelLayer(@Nullable String newLayerName) {
-            Collection<MapWithAIStreetLevelLayer> layers = MainApplication.getLayerManager().getLayersOfType(
-                    MapWithAIStreetLevelLayer.class);
+            Collection<MapWithAIStreetLevelLayer> layers = MainApplication.getLayerManager()
+                    .getLayersOfType(MapWithAIStreetLevelLayer.class);
             return layers.stream().filter(layer -> Objects.equals(newLayerName, layer.getName())).findFirst()
                     .orElseGet(() -> layers.stream().findAny().orElse(null));
         }
@@ -159,8 +160,8 @@ public class DownloadMapWithAIExtendedOsmChangeTask extends DownloadOsmChangeTas
         protected DataSet parseDataSet() throws OsmTransferException {
             final MapWithAIStreetLevelServerLocationReader realReader = (MapWithAIStreetLevelServerLocationReader) this.reader;
             final Pair<DataSet, Collection<Suggestion<RemoteImageEntry, Collection<RemoteImageEntry>>>> pair = realReader
-                    .parseMapWithAIStreetLevelOsmChange(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false),
-                            compression);
+                    .parseMapWithAIStreetLevelOsmChange(
+                            progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false), compression);
             this.suggestions = pair.b;
             return pair.a;
         }
