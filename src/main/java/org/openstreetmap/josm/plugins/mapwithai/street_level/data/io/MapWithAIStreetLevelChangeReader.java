@@ -8,7 +8,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +31,6 @@ import org.openstreetmap.josm.io.OsmChangeReader;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.data.suggestions.StreetViewImageSet;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.data.suggestions.Suggestion;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.gui.layer.geoimage.RemoteImageEntry;
-import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.XmlParsingException;
 
@@ -103,6 +101,7 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
     public Node parseNode() throws XMLStreamException {
         // IntelliJ doesn't consider this a valid method reference
         // TODO check if this is still the case after 2022-01-01
+        // May be related to JDK-8141508, backported in 8u331
         return parseSuggestionId(() -> super.parseNode());
     }
 
@@ -110,6 +109,7 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
     public Relation parseRelation() throws XMLStreamException {
         // IntelliJ doesn't consider this a valid method reference
         // TODO check if this is still the case after 2022-01-01
+        // May be related to JDK-8141508, backported in 8u331
         return parseSuggestionId(() -> super.parseRelation());
     }
 
@@ -130,6 +130,7 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
     protected Way parseWay() throws XMLStreamException {
         // IntelliJ doesn't consider this a valid method reference
         // TODO check if this is still the case after 2022-01-01
+        // May be related to JDK-8141508, backported in 8u331
         return parseSuggestionId(() -> super.parseWay());
     }
 
@@ -196,32 +197,37 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
     }
 
     private void parseSuggestion() throws XMLStreamException, XmlParsingException {
-        final long identifier = getLong2(ID).orElseThrow(() -> new XmlParsingException("No id for suggestion")
-                .rememberLocation(new XmlLocationToLocator(this.parser.getLocation())));
-        final Collection<PrimitiveData> primitiveData = new HashSet<>();
-        final List<StreetViewImageSet<RemoteImageEntry, Collection<RemoteImageEntry>>> streetViewImageSet = new ArrayList<>();
-        while (parser.hasNext()) {
-            int event = parser.next();
-            if (event == XMLStreamConstants.START_ELEMENT) {
-                if ("osm-road".equals(parser.getLocalName())) {
-                    primitiveData.add(parseOsmRoad());
-                } else if ("street-view-image-set".equals(parser.getLocalName())) {
-                    streetViewImageSet.add(parseStreetViewImageSet());
-                } else {
-                    parseUnknown();
+        if ("crosswalk-suggestion".equals(this.parser.getLocalName())) {
+            super.parseUnknown();
+        } else {
+            final long identifier = getLong2(ID).orElseThrow(() -> new XmlParsingException("No id for suggestion")
+                    .rememberLocation(new XmlLocationToLocator(this.parser.getLocation())));
+            final Collection<PrimitiveData> primitiveData = new HashSet<>();
+            final List<StreetViewImageSet<RemoteImageEntry, Collection<RemoteImageEntry>>> streetViewImageSet = new ArrayList<>();
+            while (parser.hasNext()) {
+                int event = parser.next();
+                if (event == XMLStreamConstants.START_ELEMENT) {
+                    if ("osm-road".equals(parser.getLocalName())) {
+                        primitiveData.add(parseOsmRoad());
+                    } else if ("street-view-image-set".equals(parser.getLocalName())) {
+                        streetViewImageSet.add(parseStreetViewImageSet());
+                    } else {
+                        parseUnknown();
+                    }
+                } else if (event == XMLStreamConstants.END_ELEMENT) {
+                    break;
                 }
-            } else if (event == XMLStreamConstants.END_ELEMENT) {
-                break;
             }
+            streetViewImageSets.addAll(streetViewImageSet);
+            Suggestion<RemoteImageEntry, Collection<RemoteImageEntry>> suggestion = new Suggestion<>(identifier,
+                    primitiveData, streetViewImageSet.get(0));
+            suggestionCollection.add(suggestion);
         }
-        streetViewImageSets.addAll(streetViewImageSet);
-        Suggestion<RemoteImageEntry, Collection<RemoteImageEntry>> suggestion = new Suggestion<>(identifier,
-                primitiveData, streetViewImageSet.get(0));
-        suggestionCollection.add(suggestion);
     }
 
-    private RemoteImageEntry parseStreetViewImage() throws XMLStreamException, IOException {
-        final String id = parser.getAttributeValue(null, "id");
+    private RemoteImageEntry parseStreetViewImage() throws XMLStreamException, XmlParsingException {
+        final long id = this.getLong2("id").orElseThrow(() -> new XmlParsingException("No id found")
+                .rememberLocation(new XmlLocationToLocator(this.parser.getLocation())));
         final double ca = Double.parseDouble(parser.getAttributeValue(null, "ca"));
         final double lat = Double.parseDouble(parser.getAttributeValue(null, "lat"));
         final double lon = Double.parseDouble(parser.getAttributeValue(null, "lon"));
@@ -230,7 +236,7 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
         imageEntry.setPos(new LatLon(lat, lon));
         imageEntry.setExifCoor(imageEntry.getExifCoor());
         imageEntry.setExifImgDir(ca);
-        imageEntry.setKey(id);
+        imageEntry.setId(id);
         return imageEntry;
     }
 
@@ -249,11 +255,7 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {
                 if ("street-view-image".equals(parser.getLocalName())) {
-                    try {
-                        imageEntries.add(parseStreetViewImage());
-                    } catch (IOException ioException) {
-                        Logging.error(ioException);
-                    }
+                    imageEntries.add(parseStreetViewImage());
                 } else {
                     parseUnknown();
                 }

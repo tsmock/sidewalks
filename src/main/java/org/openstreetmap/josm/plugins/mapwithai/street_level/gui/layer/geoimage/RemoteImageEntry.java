@@ -3,8 +3,6 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.mapwithai.street_level.gui.layer.geoimage;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -27,7 +25,6 @@ import org.openstreetmap.josm.plugins.mapillary.oauth.OAuthUtils;
 import org.openstreetmap.josm.plugins.mapillary.utils.MapillaryURL;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.data.suggestions.ImageSourceProvider;
 import org.openstreetmap.josm.tools.HttpClient;
-import org.openstreetmap.josm.tools.JosmRuntimeException;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -60,17 +57,13 @@ public class RemoteImageEntry extends ImageEntry implements ImageSourceProvider 
     }
 
     /**
-     * Set the image key for this image
+     * Set the image id for this image
      *
-     * @param key The key to set (will also set URL)
+     * @param id The id to set (will also set URL)
      */
-    public void setKey(String key) {
-        if (NUMBER_PATTERN.matcher(key).matches()) {
-            this.key = Long.parseLong(key);
-            this.setMapillaryV4URL();
-        } else {
-            throw new JosmRuntimeException(tr("Unknown Mapillary id {0}", key));
-        }
+    public void setId(long id) {
+        this.key = id;
+        this.setMapillaryV4URL();
     }
 
     /**
