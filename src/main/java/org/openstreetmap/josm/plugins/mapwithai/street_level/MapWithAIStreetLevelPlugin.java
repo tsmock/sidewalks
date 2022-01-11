@@ -7,7 +7,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import java.awt.Component;
+import java.lang.reflect.Field;
+import java.util.Collection;
 
+import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.osm.AbstractPrimitive;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -18,7 +21,10 @@ import org.openstreetmap.josm.plugins.mapwithai.street_level.actions.MapWithAISt
 import org.openstreetmap.josm.plugins.mapwithai.street_level.actions.ParallelSidewalkCreationAction;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.data.preferences.MapWithAIStreetLevelConfig;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.data.preferences.MapWithAIStreetLevelUrls;
+import org.openstreetmap.josm.plugins.mapwithai.street_level.gui.io.importexport.CubitorOsmChangeImporter;
 import org.openstreetmap.josm.tools.Destroyable;
+import org.openstreetmap.josm.tools.JosmRuntimeException;
+import org.openstreetmap.josm.tools.ReflectionUtils;
 
 /**
  * The POJO for StreetLevel AI detections
@@ -39,6 +45,7 @@ public class MapWithAIStreetLevelPlugin extends Plugin implements Destroyable {
         MainMenu.add(dataMenu, new ParallelSidewalkCreationAction());
         MapWithAIStreetLevelConfig.setUrls(new MapWithAIStreetLevelUrls());
         AbstractPrimitive.getDiscardableKeys().add("suggestion-id");
+        ExtensionFileFilter.addImporterFirst(CubitorOsmChangeImporter.INSTANCE);
     }
 
     @Override
@@ -52,6 +59,24 @@ public class MapWithAIStreetLevelPlugin extends Plugin implements Destroyable {
                     dataMenu.remove(jMenu);
                 }
             }
+        }
+        removeImporter();
+    }
+
+    /**
+     * Remove the importer we added (uses reflection, unfortunately)
+     */
+    private static void removeImporter() {
+        // FIXME: Add method in JOSM to remove importer
+        try {
+            final Field importersField = ExtensionFileFilter.class.getDeclaredField("importers");
+            ReflectionUtils.setObjectsAccessible(importersField);
+            final Object importers = importersField.get(null);
+            if (importers instanceof Collection) {
+                ((Collection<?>) importers).remove(CubitorOsmChangeImporter.INSTANCE);
+            }
+        } catch (ReflectiveOperationException reflectiveOperationException) {
+            throw new JosmRuntimeException(reflectiveOperationException);
         }
     }
 }
