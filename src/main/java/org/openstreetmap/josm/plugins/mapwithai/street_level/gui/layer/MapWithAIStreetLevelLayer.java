@@ -18,6 +18,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -45,6 +49,7 @@ import org.openstreetmap.josm.plugins.mapwithai.commands.MapWithAIAddCommand;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.actions.downloadtasks.DownloadMapWithAIExtendedOsmChangeTask;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.data.suggestions.ImageSourceProvider;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.data.suggestions.Suggestion;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * The layer storing street-level AI data
@@ -172,7 +177,21 @@ public class MapWithAIStreetLevelLayer extends OsmDataLayer implements DataSourc
         final DownloadParams downloadParams = new DownloadParams();
         downloadParams.withLayerName(this.getName());
         downloadParams.withNewLayer(false);
-        downloadTask.download(downloadParams, bounds, NullProgressMonitor.INSTANCE);
+        final Future<?> future = downloadTask.download(downloadParams, bounds, NullProgressMonitor.INSTANCE);
+        MainApplication.worker.execute(() -> {
+            try {
+                future.get(1, TimeUnit.MINUTES);
+                downloadTask.getErrorObjects().stream().filter(String.class::isInstance).map(String.class::cast)
+                        .forEach(Logging::error);
+                downloadTask.getErrorObjects().stream().filter(Exception.class::isInstance).map(Exception.class::cast)
+                        .forEach(Logging::error);
+            } catch (InterruptedException e) {
+                Logging.error(e);
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException | TimeoutException e) {
+                Logging.error(e);
+            }
+        });
     }
 
     @Override
