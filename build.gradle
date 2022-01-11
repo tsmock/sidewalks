@@ -6,10 +6,10 @@ import java.nio.file.Paths
 
 plugins {
   id "checkstyle"
-  id "com.diffplug.spotless" version "5.15.2"
-  id "com.github.ben-manes.versions" version "0.39.0"
-  id "com.github.spotbugs" version "4.7.6"
-  // id "de.aaschmid.cpd" version "2.0"
+  id "com.diffplug.spotless" version "6.1.2"
+  id "com.github.ben-manes.versions" version "0.41.0"
+  id "com.github.spotbugs" version "5.0.4"
+  // id "de.aaschmid.cpd" version "3.3"
   id "eclipse"
   id "jacoco"
   id "java"
@@ -57,6 +57,19 @@ repositories {
       artifact()
     }
   }
+
+  ivy {
+    url "https://github.com/JOSM/Mapillary/releases/download/v2.0.0-alpha.50"
+    content {
+      includeModule("org.openstreetmap.josm.plugins", "mapillary")
+    }
+    patternLayout {
+      artifact "Mapillary.jar"
+    }
+    metadataSources {
+      artifact()
+    }
+  }
 }
 
 sourceSets {
@@ -83,14 +96,14 @@ sourceSets {
 }
 
 def versions = [
-  awaitility: "4.1.0",
-  errorprone: "2.9.0",
-  jacoco: "0.8.5",
+  awaitility: "4.1.1",
+  errorprone: "2.10.0",
+  jacoco: "0.8.7",
   jmockit: "1.49",
-  junit: "5.8.1",
+  junit: "5.8.2",
   pmd: "6.20.0",
-  spotbugs: "4.4.1",
-  wiremock: "2.27.2",
+  spotbugs: "4.5.3",
+  wiremock: "2.32.0",
   findsecbugs: "1.11.0",
 ]
 
@@ -108,7 +121,7 @@ dependencies {
   testImplementation("org.jmockit:jmockit:${versions.jmockit}")
   testImplementation("com.github.spotbugs:spotbugs-annotations:${versions.spotbugs}")
   testImplementation("org.openstreetmap.josm:josm-unittest:"){changing=true}
-  testImplementation("com.github.tomakehurst:wiremock:${versions.wiremock}")
+  testImplementation("com.github.tomakehurst:wiremock-jre8:${versions.wiremock}")
   testImplementation("org.awaitility:awaitility:${versions.awaitility}")
 }
 

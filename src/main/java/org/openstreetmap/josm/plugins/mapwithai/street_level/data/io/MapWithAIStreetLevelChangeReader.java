@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2021 Taylor Smock <tsmock@fb.com>
+// SPDX-FileCopyrightText: 2021-2022 Taylor Smock <tsmock@fb.com>
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.mapwithai.street_level.data.io;
 
@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalLong;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -33,6 +34,7 @@ import org.openstreetmap.josm.plugins.mapwithai.street_level.data.suggestions.Su
 import org.openstreetmap.josm.plugins.mapwithai.street_level.gui.layer.geoimage.RemoteImageEntry;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Pair;
+import org.openstreetmap.josm.tools.XmlParsingException;
 
 /**
  * The class to actually read MapWithAI extended changesets. This is extremely
@@ -114,7 +116,11 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
     @Override
     protected void parseUnknown() throws XMLStreamException {
         if ("cubitor-context".equals(parser.getLocalName())) {
-            this.parseCubitorContext();
+            try {
+                this.parseCubitorContext();
+            } catch (XmlParsingException e) {
+                throw new XMLStreamException(e);
+            }
         } else {
             super.parseUnknown();
         }
@@ -133,7 +139,7 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
             throwException(tr("Missing mandatory attribute ''{0}'' on <nd> of way {1}.", "ref",
                     Long.toString(w.getUniqueId())));
         }
-        long id = getLong2("ref");
+        long id = getLong2("ref").orElse(0);
         if (id == 0) {
             throwException(tr("Illegal value of attribute ''ref'' of element <nd>. Got {0}.", Long.toString(id)));
         }
@@ -142,17 +148,17 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
     }
 
     // Duplicate code with OsmReader#getLong TODO make protected?
-    private long getLong2(String name) throws XMLStreamException {
+    private OptionalLong getLong2(String name) throws XMLStreamException {
         String value = parser.getAttributeValue(null, name);
         try {
-            return getLong(name, value);
+            return OptionalLong.of(getLong(name, value));
         } catch (IllegalDataException e) {
             throwException(e);
         }
-        return 0; // should not happen
+        return OptionalLong.empty(); // may happen -- if there are no images, there might not be an id
     }
 
-    private void parseCubitorContext() throws XMLStreamException {
+    private void parseCubitorContext() throws XMLStreamException, XmlParsingException {
         while (parser.hasNext()) {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {
@@ -168,8 +174,9 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
         }
     }
 
-    private WayData parseOsmRoad() throws XMLStreamException {
-        final long identifier = getLong2("way-id");
+    private WayData parseOsmRoad() throws XMLStreamException, XmlParsingException {
+        final long identifier = getLong2("way-id").orElseThrow(() -> new XmlParsingException("No id for way-id")
+                .rememberLocation(new XmlLocationToLocator(this.parser.getLocation())));
         WayData wayData = new WayData(identifier);
         List<Long> nodeIds = new ArrayList<>();
         while (parser.hasNext()) {
@@ -188,8 +195,9 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
         return wayData;
     }
 
-    private void parseSuggestion() throws XMLStreamException {
-        final long identifier = getLong2(ID);
+    private void parseSuggestion() throws XMLStreamException, XmlParsingException {
+        final long identifier = getLong2(ID).orElseThrow(() -> new XmlParsingException("No id for suggestion")
+                .rememberLocation(new XmlLocationToLocator(this.parser.getLocation())));
         final Collection<PrimitiveData> primitiveData = new HashSet<>();
         final List<StreetViewImageSet<RemoteImageEntry, Collection<RemoteImageEntry>>> streetViewImageSet = new ArrayList<>();
         while (parser.hasNext()) {
@@ -227,8 +235,10 @@ public class MapWithAIStreetLevelChangeReader extends OsmChangeReader {
     }
 
     private StreetViewImageSet<RemoteImageEntry, Collection<RemoteImageEntry>> parseStreetViewImageSet()
-            throws XMLStreamException {
-        final long identifier = getLong2(ID);
+            throws XMLStreamException, XmlParsingException {
+        final long identifier = getLong2(ID)
+                .orElseThrow(() -> new XmlParsingException("No id for street view image set")
+                        .rememberLocation(new XmlLocationToLocator(this.parser.getLocation())));
         final Optional<StreetViewImageSet<RemoteImageEntry, Collection<RemoteImageEntry>>> encounteredEntry = streetViewImageSets
                 .stream().filter(entry -> identifier == entry.getIdentifier()).findAny();
         if (encounteredEntry.isPresent()) {

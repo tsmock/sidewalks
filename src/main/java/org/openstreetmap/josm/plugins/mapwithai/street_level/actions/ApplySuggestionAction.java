@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2021 Taylor Smock <tsmock@fb.com>
+// SPDX-FileCopyrightText: 2021-2022 Taylor Smock <tsmock@fb.com>
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.mapwithai.street_level.actions;
 
@@ -8,6 +8,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -76,15 +77,19 @@ public class ApplySuggestionAction extends JosmAction {
                 final MapWithAIAddCommand mapwithAiAddCommand = new MapWithAIAddCommand(
                         mapWithAIStreetLevelLayer.getDataSet(), dataSet, mapWithAIStreetLevelLayer.data.getSelected());
                 UndoRedoHandler.getInstance().add(mapwithAiAddCommand);
-                final Set<OsmPrimitive> addedPrimitives = mapWithAIStreetLevelLayer.data.getSelected().stream()
-                        .map(dataSet::getPrimitiveById).collect(Collectors.toSet());
+                final Set<OsmPrimitive> addedPrimitives = new HashSet<>();
+                mapwithAiAddCommand.fillModifiedData(addedPrimitives, new HashSet<>(), addedPrimitives);
                 final long[] sources = suggestions.stream().map(Suggestion::getImageEntries)
                         .map(StreetViewImageSet::getCollection).flatMap(Collection::stream)
                         .mapToLong(ImageSourceProvider::getSource).toArray();
                 final TagMap tagMap = new TagMap("mapillary:source",
-                        LongStream.of(sources).mapToObj(Long::toString).collect(Collectors.joining(";")), "mapillary",
-                        Long.toString(sources[0]));
-                final ChangePropertyCommand changePropertyCommand = new ChangePropertyCommand(addedPrimitives, tagMap);
+                        LongStream.of(sources).skip(1 /* Skip the first id -- it will be in mapillary */)
+                                .mapToObj(Long::toString).collect(Collectors.joining(";")),
+                        "mapillary", Long.toString(sources[0]));
+                final ChangePropertyCommand changePropertyCommand = new ChangePropertyCommand(dataSet,
+                        addedPrimitives.stream().map(prim -> dataSet.getPrimitiveById(prim.getPrimitiveId()))
+                                .collect(Collectors.toList()),
+                        tagMap);
                 UndoRedoHandler.getInstance().add(changePropertyCommand);
             }
         }
