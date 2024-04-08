@@ -1,24 +1,28 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2021-2022 Taylor Smock <tsmock@fb.com>
 // License: GPL. For details, see LICENSE file.
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2021-2024 Taylor Smock <tsmock@fb.com>
 package org.openstreetmap.josm.plugins.mapwithai.street_level;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import java.awt.Component;
-import java.lang.reflect.Field;
 import java.util.Collection;
 
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.AbstractPrimitive;
+import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.actions.ApplySuggestionAction;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.actions.MapWithAIStreetLevelAction;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.actions.ParallelSidewalkCreationAction;
+import org.openstreetmap.josm.plugins.mapwithai.street_level.actions.mapmode.SidewalkMode;
+import org.openstreetmap.josm.plugins.mapwithai.street_level.data.CrossingCommandListener;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.data.preferences.MapWithAIStreetLevelConfig;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.data.preferences.MapWithAIStreetLevelUrls;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.gui.io.importexport.CubitorOsmChangeImporter;
@@ -32,6 +36,8 @@ import org.openstreetmap.josm.tools.ReflectionUtils;
  * @author Taylor Smock
  */
 public class MapWithAIStreetLevelPlugin extends Plugin implements Destroyable {
+    private CrossingCommandListener crossingCommandListener;
+
     /**
      * Creates the plugin
      *
@@ -49,15 +55,24 @@ public class MapWithAIStreetLevelPlugin extends Plugin implements Destroyable {
     }
 
     @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        super.mapFrameInitialized(oldFrame, newFrame);
+        if (newFrame != null) {
+            this.crossingCommandListener = new CrossingCommandListener();
+            UndoRedoHandler.getInstance().addCommandQueuePreciseListener(this.crossingCommandListener);
+            newFrame.addMapMode(new IconToggleButton(new SidewalkMode()));
+        } else if (this.crossingCommandListener != null) {
+            UndoRedoHandler.getInstance().removeCommandQueuePreciseListener(this.crossingCommandListener);
+        }
+    }
+
+    @Override
     public void destroy() {
         final JMenu dataMenu = MainApplication.getMenu().dataMenu;
         for (Component menuComponent : dataMenu.getMenuComponents()) {
-            if (menuComponent instanceof JMenuItem) {
-                JMenuItem jMenu = (JMenuItem) menuComponent;
-                if (jMenu.getAction().getClass().getPackage().getName()
-                        .contains(this.getClass().getPackage().getName())) {
-                    dataMenu.remove(jMenu);
-                }
+            if (menuComponent instanceof JMenuItem jMenu && jMenu.getAction().getClass().getPackage().getName()
+                    .contains(this.getClass().getPackage().getName())) {
+                dataMenu.remove(jMenu);
             }
         }
         removeImporter();
@@ -69,7 +84,7 @@ public class MapWithAIStreetLevelPlugin extends Plugin implements Destroyable {
     private static void removeImporter() {
         // FIXME: Add method in JOSM to remove importer
         try {
-            final Field importersField = ExtensionFileFilter.class.getDeclaredField("importers");
+            final var importersField = ExtensionFileFilter.class.getDeclaredField("importers");
             ReflectionUtils.setObjectsAccessible(importersField);
             final Object importers = importersField.get(null);
             if (importers instanceof Collection) {

@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2021-2022 Taylor Smock <tsmock@fb.com>
 // License: GPL. For details, see LICENSE file.
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2021-2024 Taylor Smock <tsmock@fb.com>
 package org.openstreetmap.josm.plugins.mapwithai.street_level.actions.downloadtasks;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -28,6 +28,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -61,6 +62,7 @@ import com.github.tomakehurst.wiremock.verification.NearMiss;
 // Needed for OSM primitives
 @BasicPreferences
 @MapWithAIStreetLevelConfigAnnotation(urlClass = DownloadMapWithAIExtendedOsmChangeTaskTest.WiremockUrlClass.class)
+@Disabled("Server side support not implemented")
 class DownloadMapWithAIExtendedOsmChangeTaskTest {
     /**
      * This is used to ensure that URLs are mocked TODO replace with

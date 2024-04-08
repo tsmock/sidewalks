@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2021-2022 Taylor Smock <tsmock@fb.com>
 // License: GPL. For details, see LICENSE file.
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2021-2024 Taylor Smock <tsmock@fb.com>
 package org.openstreetmap.josm.plugins.mapwithai.street_level.gui.layer;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -132,12 +132,12 @@ public class MapWithAIStreetLevelLayer extends OsmDataLayer implements DataSourc
      */
     public MapWithAIStreetLevelLayer(@Nonnull DataSet data, @Nonnull String name, @Nonnull OsmDataLayer osmDataLayer) {
         super(data, name, null);
-        osmDataLayer.getDataSet().addDataSourceListener(this);
         osmDataLayer.getDataSet().getDataSources().stream().map(dataSource -> dataSource.bounds)
                 .filter(b -> b.isValid() && !b.isCollapsed() && !b.isOutOfTheWorld()).flatMap(Conversions::boundsToTile)
                 .distinct().parallel().forEach(this::download);
         this.getDataSet().setUploadPolicy(UploadPolicy.BLOCKED);
         this.getDataSet().setDownloadPolicy(DownloadPolicy.BLOCKED);
+        osmDataLayer.getDataSet().addDataSourceListener(this);
     }
 
     /**

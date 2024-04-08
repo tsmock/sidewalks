@@ -3,6 +3,9 @@
 	<name>JOSM-MapWithAI-StreetLevel</name>
 	<comment></comment>
 	<projects>
+		<project>JOSM</project>
+		<project>JOSM-Mapillary</project>
+		<project>JOSM-MapWithAI</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

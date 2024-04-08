@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2021-2022 Taylor Smock <tsmock@fb.com>
 // License: GPL. For details, see LICENSE file.
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2021-2024 Taylor Smock <tsmock@fb.com>
 package org.openstreetmap.josm.plugins.mapwithai.street_level.testutils.annotations;
 
 import java.lang.annotation.Documented;
@@ -25,16 +25,17 @@ import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.data.preferences.MapWithAIStreetLevelConfig;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.spi.preferences.IUrls;
-import org.openstreetmap.josm.plugins.mapwithai.testutils.annotations.Wiremock;
 import org.openstreetmap.josm.tools.Logging;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.matching.StringValuePattern;
 
 /**
@@ -102,8 +103,9 @@ public @interface MapWithAIStreetLevelConfigAnnotation {
         }
 
         @Override
-        public void afterAll(ExtensionContext context) {
+        public void afterAll(ExtensionContext context) throws Exception {
             MapWithAIStreetLevelConfig.setUrls(new BadUrlClass());
+            getUrlsExtension(context, AfterAllCallback.class, AfterAllCallback::afterAll);
         }
 
         @Override
@@ -113,6 +115,7 @@ public @interface MapWithAIStreetLevelConfigAnnotation {
             if (annotation.isPresent()) {
                 this.afterAll(context);
             }
+            getUrlsExtension(context, AfterEachCallback.class, AfterEachCallback::afterEach);
         }
 
         @Override
@@ -121,8 +124,18 @@ public @interface MapWithAIStreetLevelConfigAnnotation {
                     .findAnnotation(context.getElement(), MapWithAIStreetLevelConfigAnnotation.class);
             if (annotation.isPresent()) {
                 Class<? extends IUrls> clazz = annotation.get().urlClass();
-                MapWithAIStreetLevelConfig.setUrls(clazz.getConstructor(ExtensionContext.class).newInstance(context));
+                try {
+                    MapWithAIStreetLevelConfig
+                            .setUrls(clazz.getConstructor(ExtensionContext.class).newInstance(context));
+                } catch (NoSuchMethodException noSuchMethodException) {
+                    Logging.trace(noSuchMethodException);
+                    MapWithAIStreetLevelConfig.setUrls(clazz.getConstructor().newInstance());
+                }
+                final var store = context
+                        .getStore(ExtensionContext.Namespace.create(MapWithAIStreetLevelConfigAnnotation.class));
+                store.put(IUrls.class, MapWithAIStreetLevelConfig.getUrls());
             }
+            getUrlsExtension(context, BeforeAllCallback.class, BeforeAllCallback::beforeAll);
         }
 
         @Override
@@ -133,18 +146,37 @@ public @interface MapWithAIStreetLevelConfigAnnotation {
                     && !annotation.get().urlClass().equals(MapWithAIStreetLevelConfig.getUrls().getClass()))) {
                 this.beforeAll(context);
             }
+            getUrlsExtension(context, BeforeEachCallback.class, BeforeEachCallback::beforeEach);
+        }
+
+        private static <T extends Extension> void getUrlsExtension(ExtensionContext context, Class<T> clazz,
+                CheckedRunnable<T, ?> runnable) throws Exception {
+            final var store = context
+                    .getStore(ExtensionContext.Namespace.create(MapWithAIStreetLevelConfigAnnotation.class));
+            final var extension = store.get(IUrls.class, IUrls.class);
+            if (clazz.isInstance(extension)) {
+                runnable.accept(clazz.cast(extension), context);
+            }
+        }
+
+        @FunctionalInterface
+        interface CheckedRunnable<T extends Extension, E extends Exception> {
+            void accept(T extension, ExtensionContext context) throws E;
         }
     }
 
     /**
      * This is used to ensure that URLs are mocked
      */
-    class WiremockUrlClass extends Wiremock.WiremockExtension implements IUrls {
-        private final String wiremockUrl;
+    class WiremockUrlClass extends WireMockExtension implements IUrls {
+        private String wiremockUrl;
 
-        public WiremockUrlClass(final ExtensionContext context) {
-            final WireMockServer wireMockServer = Objects.requireNonNull(getWiremock(context), "Is @Wiremock used?");
-            this.wiremockUrl = wireMockServer.baseUrl();
+        @Override
+        protected void onBeforeEach(WireMockRuntimeInfo wireMockRuntimeInfo) {
+            super.onBeforeEach(wireMockRuntimeInfo);
+            final WireMock wireMockServer = Objects.requireNonNull(wireMockRuntimeInfo.getWireMock(),
+                    "Is @Wiremock used?");
+            this.wiremockUrl = wireMockRuntimeInfo.getHttpBaseUrl();
             final Map<String, StringValuePattern> queryParams = new HashMap<>(9);
             queryParams.put("result_type", WireMock.equalTo("extended_osc"));
             queryParams.put("conflate_with_osm", WireMock.equalTo("true"));
@@ -156,7 +188,7 @@ public @interface MapWithAIStreetLevelConfigAnnotation {
             queryParams.put("ext", WireMock.equalTo("1918681607"));
             queryParams.put("sources", WireMock.equalTo("fb_footway"));
             queryParams.put("bbox", WireMock.matching("([0-9-.]+,?){4}"));
-            wireMockServer.stubFor(WireMock.get("/cubitor").withQueryParams(queryParams).willReturn(
+            wireMockServer.register(WireMock.get("/cubitor").withQueryParams(queryParams).willReturn(
                     WireMock.aResponse().withBodyFile("cubitor/-122.3492432,47.6098665,-122.34375,47.6135698.xml")));
         }
 

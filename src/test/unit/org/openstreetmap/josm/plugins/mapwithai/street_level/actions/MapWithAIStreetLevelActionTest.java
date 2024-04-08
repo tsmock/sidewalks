@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2021 Taylor Smock <tsmock@fb.com>
 // License: GPL. For details, see LICENSE file.
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2021-2024 Taylor Smock <tsmock@fb.com>
 package org.openstreetmap.josm.plugins.mapwithai.street_level.actions;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -60,7 +60,8 @@ class MapWithAIStreetLevelActionTest {
         layerManager.removeLayer(osmDataLayer);
         assertFalse(mapWithAIStreetLevelAction.isEnabled());
 
-        final MapWithAIStreetLevelLayer mapWithAIStreetLevelLayer = new MapWithAIStreetLevelLayer(new DataSet(), "", osmDataLayer);
+        final MapWithAIStreetLevelLayer mapWithAIStreetLevelLayer = new MapWithAIStreetLevelLayer(new DataSet(), "",
+                osmDataLayer);
         layerManager.addLayer(mapWithAIStreetLevelLayer);
         assertFalse(mapWithAIStreetLevelAction.isEnabled());
         layerManager.removeLayer(mapWithAIStreetLevelLayer);

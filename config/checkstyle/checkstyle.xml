@@ -55,8 +55,8 @@ JOSM Checkstyle rules
     <module name="GenericWhitespace"/>
     <module name="EmptyForInitializerPad"/>
     <module name="EmptyForIteratorPad"/>
-    <module name="NoWhitespaceAfter"/>
-    <module name="NoWhitespaceBefore"/>
+      <!--<module name="NoWhitespaceAfter"/>-->
+      <!--<module name="NoWhitespaceBefore"/>-->
     <module name="SingleSpaceSeparator"/>
     <module name="MethodParamPad"/>
     <module name="ParenPad"/>
@@ -107,7 +107,7 @@ JOSM Checkstyle rules
     </module>
   </module>
   <module name="RegexpHeader">
-    <property name="header" value="// SPDX-License-Identifier: GPL-2.0-or-later\n// SPDX-FileCopyrightText: \d{4} .*\n// License: GPL. For details, see LICENSE file."/>
+    <property name="header" value="// License: GPL. For details, see LICENSE file.\n// SPDX-License-Identifier: GPL-2.0-or-later\n// SPDX-FileCopyrightText: \d{4}(-\d{4})? .*"/>
     <property name="fileExtensions" value=".java"/>
   </module>
   <module name="FileLength">

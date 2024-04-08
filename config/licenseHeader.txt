@@ -1,3 +1,3 @@
+// License: GPL. For details, see LICENSE file.
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: $YEAR Taylor Smock <tsmock@fb.com>
-// License: GPL. For details, see LICENSE file.

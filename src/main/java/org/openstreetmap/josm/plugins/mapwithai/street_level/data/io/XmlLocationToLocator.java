@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2022 Taylor Smock <tsmock@fb.com>
 // License: GPL. For details, see LICENSE file.
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2022-2024 Taylor Smock <tsmock@fb.com>
 package org.openstreetmap.josm.plugins.mapwithai.street_level.data.io;
 
 import javax.xml.stream.Location;
@@ -15,6 +15,11 @@ import org.xml.sax.Locator;
 public class XmlLocationToLocator implements Locator {
     private final Location location;
 
+    /**
+     * Crete a new locator
+     *
+     * @param location The location to use for conversion
+     */
     public XmlLocationToLocator(final Location location) {
         this.location = location;
     }

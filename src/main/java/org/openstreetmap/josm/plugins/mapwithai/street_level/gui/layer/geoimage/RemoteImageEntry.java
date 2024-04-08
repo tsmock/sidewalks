@@ -1,31 +1,20 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2021-2022 Taylor Smock <tsmock@fb.com>
 // License: GPL. For details, see LICENSE file.
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2021-2024 Taylor Smock <tsmock@fb.com>
 package org.openstreetmap.josm.plugins.mapwithai.street_level.gui.layer.geoimage;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 import org.apache.commons.jcs3.access.CacheAccess;
 import org.openstreetmap.josm.data.cache.JCSCacheManager;
-import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.INode;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
-import org.openstreetmap.josm.plugins.mapillary.oauth.OAuthUtils;
-import org.openstreetmap.josm.plugins.mapillary.utils.MapillaryURL;
+import org.openstreetmap.josm.plugins.mapillary.data.mapillary.MapillaryDownloader;
 import org.openstreetmap.josm.plugins.mapwithai.street_level.data.suggestions.ImageSourceProvider;
-import org.openstreetmap.josm.tools.HttpClient;
-import org.openstreetmap.josm.tools.Logging;
 
 /**
  * A remote image entry This class may be finalized, such that it is no longer
@@ -37,8 +26,6 @@ import org.openstreetmap.josm.tools.Logging;
 public class RemoteImageEntry extends ImageEntry implements ImageSourceProvider {
     private static final CacheAccess<String, byte[]> CACHE = JCSCacheManager
             .getCache("mapwithai:streetlevel:RemoteImageEntry");
-    private static final byte[] EMPTY_BYTES = {};
-    private static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9]+");
     private long key;
     private String url;
 
@@ -71,62 +58,36 @@ public class RemoteImageEntry extends ImageEntry implements ImageSourceProvider 
      */
     private void setMapillaryV4URL() {
         // get Mapillary v4 url
-        final String mapillaryV4Url = MapillaryURL.APIv4.getImageInformation(this.key);
-        final byte[] bytes = CACHE.get(mapillaryV4Url, () -> {
-            HttpClient client = null;
-            try {
-                client = OAuthUtils.addAuthenticationHeader(HttpClient.create(new URL(mapillaryV4Url)));
-                client.connect();
-                return client.getResponse().fetchContent().getBytes(StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                Logging.error(e);
-            } finally {
-                if (client != null) {
-                    client.disconnect();
-                }
-            }
-            return null;
-        });
-        try (JsonReader jsonReader = Json.createReader(new ByteArrayInputStream(bytes == null ? EMPTY_BYTES : bytes))) {
-            JsonObject data = jsonReader.readObject();
-            if (data.containsKey("altitude")) {
-                super.setElevation(data.getJsonNumber("altitude").doubleValue());
-            }
-            if (data.containsKey("computed_altitude")) {
-                super.setElevation(data.getJsonNumber("computed_altitude").doubleValue());
-            }
-            if (data.containsKey("compass_angle")) {
-                super.setExifImgDir(data.getJsonNumber("compass_angle").doubleValue());
-            }
-            if (data.containsKey("computed_compass_angle")) {
-                super.setExifImgDir(data.getJsonNumber("computed_compass_angle").doubleValue());
-            }
-            if (data.containsKey("captured_at")) {
-                super.setExifTime(Instant.ofEpochMilli(data.getInt("captured_at")));
-            }
-            if (data.containsKey("geometry")) {
-                final JsonArray coordinates = data.getJsonObject("geometry").getJsonArray("coordinates");
-                super.setExifCoor(new LatLon(coordinates.getJsonNumber(1).doubleValue(),
-                        coordinates.getJsonNumber(0).doubleValue()));
-            }
-            if (data.containsKey("computed_geometry")) {
-                final JsonArray coordinates = data.getJsonObject("computed_geometry").getJsonArray("coordinates");
-                super.setPos(new LatLon(coordinates.getJsonNumber(1).doubleValue(),
-                        coordinates.getJsonNumber(0).doubleValue()));
-            }
-            if (data.containsKey("width")) {
-                super.setWidth(data.getInt("width"));
-            }
-            if (data.containsKey("height")) {
-                super.setHeight(data.getInt("height"));
-            }
-            this.url = data.getString("thumb_2048_url");
+        final INode data = MapillaryDownloader.downloadImages(this.key).values().iterator().next().get(0);
+        if (data.hasKey("altitude")) {
+            super.setElevation(Double.parseDouble(data.get("altitude")));
         }
+        if (data.hasKey("computed_altitude")) {
+            super.setElevation(Double.parseDouble(data.get("computed_altitude")));
+        }
+        if (data.hasKey("compass_angle")) {
+            super.setExifImgDir(Double.parseDouble(data.get("compass_angle")));
+        }
+        if (data.hasKey("computed_compass_angle")) {
+            super.setExifImgDir(Double.parseDouble(data.get("computed_compass_angle")));
+        }
+        if (data.hasKey("captured_at")) {
+            super.setExifTime(Instant.ofEpochMilli(Long.parseLong(data.get("captured_at"))));
+        }
+        super.setExifCoor(data);
+        super.setPos(data); // TODO: Should this be computed geometry?
+        if (data.hasKey("width")) {
+            super.setWidth(Integer.parseInt(data.get("width")));
+        }
+        if (data.hasKey("height")) {
+            super.setHeight(Integer.parseInt(data.get("height")));
+        }
+        this.url = data.get("thumb_2048_url");
     }
 
     @Override
     protected URL getImageUrl() throws MalformedURLException {
-        return new URL(this.url);
+        return URI.create(this.url).toURL();
     }
 
     @Override

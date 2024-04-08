@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2021 Taylor Smock <tsmock@fb.com>
 // License: GPL. For details, see LICENSE file.
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2021-2024 Taylor Smock <tsmock@fb.com>
 package org.openstreetmap.josm.plugins.mapwithai.street_level.data.io;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -43,7 +43,8 @@ public class MapWithAIStreetLevelServerLocationReader extends OsmServerLocationR
      */
     public Pair<DataSet, Collection<Suggestion<RemoteImageEntry, Collection<RemoteImageEntry>>>> parseMapWithAIStreetLevelOsmChange(
             ProgressMonitor progressMonitor, Compression compression) throws OsmTransferException {
-        final MapWithAIStreetLevelOsmChangeParser parser = new MapWithAIStreetLevelOsmChangeParser(progressMonitor, compression);
+        final MapWithAIStreetLevelOsmChangeParser parser = new MapWithAIStreetLevelOsmChangeParser(progressMonitor,
+                compression);
         return doParse(parser, progressMonitor);
     }
 
@@ -66,8 +67,8 @@ public class MapWithAIStreetLevelServerLocationReader extends OsmServerLocationR
             if (in == null)
                 return null;
             progressMonitor.subTask(tr("Downloading OSM data..."));
-            return MapWithAIStreetLevelChangeReader.parseDataSetAndSuggestions(compression.getUncompressedInputStream(in),
-                    progressMonitor.createSubTaskMonitor(1, false));
+            return MapWithAIStreetLevelChangeReader.parseDataSetAndSuggestions(
+                    compression.getUncompressedInputStream(in), progressMonitor.createSubTaskMonitor(1, false));
         }
     }
 }

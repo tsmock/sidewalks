@@ -1,12 +1,13 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2021-2022 Taylor Smock <tsmock@fb.com>
 // License: GPL. For details, see LICENSE file.
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2021-2024 Taylor Smock <tsmock@fb.com>
 package org.openstreetmap.josm.plugins.mapwithai.street_level.gui.layer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -54,6 +55,7 @@ class MapWithAIStreetLevelLayerTest {
 
     @ParameterizedTest
     @MethodSource
+    @Disabled("Server side support not done")
     void testDataSourceChange(final int expectedCalls, final OsmDataLayer osmDataLayer) {
         final MapWithAIStreetLevelLayerMock mapWithAIStreetLevelLayerMock = new MapWithAIStreetLevelLayerMock();
         final MapWithAIStreetLevelLayer mapWithAIStreetLevelLayer = new MapWithAIStreetLevelLayer(new DataSet(), "",

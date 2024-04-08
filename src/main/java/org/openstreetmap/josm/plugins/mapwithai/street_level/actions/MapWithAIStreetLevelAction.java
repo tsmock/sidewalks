@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2021 Taylor Smock <tsmock@fb.com>
 // License: GPL. For details, see LICENSE file.
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2021-2024 Taylor Smock <tsmock@fb.com>
 package org.openstreetmap.josm.plugins.mapwithai.street_level.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -28,8 +28,8 @@ public class MapWithAIStreetLevelAction extends JosmAction {
      */
     public MapWithAIStreetLevelAction() {
         super(tr("MapWithAI StreetLevel: Add layer"), (ImageProvider) null, tr("MapWithAI sidewalk assistant"),
-                Shortcut.registerShortcut("mapwithai:streetlevel:add_layer", tr("MapWithAI StreetLevel: Add layer"), KeyEvent.CHAR_UNDEFINED,
-                        Shortcut.NONE),
+                Shortcut.registerShortcut("mapwithai:streetlevel:add_layer", tr("MapWithAI StreetLevel: Add layer"),
+                        KeyEvent.CHAR_UNDEFINED, Shortcut.NONE),
                 true, "mapwithai:streetlevel:add_layer", true);
     }
 
@@ -41,8 +41,8 @@ public class MapWithAIStreetLevelAction extends JosmAction {
         // OsmDataLayer instead of a class that extends it (something I've done
         // often to avoid some implementation duplication)
         if (osmDataLayer != null && OsmDataLayer.class.equals(osmDataLayer.getClass())) {
-            layerManager.addLayer(
-                    new MapWithAIStreetLevelLayer(new DataSet(), tr("MapWithAI StreetLevel: {0}", osmDataLayer.getName()), osmDataLayer));
+            layerManager.addLayer(new MapWithAIStreetLevelLayer(new DataSet(),
+                    tr("MapWithAI StreetLevel: {0}", osmDataLayer.getName()), osmDataLayer));
         }
     }
 

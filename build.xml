@@ -1,32 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project xmlns:ivy="antlib:org.apache.ivy.ant" name="mapwithai_streetlevel" default="dist" basedir=".">
-  <property name="plugin.src.dir" value="src/main/java"/>
-  <property name="plugin.test.dir" value="src/test"/>
+    <property name="plugin.src.dir" value="src/main/java"/>
+    <property name="plugin.test.dir" value="src/test"/>
 
-  <!-- edit the properties of this plugin in the file `gradle.properties` -->
-  <property file="${basedir}/gradle.properties"/>
+    <!-- edit the properties of this plugin in the file `gradle.properties` -->
+    <property file="${basedir}/gradle.properties"/>
+    <property name="plugin.minimum.java.version" value="17"/>
+    <property name="java.lang.version" value="17"/>
 
-  <!-- ** include targets that all plugins have in common ** -->
-  <import file="../build-common.xml"/>
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
 
-  <!-- Override the `setup-dist-default` task from build-common.xml -->
-  <target name="setup-dist-default">
-    <copy todir="${plugin.build.dir}" failonerror="no" includeemptydirs="no">
-      <fileset dir="src/main/resources"/>
-    </copy>
-    <copy todir="${plugin.build.dir}">
-      <fileset dir=".">
-        <include name="README"/>
-        <include name="LICENSE*"/>
-        <include name="*GPL*"/>
-        <include name="*.md"/>
-      </fileset>
-    </copy>
-  </target>
+    <!-- Override the `setup-dist-default` task from build-common.xml -->
+    <target name="setup-dist-default">
+      <copy todir="${plugin.build.dir}" failonerror="no" includeemptydirs="no">
+        <fileset dir="src/main/resources"/>
+      </copy>
+      <copy todir="${plugin.build.dir}">
+        <fileset dir=".">
+          <include name="README"/>
+          <include name="LICENSE*"/>
+          <include name="*GPL*"/>
+          <include name="*.md"/>
+        </fileset>
+      </copy>
+    </target>
 
-  <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
-    <include name="mapwithai.jar"/>
-    <include name="Mapillary.jar"/>
-    <include name="apache-http.jar"/>
-  </fileset>
+    <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
+      <include name="mapwithai.jar"/>
+      <include name="Mapillary.jar"/>
+      <include name="apache-http.jar"/>
+    </fileset>
 </project>
