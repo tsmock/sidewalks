@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="mapwithai_streetlevel" default="dist" basedir=".">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="sidewalks" default="dist" basedir=".">
     <property name="plugin.src.dir" value="src/main/java"/>
     <property name="plugin.test.dir" value="src/test"/>
 
