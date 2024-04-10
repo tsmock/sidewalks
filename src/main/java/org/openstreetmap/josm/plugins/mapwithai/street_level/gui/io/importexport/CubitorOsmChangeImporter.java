@@ -37,14 +37,14 @@ import org.openstreetmap.josm.tools.JosmRuntimeException;
  * @author Taylor Smock
  */
 public class CubitorOsmChangeImporter extends FileImporter {
-    /** The instance of the file importer */
-    public static final FileImporter INSTANCE = new CubitorOsmChangeImporter();
-
     /**
      * File filter for OsmChange files.
      */
     private static final ExtensionFileFilter FILE_FILTER = ExtensionFileFilter
             .newFilterWithArchiveExtensions("cubitor.osc", "cubitor.osc", tr("Cubitor extended OsmChange File"), true);
+
+    /** The instance of the file importer */
+    public static final FileImporter INSTANCE = new CubitorOsmChangeImporter();
 
     /**
      * Constructs a new {@link CubitorOsmChangeImporter}
