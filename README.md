@@ -40,3 +40,5 @@ geometry of the highway before using this tool.
 | `sidewalk.crossing.maxlength` |     `22`      | The maximum length for a crossing way                                      |
 | `sidewalk.crossing.sync`      |    `true`     | If `true`, synchronize tags between the crossing way and the crossing node |
 
+## License
+GPLv2 or any later version
