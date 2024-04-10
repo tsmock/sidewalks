@@ -32,7 +32,7 @@ public class CrossingCommandListener implements UndoRedoHandler.CommandQueuePrec
 
     @Override
     public void commandAdded(UndoRedoHandler.CommandAddedEvent e) {
-        if (Config.getPref().getBoolean("sidewalk.crossing.sync", false)) {
+        if (!Config.getPref().getBoolean("sidewalk.crossing.sync", true)) {
             return;
         }
         final Command command;
