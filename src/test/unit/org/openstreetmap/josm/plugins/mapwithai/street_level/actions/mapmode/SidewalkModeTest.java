@@ -182,10 +182,16 @@ class SidewalkModeTest {
         clickAt(38.3124351, -104.6249914); // Create a new stub footway
         final var crossing = southBound.getNode(1).getParentWays().stream().filter(not(southBound::equals)).findFirst()
                 .orElseThrow();
-        assertEquals("kerb", crossing.firstNode().get("barrier"));
-        assertEquals("kerb", crossing.lastNode().get("barrier"));
-        assertFalse(crossing.getNode(1).hasTag("barrier"));
-        assertFalse(crossing.getNode(2).hasTag("barrier"));
+        assertEquals(6, this.ds.getWays().size());
+        assertAll(() -> assertEquals("kerb", crossing.firstNode().get("barrier")),
+                () -> assertEquals("kerb", crossing.lastNode().get("barrier")),
+                () -> assertFalse(crossing.getNode(1).hasTag("barrier")),
+                () -> assertFalse(crossing.getNode(2).hasTag("barrier")),
+                () -> assertTrue(crossing.getNode(1).hasTag("highway", "crossing")),
+                () -> assertTrue(crossing.getNode(2).hasTag("highway", "crossing")),
+                () -> assertLatLonEquals(new LatLon(38.3124378, -104.6251142), crossing.getNode(1)),
+                () -> assertLatLonEquals(new LatLon(38.3124388, -104.6250343), crossing.getNode(2)),
+                () -> assertEquals(4, crossing.getNodesCount()));
     }
 
     @Test
@@ -274,4 +280,13 @@ class SidewalkModeTest {
                 .collect(Collectors.joining("%7C"));
     }
 
+    private static void assertLatLonEquals(ILatLon expected, ILatLon actual) {
+        assertLatLonEquals(expected.lat(), expected.lon(), actual.lat(), actual.lon());
+    }
+
+    private static void assertLatLonEquals(double expectedLat, double expectedLon, double actualLat, double actualLon) {
+        assertAll("Expected " + expectedLat + "," + expectedLon + " but was " + actualLat + "," + actualLon,
+                () -> assertEquals(expectedLat, actualLat, ILatLon.MAX_SERVER_PRECISION),
+                () -> assertEquals(expectedLon, actualLon, ILatLon.MAX_SERVER_PRECISION));
+    }
 }

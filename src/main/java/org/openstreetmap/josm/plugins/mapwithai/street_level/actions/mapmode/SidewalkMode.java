@@ -288,7 +288,8 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         final var intersection = Geometry.addIntersections(Arrays.asList(possibleCrossing, crossingWay), false,
                 intersectionCommands);
         if (intersection.size() == 1) {
-            crossingWay.addNode(1, intersection.iterator().next());
+            final var node = intersection.iterator().next();
+            crossingWay.addNode(Geometry.getClosestWaySegment(crossingWay, node).getUpperIndex(), node);
             // The crossing way isn't part of the dataset yet, and we add it by "saving" the
             // crossing way.
             intersectionCommands.removeIf(command -> command.getParticipatingPrimitives().contains(crossingWay));
