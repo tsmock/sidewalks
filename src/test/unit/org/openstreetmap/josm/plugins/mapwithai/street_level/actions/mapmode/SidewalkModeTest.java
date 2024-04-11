@@ -300,6 +300,22 @@ class SidewalkModeTest {
         assertDoesNotThrow(() -> this.action.mouseReleased(mouseClickAt(neSidewalk.getNode(1))));
     }
 
+    @Test
+    void testCrossingNodeNoWay() {
+        final var alley = TestUtils.newWay("highway=service service=alley",
+                new Node(new LatLon(38.5683524, -121.4924243)), new Node(new LatLon(38.5679984, -121.4910983)));
+        final var sidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
+                new Node(new LatLon(38.5675992, -121.491466)), new Node(new LatLon(38.567585, -121.4914197)));
+        this.ds.addPrimitiveRecursive(alley);
+        this.ds.addPrimitiveRecursive(sidewalk);
+        clickAt(38.567585, -121.4914197);
+        clickAt(38.5682456, -121.4911187);
+        clickAt(38.5682456, -121.4911187); // Finish drawing
+        assertEquals(4, sidewalk.getNodesCount());
+        assertLatLonEquals(new LatLon(38.5680301, -121.4912169), sidewalk.getNode(2));
+        assertEquals(2, sidewalk.getNode(2).getParentWays().size());
+    }
+
     private void clickAt(double lat, double lon) {
         clickAt(new LatLon(lat, lon));
     }

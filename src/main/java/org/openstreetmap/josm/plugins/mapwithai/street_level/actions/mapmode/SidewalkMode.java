@@ -171,7 +171,8 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
             return;
         }
         final var undoRedoHandler = UndoRedoHandler.getInstance();
-        if (undoRedoHandler == null || undoRedoHandler.getLastCommand() == null || undoRedoHandler.getLastCommand().getChildren() == null) {
+        if (undoRedoHandler == null || undoRedoHandler.getLastCommand() == null
+                || undoRedoHandler.getLastCommand().getChildren() == null) {
             return;
         }
         final var way = undoRedoHandler.getLastCommand().getParticipatingPrimitives().stream()
@@ -215,7 +216,7 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                         createCrossingWay(way, crossingWay, possibleCrossing, parentWays, forwardDirection);
                     } else {
                         final var commands = new ArrayList<Command>(1);
-                        createCrossingNodes(crossingWay, possibleCrossing, commands);
+                        createCrossingNodes(way, possibleCrossing, commands);
                         UndoRedoHandler.getInstance()
                                 .add(SequenceCommand.wrapIfNeeded(tr("Create crossing nodes"), commands));
                     }
@@ -325,10 +326,12 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                 intersectionCommands);
         if (intersection.size() == 1) {
             final var node = intersection.iterator().next();
-            crossingWay.addNode(Geometry.getClosestWaySegment(crossingWay, node).getUpperIndex(), node);
             // The crossing way isn't part of the dataset yet, and we add it by "saving" the
             // crossing way.
-            intersectionCommands.removeIf(command -> command.getParticipatingPrimitives().contains(crossingWay));
+            if (crossingWay.getDataSet() == null) {
+                crossingWay.addNode(Geometry.getClosestWaySegment(crossingWay, node).getUpperIndex(), node);
+                intersectionCommands.removeIf(command -> command.getParticipatingPrimitives().contains(crossingWay));
+            }
             commands.addAll(intersectionCommands);
         }
         return intersection;
