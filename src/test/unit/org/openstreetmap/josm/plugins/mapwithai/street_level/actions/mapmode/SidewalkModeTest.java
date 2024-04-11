@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.event.MouseEvent;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.openstreetmap.josm.TestUtils;
+import org.openstreetmap.josm.actions.ReverseWayAction;
 import org.openstreetmap.josm.data.coor.ILatLon;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -38,6 +41,7 @@ import org.openstreetmap.josm.testutils.annotations.Main;
 import org.openstreetmap.josm.testutils.annotations.Projection;
 import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.UserCancelException;
 
 /**
  * Test class for {@link SidewalkMode}
@@ -108,13 +112,17 @@ class SidewalkModeTest {
         final var crossings = this.ds.getWays().stream().filter(w -> w.hasTag("footway", "crossing")).toList();
         assertEquals(1, crossings.size());
         final var crossing = crossings.get(0);
+        final var firstNode = crossing.firstNode();
+        final var lastNode = crossing.lastNode();
+        assertNotNull(firstNode);
+        assertNotNull(lastNode);
         assertAll(() -> assertEquals(3, crossing.getNodesCount()),
                 () -> assertTrue(new LatLon(39.0701497, -108.4654119).equalsEpsilon(crossing.getNode(1))),
                 () -> assertTrue(crossing.getNode(1).hasTag("highway", "crossing")),
-                () -> assertTrue(crossing.firstNode().hasTag("barrier", "kerb")),
-                () -> assertTrue(crossing.lastNode().hasTag("barrier", "kerb")),
-                () -> assertEquals(2, crossing.firstNode().getParentWays().size()),
-                () -> assertEquals(2, crossing.lastNode().getParentWays().size()));
+                () -> assertTrue(firstNode.hasTag("barrier", "kerb")),
+                () -> assertTrue(lastNode.hasTag("barrier", "kerb")),
+                () -> assertEquals(2, firstNode.getParentWays().size()),
+                () -> assertEquals(2, lastNode.getParentWays().size()));
         final var links = this.ds.getWays().stream().filter(w -> w.getLength() < 1).toList();
         assertEquals(2, links.size());
     }
@@ -183,8 +191,8 @@ class SidewalkModeTest {
         final var crossing = southBound.getNode(1).getParentWays().stream().filter(not(southBound::equals)).findFirst()
                 .orElseThrow();
         assertEquals(6, this.ds.getWays().size());
-        assertAll(() -> assertEquals("kerb", crossing.firstNode().get("barrier")),
-                () -> assertEquals("kerb", crossing.lastNode().get("barrier")),
+        assertAll(() -> assertEquals("kerb", Objects.requireNonNull(crossing.firstNode()).get("barrier")),
+                () -> assertEquals("kerb", Objects.requireNonNull(crossing.lastNode()).get("barrier")),
                 () -> assertFalse(crossing.getNode(1).hasTag("barrier")),
                 () -> assertFalse(crossing.getNode(2).hasTag("barrier")),
                 () -> assertTrue(crossing.getNode(1).hasTag("highway", "crossing")),
@@ -195,7 +203,39 @@ class SidewalkModeTest {
     }
 
     @Test
-    void test4WayIntersectionCrossing() {
+    void testDividedHighwayReversed() throws UserCancelException {
+        final var southBound = TestUtils.newWay("highway=unclassified surface=concrete oneway=yes",
+                new Node(new LatLon(38.3125107, -104.625117)), new Node(new LatLon(38.3121189, -104.6251017)));
+        final var northBound = TestUtils.newWay("highway=unclassified surface=asphalt oneway=yes",
+                new Node(new LatLon(38.3121198, -104.6250227)), new Node(new LatLon(38.3125131, -104.625037)));
+        final var westSidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
+                new Node(new LatLon(38.3124233, -104.6251597)), new Node(new LatLon(38.3124337, -104.6251768)),
+                new Node(new LatLon(38.3124362, -104.6252079)));
+        this.ds.addPrimitiveRecursive(southBound);
+        this.ds.addPrimitiveRecursive(northBound);
+        this.ds.addPrimitiveRecursive(westSidewalk);
+        clickAt(38.3124337, -104.6251768);
+        clickAt(38.3124372, -104.6251651); // Kerb 1
+        ReverseWayAction.reverseWay(this.ds.getLastSelectedWay()).getReverseCommand().executeCommand();
+        clickAt(38.3124393, -104.6249971); // Kerb 2
+        clickAt(38.3124351, -104.6249914);
+        clickAt(38.3124351, -104.6249914); // Create a new stub footway
+        final var crossing = southBound.getNode(1).getParentWays().stream().filter(not(southBound::equals)).findFirst()
+                .orElseThrow();
+        assertEquals(6, this.ds.getWays().size());
+        assertAll(() -> assertEquals("kerb", Objects.requireNonNull(crossing.firstNode()).get("barrier")),
+                () -> assertEquals("kerb", Objects.requireNonNull(crossing.lastNode()).get("barrier")),
+                () -> assertFalse(crossing.getNode(1).hasTag("barrier")),
+                () -> assertFalse(crossing.getNode(2).hasTag("barrier")),
+                () -> assertTrue(crossing.getNode(1).hasTag("highway", "crossing")),
+                () -> assertTrue(crossing.getNode(2).hasTag("highway", "crossing")),
+                () -> assertLatLonEquals(new LatLon(38.3124388, -104.6250343), crossing.getNode(1)),
+                () -> assertLatLonEquals(new LatLon(38.3124378, -104.6251142), crossing.getNode(2)),
+                () -> assertEquals(4, crossing.getNodesCount()));
+    }
+
+    @Test
+    void testFourWayIntersectionCrossing() {
         final var neSidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
                 new Node(new LatLon(39.0995956, -108.5016914)), new Node(new LatLon(39.0995628, -108.5016756)),
                 new Node(new LatLon(39.0995459, -108.501632)));

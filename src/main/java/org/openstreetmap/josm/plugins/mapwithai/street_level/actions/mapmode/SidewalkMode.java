@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import org.openstreetmap.josm.actions.mapmode.DrawAction;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
+import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.AddPrimitivesCommand;
 import org.openstreetmap.josm.command.ChangeNodesCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
@@ -178,13 +179,22 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         if (way == null || way.firstNode() == null) {
             return;
         }
-        final var parentWays = way.firstNode().getParentWays().stream().filter(not(way::equals))
-                .filter(w -> w.hasTag(HIGHWAY, FOOTWAY)).toList();
+        final var addedNode = undoRedoHandler.getLastCommand().getChildren().stream()
+                .filter(AddCommand.class::isInstance).map(AddCommand.class::cast)
+                .map(AddCommand::getParticipatingPrimitives).flatMap(Collection::stream).filter(Node.class::isInstance)
+                .map(Node.class::cast).findFirst().orElse(way.lastNode());
+        final var forwardDirection = way.lastNode().equals(addedNode);
+
+        final var segmentStart = forwardDirection ? way.getNodesCount() - 2 : 0;
+
+        // We want to get the parent ways of the node on the other side.
+        final var parentWays = (forwardDirection ? way.firstNode() : way.lastNode()).getParentWays().stream()
+                .filter(not(way::equals)).filter(w -> w.hasTag(HIGHWAY, FOOTWAY)).toList();
         if (way.hasTag(HIGHWAY, FOOTWAY) && way.getNodesCount() >= 3
-                && way.getNode(way.getNodesCount() - 2).hasTag("barrier", "kerb")) {
-            switchToFootway(way, parentWays);
+                && way.getNode(forwardDirection ? segmentStart : 1).hasTag("barrier", "kerb")) {
+            switchToFootway(way, parentWays, forwardDirection);
         } else if (way.hasTag(HIGHWAY, FOOTWAY) || !parentWays.isEmpty()) {
-            final var segment = new WaySegment(way, way.getNodesCount() - 2);
+            final var segment = new WaySegment(way, segmentStart);
             final var crossingWay = segment.toWay();
             final var possibleWays = new ArrayList<>(Optional.ofNullable(way.getDataSet())
                     .orElse(OsmDataManager.getInstance().getEditDataSet()).searchWays(crossingWay.getBBox()));
@@ -202,7 +212,7 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                     // the user is
                     // trying to make a curve and gets a bunch of crossing ways)
                     if (crossingWay.getLength() < Config.getPref().getInt("sidewalk.crossing.maxlength", 22)) {
-                        createCrossingWay(way, crossingWay, possibleCrossing, parentWays);
+                        createCrossingWay(way, crossingWay, possibleCrossing, parentWays, forwardDirection);
                     } else {
                         final var commands = new ArrayList<Command>(1);
                         createCrossingNodes(crossingWay, possibleCrossing, commands);
@@ -214,23 +224,49 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         }
     }
 
-    private static void switchToFootway(Way way, Collection<Way> parentWays) {
+    /**
+     * Switch to drawing a footway from a crossing
+     *
+     * @param way              The way to split (switch to footway from sidewalk)
+     * @param parentWays       The parent ways of the node we are switching to a
+     *                         footway
+     * @param forwardDirection {@code true} if adding to the end of the way
+     */
+    private static void switchToFootway(Way way, Collection<Way> parentWays, boolean forwardDirection) {
         // We want to use sidewalk tags from the "right" side of the road
-        final var newParentWays = new ArrayList<>(way.lastNode().getParentWays().stream().filter(not(way::equals))
-                .filter(w -> w.hasTag(HIGHWAY, FOOTWAY)).toList());
+        final var newParentWays = new ArrayList<>((forwardDirection ? way.lastNode() : way.firstNode()).getParentWays()
+                .stream().filter(not(way::equals)).filter(w -> w.hasTag(HIGHWAY, FOOTWAY)).toList());
         final var actualWays = newParentWays.isEmpty() ? parentWays : newParentWays;
         final var commands = new ArrayList<Command>(3);
-        commands.add(new ChangeNodesCommand(way, new ArrayList<>(way.getNodes().subList(0, way.getNodesCount() - 1))));
+        final var startIndex = forwardDirection ? 0 : 1;
+        commands.add(new ChangeNodesCommand(way,
+                new ArrayList<>(way.getNodes().subList(startIndex, way.getNodesCount() - 1 + startIndex))));
         final var stubWay = new Way();
-        stubWay.addNode(way.getNode(way.getNodesCount() - 2));
-        stubWay.addNode(way.lastNode());
+        if (forwardDirection) {
+            stubWay.addNode(way.getNode(way.getNodesCount() - 2));
+            stubWay.addNode(way.lastNode());
+        } else {
+            stubWay.addNode(way.firstNode());
+            stubWay.addNode(way.getNode(1));
+        }
         stubWay.putAll(TagCollection.commonToAllPrimitives(actualWays).asList().stream()
                 .collect(Collectors.toMap(Tag::getKey, Tag::getValue)));
         commands.add(new AddPrimitivesCommand(Collections.singletonList(stubWay.save()), way.getDataSet()));
         UndoRedoHandler.getInstance().add(SequenceCommand.wrapIfNeeded(tr("Add footway"), commands));
     }
 
-    private void createCrossingWay(Way way, Way crossingWay, Way possibleCrossing, Collection<Way> parentWays) {
+    /**
+     * Create the crossing way
+     *
+     * @param way              The original way
+     * @param crossingWay      The new crossing way
+     * @param possibleCrossing The way that we may be crossing
+     * @param parentWays       The parent ways of the node at the end of the way
+     *                         that is not being modified (for tag information)
+     * @param forwardDirection {@code true} if adding to the last node of the way
+     */
+    private void createCrossingWay(Way way, Way crossingWay, Way possibleCrossing, Collection<Way> parentWays,
+            boolean forwardDirection) {
         final var undoRedoHandler = UndoRedoHandler.getInstance();
         final var newNodes = new ArrayList<>(way.getNodes());
         final var usuallyRightCommands = new ArrayList<Command>(6);
@@ -249,7 +285,7 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         } else if (way.hasTag(SURFACE)) {
             crossingWay.put(SURFACE, way.get(SURFACE));
         }
-        newNodes.remove(crossingWay.lastNode());
+        newNodes.remove(forwardDirection ? crossingWay.lastNode() : crossingWay.firstNode());
         if (newNodes.isEmpty() || newNodes.size() == 1) {
             usuallyRightCommands.add(DeleteCommand.delete(Collections.singleton(way), false, true));
         } else {
@@ -275,7 +311,7 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         // Needed to continue drawing. It would be nice to pass the original footway
         // tags on, but that isn't
         // currently possible.
-        way.getDataSet().setSelected(crossingWay.lastNode());
+        way.getDataSet().setSelected(forwardDirection ? crossingWay.lastNode() : crossingWay.firstNode());
         this.drawAction.updateKeyModifiers(new MouseEvent(MainApplication.getMap(),
                 Long.hashCode(System.currentTimeMillis()), System.currentTimeMillis(),
                 InputEvent.ALT_DOWN_MASK | (this.ctrl ? InputEvent.CTRL_DOWN_MASK : 0)
