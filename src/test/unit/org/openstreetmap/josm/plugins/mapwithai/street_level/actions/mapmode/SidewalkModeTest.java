@@ -5,6 +5,7 @@ package org.openstreetmap.josm.plugins.mapwithai.street_level.actions.mapmode;
 
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -25,6 +26,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.actions.ReverseWayAction;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.ILatLon;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -286,21 +289,36 @@ class SidewalkModeTest {
         assertAll(this.ds.getWays().stream().map(w -> () -> assertNotEquals(1, w.getNodesCount())));
     }
 
+    @Test
+    void testUndoRedoActionsNoChildCommands() {
+        // Check tag change
+        final var neSidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
+                new Node(new LatLon(39.0995956, -108.5016914)), new Node(new LatLon(39.0995628, -108.5016756)),
+                new Node(new LatLon(39.0995459, -108.501632)));
+        this.ds.addPrimitiveRecursive(neSidewalk);
+        UndoRedoHandler.getInstance().add(new ChangePropertyCommand(neSidewalk, "surface", "concrete"));
+        assertDoesNotThrow(() -> this.action.mouseReleased(mouseClickAt(neSidewalk.getNode(1))));
+    }
+
     private void clickAt(double lat, double lon) {
         clickAt(new LatLon(lat, lon));
     }
 
     private void clickAt(ILatLon location) {
-        final var mapView = MainApplication.getMap().mapView;
-        mapView.zoomToFactor(0.005);
-        mapView.zoomTo(location);
-        final var point = mapView.getPoint(location);
-        final var click = new MouseEvent(MainApplication.getMap(), Long.hashCode(System.currentTimeMillis()),
-                System.currentTimeMillis(), 0, point.x, point.y, 1, false, MouseEvent.BUTTON1);
+        final var click = mouseClickAt(location);
         MainApplication.getMap().mapModeDraw.mouseReleased(click);
         this.action.mouseReleased(click);
         GuiHelper.runInEDTAndWait(() -> {
             /* Sync UI thread */ });
+    }
+
+    private MouseEvent mouseClickAt(ILatLon location) {
+        final var mapView = MainApplication.getMap().mapView;
+        mapView.zoomToFactor(0.005);
+        mapView.zoomTo(location);
+        final var point = mapView.getPoint(location);
+        return new MouseEvent(MainApplication.getMap(), Long.hashCode(System.currentTimeMillis()),
+                System.currentTimeMillis(), 0, point.x, point.y, 1, false, MouseEvent.BUTTON1);
     }
 
     private static void loadIntoJosm(String uri) throws IOException {

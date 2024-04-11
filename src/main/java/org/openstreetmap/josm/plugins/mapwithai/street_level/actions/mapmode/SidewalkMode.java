@@ -171,7 +171,7 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
             return;
         }
         final var undoRedoHandler = UndoRedoHandler.getInstance();
-        if (undoRedoHandler == null || undoRedoHandler.getLastCommand() == null) {
+        if (undoRedoHandler == null || undoRedoHandler.getLastCommand() == null || undoRedoHandler.getLastCommand().getChildren() == null) {
             return;
         }
         final var way = undoRedoHandler.getLastCommand().getParticipatingPrimitives().stream()
