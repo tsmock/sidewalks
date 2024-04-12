@@ -70,8 +70,8 @@ public class MapWithAIStreetLevelPlugin extends Plugin implements Destroyable {
     public void destroy() {
         final JMenu dataMenu = MainApplication.getMenu().dataMenu;
         for (Component menuComponent : dataMenu.getMenuComponents()) {
-            if (menuComponent instanceof JMenuItem jMenu && jMenu.getAction().getClass().getPackage().getName()
-                    .contains(this.getClass().getPackage().getName())) {
+            if (menuComponent instanceof JMenuItem jMenu && jMenu.getAction() != null && jMenu.getAction().getClass()
+                    .getPackage().getName().contains(this.getClass().getPackage().getName())) {
                 dataMenu.remove(jMenu);
             }
         }
