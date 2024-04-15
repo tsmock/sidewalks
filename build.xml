@@ -25,10 +25,4 @@
         </fileset>
       </copy>
     </target>
-
-    <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
-      <include name="mapwithai.jar"/>
-      <include name="Mapillary.jar"/>
-      <include name="apache-http.jar"/>
-    </fileset>
 </project>
