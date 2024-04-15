@@ -17,7 +17,6 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.INode;
 import org.openstreetmap.josm.data.osm.IWay;
 import org.openstreetmap.josm.tools.Geometry;
-import org.openstreetmap.josm.tools.JosmRuntimeException;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -26,7 +25,12 @@ import org.openstreetmap.josm.tools.Logging;
  * @author Taylor Smock
  */
 public final class ParallelSidewalkCreation {
-    private static final Pattern NUMBER_REGEX = Pattern.compile("[0-9]*[.]?[0-9]*");
+    private static final Pattern NUMBER_REGEX = Pattern.compile("\\d*\\.?\\d*");
+    private static final Pattern KM_NUMBER_REGEX = Pattern.compile(NUMBER_REGEX.pattern() + " km");
+    private static final Pattern MI_NUMBER_REGEX = Pattern.compile(NUMBER_REGEX.pattern() + " mi");
+    private static final Pattern NMI_NUMBER_REGEX = Pattern.compile(NUMBER_REGEX.pattern() + " nmi");
+    private static final Pattern FT_IN_NUMBER_REGEX = Pattern
+            .compile("(" + NUMBER_REGEX.pattern() + "')?(" + NUMBER_REGEX.pattern() + "\")?");
 
     private ParallelSidewalkCreation() {
         // Hide the constructor
@@ -49,12 +53,7 @@ public final class ParallelSidewalkCreation {
         final float width;
         if (way.hasKey("width")) {
             String widthValue = way.get("width");
-            if (NUMBER_REGEX.matcher(widthValue).matches()) {
-                width = Float.parseFloat(widthValue) + 3; // 3m for sidewalks
-            } else {
-                // TODO something better
-                throw new JosmRuntimeException("Width not yet understood");
-            }
+            width = parseWidth(widthValue) + 3; // 3m for sidewalks
         } else {
             width = 11.5f; // 8.5m for road, another 3m for sidewalk
         }
@@ -91,6 +90,36 @@ public final class ParallelSidewalkCreation {
         } catch (ReflectiveOperationException e) {
             Logging.error(e);
             return Collections.emptyMap();
+        }
+    }
+
+    /**
+     * Parse the width value
+     *
+     * @param widthValue The width to parse
+     * @return The width in meters
+     */
+    private static float parseWidth(String widthValue) {
+        if (NUMBER_REGEX.matcher(widthValue).matches()) {
+            return Float.parseFloat(widthValue);
+        } else if (KM_NUMBER_REGEX.matcher(widthValue).matches()) {
+            return Float.parseFloat(widthValue.substring(0, widthValue.length() - 3)) * 1000;
+        } else if (MI_NUMBER_REGEX.matcher(widthValue).matches()) {
+            return Float.parseFloat(widthValue.substring(0, widthValue.length() - 3)) * 1609.344f;
+        } else if (NMI_NUMBER_REGEX.matcher(widthValue).matches()) {
+            return Float.parseFloat(widthValue.substring(0, widthValue.length() - 4)) * 1852;
+        } else if (FT_IN_NUMBER_REGEX.matcher(widthValue).matches()) {
+            final var matcher = FT_IN_NUMBER_REGEX.matcher(widthValue);
+            // Find the match. Again.
+            if (matcher.matches()) {
+                final var feet = matcher.group(1) == null ? 0 : Float.parseFloat(matcher.group(1).replace("'", ""));
+                final var inches = matcher.group(2) == null ? 0 : Float.parseFloat(matcher.group(2).replace("\"", ""));
+                return (12 * feet + inches) * 0.0254f;
+            } else {
+                throw new IllegalStateException("This should never be hit");
+            }
+        } else {
+            throw new IllegalArgumentException("Width not yet understood: " + widthValue);
         }
     }
 
