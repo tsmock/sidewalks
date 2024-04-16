@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.openstreetmap.josm.actions.mapmode.DrawAction;
@@ -292,9 +294,13 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         } else {
             usuallyRightCommands.add(new ChangeNodesCommand(way, newNodes));
         }
-        if (isCrossing) {
-            usuallyRightCommands.add(new ChangePropertyCommand(
-                    Arrays.asList(crossingWay.firstNode(), crossingWay.lastNode()), "barrier", "kerb"));
+        if (isCrossing && Config.getPref().getBoolean("sidewalk.crossing.kerb", true)) {
+            final var tagMap = Config.getPref().getListOfMaps("sidewalk.crossing.kerb.tags").stream().map(Map::entrySet)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (old, n) -> n, TreeMap::new));
+            tagMap.putIfAbsent("barrier", "kerb");
+            usuallyRightCommands.add(
+                    new ChangePropertyCommand(Arrays.asList(crossingWay.firstNode(), crossingWay.lastNode()), tagMap));
         }
         // Now add the intersection node
         final var intersection = createCrossingNodes(crossingWay, possibleCrossing, usuallyRightCommands);
