@@ -6,6 +6,7 @@ package org.openstreetmap.josm.plugins.mapwithai.street_level.actions.mapmode;
 import static java.util.function.Predicate.not;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -53,6 +54,8 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
      * Make protected methods available for this class
      */
     private static final class DrawActionCustom extends DrawAction {
+        private final Cursor cursorCopy = this.cursor;
+
         @Override
         public void updateStatusLine() {
             super.updateStatusLine();
@@ -112,7 +115,7 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         super(tr("Sidewalk mode"), "presets/transport/way/way_pedestrian.svg", tr("Draw sidewalks more efficiently"),
                 Shortcut.registerShortcut("sidewalk:sidewalk", tr("Sidewalk mode"), KeyEvent.CHAR_UNDEFINED,
                         Shortcut.NONE),
-                ImageProvider.getCursor("crosshair", null));
+                ImageProvider.getCursor("crosshair", "sidewalk"));
         new ImageProvider("presets/transport/way/way_pedestrian.svg").setOptional(true).getResource()
                 .attachImageIcon(this);
         MapFrame.addMapModeChangeListener(this);
@@ -167,6 +170,15 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
     }
 
     @Override
+    public void mouseMoved(MouseEvent e) {
+        super.mouseMoved(e);
+        final var currentCursor = MainApplication.getMap().mapView.getCursor();
+        if (currentCursor.equals(this.drawAction.cursorCopy)) {
+            MainApplication.getMap().mapView.setNewCursor(this.cursor, this);
+        }
+    }
+
+    @Override
     public void mouseReleased(MouseEvent e) {
         this.updateKeyModifiers(e);
         if (this.ctrl) { // Add nodes uses ctrl to avoid adding node to existing ways.
@@ -186,6 +198,15 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                 .filter(AddCommand.class::isInstance).map(AddCommand.class::cast)
                 .map(AddCommand::getParticipatingPrimitives).flatMap(Collection::stream).filter(Node.class::isInstance)
                 .map(Node.class::cast).findFirst().orElse(way.lastNode());
+        // Add sidewalk keys to a *new* way, but not if the user has explicitly undone
+        // the tag add.
+        if (way.getNodesCount() == 2 && !way.hasKeys() && (!undoRedoHandler.hasRedoCommands()
+                || !(undoRedoHandler.getRedoCommands().get(0) instanceof ChangePropertyCommand changePropertyCommand
+                        && Map.of(HIGHWAY, FOOTWAY, FOOTWAY, "sidewalk").equals(changePropertyCommand.getTags())
+                        && changePropertyCommand.getParticipatingPrimitives().contains(way)))) {
+            undoRedoHandler.add(new ChangePropertyCommand(Collections.singleton(way),
+                    Map.of(HIGHWAY, FOOTWAY, FOOTWAY, "sidewalk")));
+        }
         final var forwardDirection = way.lastNode().equals(addedNode);
 
         final var segmentStart = forwardDirection ? way.getNodesCount() - 2 : 0;
@@ -214,13 +235,14 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                     // for automatically adding a crossing way (this should avoid situations where
                     // the user is
                     // trying to make a curve and gets a bunch of crossing ways)
-                    if (crossingWay.getLength() < Config.getPref().getInt("sidewalk.crossing.maxlength", 22)) {
+                    if (crossingWay.getLength() < Config.getPref().getInt("sidewalk.crossing.maxlength", 30)) {
                         createCrossingWay(way, crossingWay, possibleCrossing, parentWays, forwardDirection);
                     } else {
                         final var commands = new ArrayList<Command>(1);
                         createCrossingNodes(way, possibleCrossing, commands);
-                        UndoRedoHandler.getInstance()
-                                .add(SequenceCommand.wrapIfNeeded(tr("Create crossing nodes"), commands));
+                        if (!commands.isEmpty()) {
+                            undoRedoHandler.add(SequenceCommand.wrapIfNeeded(tr("Create crossing nodes"), commands));
+                        }
                     }
                 }
             }

@@ -37,7 +37,7 @@ geometry of the highway before using this tool.
 ## Advanced preferences
 | Preference                    | Default value | Description                                                                |
 |:------------------------------|:-------------:|:---------------------------------------------------------------------------|
-| `sidewalk.crossing.maxlength` |     `22`      | The maximum length for a crossing way                                      |
+| `sidewalk.crossing.maxlength` |     `30`      | The maximum length for a crossing way                                      |
 | `sidewalk.crossing.sync`      |    `true`     | If `true`, synchronize tags between the crossing way and the crossing node |
 | `sidewalk.crossing.kerb`      |    `true`     | If `true`, add `kerb` tags to crossing nodes connected to sidewalks        |
 | `sidewalk.crossing.kerb.tags` |    `[{}]`     | Any additional tags to add to the `kerb` node                              |
