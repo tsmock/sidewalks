@@ -229,12 +229,10 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                         && !possibleCrossing.containsNode(crossingWay.firstNode())
                         && !possibleCrossing.containsNode(crossingWay.lastNode())) {
                     // Lanes are somewhere around 3.6m; most roads are going to be less than 3 lanes
-                    // one way.
-                    // This means 3 lanes/way * 2 ways * 3.6 metres/lane = 21.6 metres should be a
-                    // good "max length"
-                    // for automatically adding a crossing way (this should avoid situations where
-                    // the user is
-                    // trying to make a curve and gets a bunch of crossing ways)
+                    // one way. This means 3 lanes/way * 2 ways * 3.6 metres/lane = 21.6 metres
+                    // should be a good "max length" for automatically adding a crossing way (this
+                    // should avoid situations where the user is trying to make a curve and gets a
+                    // bunch of crossing ways). Rounded up to 30m due to feedback.
                     if (crossingWay.getLength() < Config.getPref().getInt("sidewalk.crossing.maxlength", 30)) {
                         createCrossingWay(way, crossingWay, possibleCrossing, parentWays, forwardDirection);
                     } else {
@@ -310,7 +308,7 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         } else if (way.hasTag(SURFACE)) {
             crossingWay.put(SURFACE, way.get(SURFACE));
         }
-        newNodes.remove(forwardDirection ? crossingWay.lastNode() : crossingWay.firstNode());
+        newNodes.remove(forwardDirection ? newNodes.size() - 1 : 0);
         if (newNodes.isEmpty() || newNodes.size() == 1) {
             usuallyRightCommands.add(DeleteCommand.delete(Collections.singleton(way), false, true));
         } else {

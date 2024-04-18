@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.event.MouseEvent;
@@ -316,6 +317,29 @@ class SidewalkModeTest {
         assertEquals(2, sidewalk.getNode(2).getParentWays().size());
     }
 
+    @Test
+    void testClosedSidewalkLoopWithCrossing() {
+        final var highway = TestUtils.newWay("highway=residential", new Node(new LatLon(47.6959017, -122.1157234)),
+                new Node(new LatLon(47.6958032, -122.1156135)));
+        final var sidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
+                new Node(new LatLon(47.6957785, -122.1158262)), new Node(new LatLon(47.6957082, -122.1155322)));
+        final var originalNodes = sidewalk.getNodes();
+        this.ds.addPrimitiveRecursive(highway);
+        this.ds.addPrimitiveRecursive(sidewalk);
+        this.ds.setSelected(sidewalk.lastNode());
+        clickAt(47.6959489, -122.1155503);
+        clickAt(47.6957785, -122.1158262); // Close the loop
+        clickAt(47.6957785, -122.1158262); // Finish drawing
+        assertEquals(3, sidewalk.getNodesCount());
+        assertSame(originalNodes.get(0), sidewalk.firstNode());
+        assertSame(originalNodes.get(1), sidewalk.getNode(1));
+        // Relevant XKCD: https://xkcd.com/2170/
+        // Note that we aren't as precise as I would like here since we are clicking on
+        // the map, and the UI decides to put the point at a slightly different position
+        // from where we clicked.
+        assertLatLonEquals(47.6959489, -122.1155503, sidewalk.lastNode().lat(), sidewalk.lastNode().lon(), 1e-6);
+    }
+
     private void clickAt(double lat, double lon) {
         clickAt(new LatLon(lat, lon));
     }
@@ -359,8 +383,12 @@ class SidewalkModeTest {
     }
 
     private static void assertLatLonEquals(double expectedLat, double expectedLon, double actualLat, double actualLon) {
+        assertLatLonEquals(expectedLat, expectedLon, actualLat, actualLon, ILatLon.MAX_SERVER_PRECISION);
+    }
+
+    private static void assertLatLonEquals(double expectedLat, double expectedLon, double actualLat, double actualLon,
+            double delta) {
         assertAll("Expected " + expectedLat + "," + expectedLon + " but was " + actualLat + "," + actualLon,
-                () -> assertEquals(expectedLat, actualLat, ILatLon.MAX_SERVER_PRECISION),
-                () -> assertEquals(expectedLon, actualLon, ILatLon.MAX_SERVER_PRECISION));
+                () -> assertEquals(expectedLat, actualLat, delta), () -> assertEquals(expectedLon, actualLon, delta));
     }
 }
