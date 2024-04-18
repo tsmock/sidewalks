@@ -314,14 +314,7 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         } else {
             usuallyRightCommands.add(new ChangeNodesCommand(way, newNodes));
         }
-        if (isCrossing && Config.getPref().getBoolean("sidewalk.crossing.kerb", true)) {
-            final var tagMap = Config.getPref().getListOfMaps("sidewalk.crossing.kerb.tags").stream().map(Map::entrySet)
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (old, n) -> n, TreeMap::new));
-            tagMap.putIfAbsent("barrier", "kerb");
-            usuallyRightCommands.add(
-                    new ChangePropertyCommand(Arrays.asList(crossingWay.firstNode(), crossingWay.lastNode()), tagMap));
-        }
+        addKerbTagging(way, crossingWay, usuallyRightCommands, isCrossing);
         // Now add the intersection node
         final var intersection = createCrossingNodes(crossingWay, possibleCrossing, usuallyRightCommands);
         usuallyRightCommands
@@ -344,6 +337,33 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                 InputEvent.ALT_DOWN_MASK | (this.ctrl ? InputEvent.CTRL_DOWN_MASK : 0)
                         | (this.shift ? InputEvent.SHIFT_DOWN_MASK : 0) | (this.meta ? InputEvent.META_DOWN_MASK : 0),
                 0, 0, 0, false));
+    }
+
+    private static void addKerbTagging(Way originalWay, Way crossingWay, Collection<Command> usuallyRightCommands,
+            boolean isCrossing) {
+        if (isCrossing && Config.getPref().getBoolean("sidewalk.crossing.kerb", true)) {
+            final var tagMap = Config.getPref().getListOfMaps("sidewalk.crossing.kerb.tags").stream().map(Map::entrySet)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (old, n) -> n, TreeMap::new));
+            tagMap.putIfAbsent("barrier", "kerb");
+            final var changingNodes = Arrays.asList(crossingWay.firstNode(), crossingWay.lastNode()).stream()
+                    .filter(node -> !inMiddleOfSidewalk(originalWay, crossingWay, node)).toList();
+            if (!changingNodes.isEmpty()) {
+                usuallyRightCommands.add(new ChangePropertyCommand(changingNodes, tagMap));
+            }
+        }
+    }
+
+    private static boolean inMiddleOfSidewalk(Way originalWay, Way crossingWay, Node node) {
+        final var footways = node.getParentWays().stream().filter(not(crossingWay::equals))
+                .filter(not(originalWay::equals)).filter(way -> way.hasTag(HIGHWAY, FOOTWAY)).toList();
+        if (footways.isEmpty()) {
+            return false;
+        } else if (footways.size() >= 2) {
+            return true;
+        }
+        final var footway = footways.get(0);
+        return footway.isClosed() || footway.isInnerNode(node);
     }
 
     private static Set<Node> createCrossingNodes(Way crossingWay, Way possibleCrossing, Collection<Command> commands) {

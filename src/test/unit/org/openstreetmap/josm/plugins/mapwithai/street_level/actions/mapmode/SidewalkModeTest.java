@@ -340,6 +340,28 @@ class SidewalkModeTest {
         assertLatLonEquals(47.6959489, -122.1155503, sidewalk.lastNode().lat(), sidewalk.lastNode().lon(), 1e-6);
     }
 
+    @Test
+    void testDontAddKerbsInMiddleOfSidewalk() {
+        final var sidewalk1 = TestUtils.newWay("highway=footway footway=sidewalk",
+                new Node(new LatLon(47.6956969, -122.1190318)), new Node(new LatLon(47.6956808, -122.1189738)));
+        final var sidewalk2 = TestUtils.newWay("highway=footway footway=sidewalk", sidewalk1.lastNode(),
+                new Node(new LatLon(47.6956658, -122.118944)));
+        final var sidewalk3 = TestUtils.newWay("highway=footway footway=sidewalk",
+                new Node(new LatLon(47.6956331, -122.1187476)), new Node(new LatLon(47.6956663, -122.1187291)),
+                new Node(new LatLon(47.695686, -122.1187006)));
+        final var highway = TestUtils.newWay("highway=residential", new Node(new LatLon(47.6957655, -122.1188517)),
+                new Node(new LatLon(47.6945597, -122.1186691)));
+        this.ds.addPrimitiveRecursive(sidewalk1);
+        this.ds.addPrimitiveRecursive(sidewalk2);
+        this.ds.addPrimitiveRecursive(sidewalk3);
+        this.ds.addPrimitiveRecursive(highway);
+        this.ds.setSelected(sidewalk2.firstNode());
+        clickAt(sidewalk3.getNode(1));
+        clickAt(sidewalk3.getNode(1));// Finish sidewalk
+        assertFalse(sidewalk3.getNode(1).hasKeys());
+        assertFalse(sidewalk1.lastNode().hasKeys());
+    }
+
     private void clickAt(double lat, double lon) {
         clickAt(new LatLon(lat, lon));
     }
