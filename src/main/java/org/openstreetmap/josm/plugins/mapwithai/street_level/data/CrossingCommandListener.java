@@ -26,7 +26,8 @@ import org.openstreetmap.josm.spi.preferences.Config;
 public class CrossingCommandListener implements UndoRedoHandler.CommandQueuePreciseListener {
     private static final String HIGHWAY = "highway";
     private static final String FOOTWAY = "footway";
-    private static final String[] COMMON_TAGS = new String[] { "bicycle", "crossing", "crossing:continuous",
+    private static final String CROSSING = "crossing";
+    private static final String[] COMMON_TAGS = new String[] { "bicycle", CROSSING, "crossing:continuous",
             "crossing:markings", "crossing:signals", "crossing_ref", "cycleway", "flashing_lights", FOOTWAY, HIGHWAY,
             "horse", "path", "railway", "segregated", "traffic_signals:sound", "traffic_signals:vibration", };
 
@@ -61,12 +62,13 @@ public class CrossingCommandListener implements UndoRedoHandler.CommandQueuePrec
             if (changed instanceof Way footway) {
                 if (newTags.containsKey(FOOTWAY))
                     newTags.put(HIGHWAY, newTags.remove(FOOTWAY));
-                linked = footway.getNodes().stream().filter(node -> node.hasTag(HIGHWAY, "crossing"))
+                linked = footway.getNodes().stream().filter(node -> node.hasTag(HIGHWAY, CROSSING))
                         .collect(Collectors.toSet());
             } else if (changed instanceof Node crossing) {
                 if (newTags.containsKey(HIGHWAY))
                     newTags.put(FOOTWAY, newTags.remove(HIGHWAY));
-                linked = crossing.getParentWays().stream().filter(way -> way.hasTag(HIGHWAY, FOOTWAY))
+                linked = crossing.getParentWays().stream()
+                        .filter(way -> way.hasTag(HIGHWAY, FOOTWAY) && way.hasTag(FOOTWAY, CROSSING))
                         .collect(Collectors.toSet());
             } else {
                 // Relations are not supported for syncing crossing tags

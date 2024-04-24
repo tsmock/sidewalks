@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.openstreetmap.josm.plugins.mapwithai.street_level.testutils.SidewalkTestUtils.newWay;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -97,12 +98,10 @@ class SidewalkModeTest {
 
     @Test
     void testBasic() {
-        final var highway = TestUtils.newWay("highway=residential", new Node(new LatLon(39.0700657, -108.4654122)),
-                new Node(new LatLon(39.0701854, -108.4654118)));
+        final var highway = newWay("highway=residential", 39.0700657, -108.4654122, 39.0701854, -108.4654118);
         this.ds.addPrimitiveRecursive(highway);
-        final var sidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
-                new Node(new LatLon(39.0701677, -108.4653373)), new Node(new LatLon(39.0701554, -108.4653242)),
-                new Node(new LatLon(39.0701461, -108.465308)));
+        final var sidewalk = newWay("highway=footway footway=sidewalk", 39.0701677, -108.4653373, 39.0701554,
+                -108.4653242, 39.0701461, -108.465308);
         this.ds.addPrimitiveRecursive(sidewalk);
         this.ds.setSelected(sidewalk.getNode(1));
         clickAt(39.0701499, -108.4653312);
@@ -133,12 +132,10 @@ class SidewalkModeTest {
 
     @Test
     void testValidWaysNonProblematic() {
-        final var highway = TestUtils.newWay("highway=residential", new Node(new LatLon(39.0700657, -108.4654122)),
-                new Node(new LatLon(39.0701854, -108.4654118)));
+        final var highway = newWay("highway=residential", 39.0700657, -108.4654122, 39.0701854, -108.4654118);
         this.ds.addPrimitiveRecursive(highway);
-        final var sidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
-                new Node(new LatLon(39.0701677, -108.4653373)), new Node(new LatLon(39.0701554, -108.4653242)),
-                new Node(new LatLon(39.0701461, -108.465308)));
+        final var sidewalk = newWay("highway=footway footway=sidewalk", 39.0701677, -108.4653373, 39.0701554,
+                -108.4653242, 39.0701461, -108.465308);
         this.ds.addPrimitiveRecursive(sidewalk);
         final var kerb = TestUtils.newNode("barrier=kerb");
         kerb.setCoor(new LatLon(39.0701494, -108.4654942));
@@ -157,14 +154,12 @@ class SidewalkModeTest {
      */
     @Test
     void testValidWaysProblematic() {
-        final var crossing = TestUtils.newWay(
-                "crossing:markings=yes crossing=uncontrolled footway=crossing highway=footway",
-                new Node(new LatLon(38.2477457, -104.643939)), new Node(new LatLon(38.2477466, -104.643881)),
-                new Node(new LatLon(38.2477482, -104.64377)));
-        final var sidewalk = TestUtils.newWay("footway=sidewalk highway=footway",
-                new Node(new LatLon(38.2475898, -104.643719)), new Node(new LatLon(38.2477489, -104.6437271)));
-        final var highway = TestUtils.newWay("highway=service oneway=yes surface=asphalt",
-                new Node(new LatLon(38.2485921, -104.6437852)), new Node(new LatLon(38.2488394, -104.6435905)));
+        final var crossing = newWay("crossing:markings=yes crossing=uncontrolled footway=crossing highway=footway",
+                38.2477457, -104.643939, 38.2477466, -104.643881, 38.2477482, -104.64377);
+        final var sidewalk = newWay("footway=sidewalk highway=footway", 38.2475898, -104.643719, 38.2477489,
+                -104.6437271);
+        final var highway = newWay("highway=service oneway=yes surface=asphalt", 38.2485921, -104.6437852, 38.2488394,
+                -104.6435905);
         this.ds.addPrimitiveRecursive(sidewalk);
         this.ds.addPrimitiveRecursive(crossing);
         this.ds.addPrimitiveRecursive(highway);
@@ -177,13 +172,12 @@ class SidewalkModeTest {
 
     @Test
     void testDividedHighway() {
-        final var southBound = TestUtils.newWay("highway=unclassified surface=concrete oneway=yes",
-                new Node(new LatLon(38.3125107, -104.625117)), new Node(new LatLon(38.3121189, -104.6251017)));
-        final var northBound = TestUtils.newWay("highway=unclassified surface=asphalt oneway=yes",
-                new Node(new LatLon(38.3121198, -104.6250227)), new Node(new LatLon(38.3125131, -104.625037)));
-        final var westSidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
-                new Node(new LatLon(38.3124233, -104.6251597)), new Node(new LatLon(38.3124337, -104.6251768)),
-                new Node(new LatLon(38.3124362, -104.6252079)));
+        final var southBound = newWay("highway=unclassified surface=concrete oneway=yes", 38.3125107, -104.625117,
+                38.3121189, -104.6251017);
+        final var northBound = newWay("highway=unclassified surface=asphalt oneway=yes", 38.3121198, -104.6250227,
+                38.3125131, -104.625037);
+        final var westSidewalk = newWay("highway=footway footway=sidewalk", 38.3124233, -104.6251597, 38.3124337,
+                -104.6251768, 38.3124362, -104.6252079);
         this.ds.addPrimitiveRecursive(southBound);
         this.ds.addPrimitiveRecursive(northBound);
         this.ds.addPrimitiveRecursive(westSidewalk);
@@ -208,13 +202,12 @@ class SidewalkModeTest {
 
     @Test
     void testDividedHighwayReversed() throws UserCancelException {
-        final var southBound = TestUtils.newWay("highway=unclassified surface=concrete oneway=yes",
-                new Node(new LatLon(38.3125107, -104.625117)), new Node(new LatLon(38.3121189, -104.6251017)));
-        final var northBound = TestUtils.newWay("highway=unclassified surface=asphalt oneway=yes",
-                new Node(new LatLon(38.3121198, -104.6250227)), new Node(new LatLon(38.3125131, -104.625037)));
-        final var westSidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
-                new Node(new LatLon(38.3124233, -104.6251597)), new Node(new LatLon(38.3124337, -104.6251768)),
-                new Node(new LatLon(38.3124362, -104.6252079)));
+        final var southBound = newWay("highway=unclassified surface=concrete oneway=yes", 38.3125107, -104.625117,
+                38.3121189, -104.6251017);
+        final var northBound = newWay("highway=unclassified surface=asphalt oneway=yes", 38.3121198, -104.6250227,
+                38.3125131, -104.625037);
+        final var westSidewalk = newWay("highway=footway footway=sidewalk", 38.3124233, -104.6251597, 38.3124337,
+                -104.6251768, 38.3124362, -104.6252079);
         this.ds.addPrimitiveRecursive(southBound);
         this.ds.addPrimitiveRecursive(northBound);
         this.ds.addPrimitiveRecursive(westSidewalk);
@@ -240,22 +233,17 @@ class SidewalkModeTest {
 
     @Test
     void testFourWayIntersectionCrossing() {
-        final var neSidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
-                new Node(new LatLon(39.0995956, -108.5016914)), new Node(new LatLon(39.0995628, -108.5016756)),
-                new Node(new LatLon(39.0995459, -108.501632)));
-        final var nwSidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
-                new Node(new LatLon(39.0995904, -108.5018225)), new Node(new LatLon(39.0995591, -108.5018476)),
-                new Node(new LatLon(39.0995466, -108.5018838)));
-        final var swSidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
-                new Node(new LatLon(39.099448, -108.5018858)), new Node(new LatLon(39.0994309, -108.5018433)),
-                new Node(new LatLon(39.0993986, -108.5018265)));
-        final var seSidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
-                new Node(new LatLon(39.0994007, -108.5016987)), new Node(new LatLon(39.0994319, -108.5016816)),
-                new Node(new LatLon(39.0994465, -108.5016357)));
-        final var nsHighway = TestUtils.newWay("highway=residential", new Node(new LatLon(39.0991704, -108.5017607)),
-                new Node(new LatLon(39.0994965, -108.5017631)), new Node(new LatLon(39.0995913, -108.5017581)));
-        final var weHighway = TestUtils.newWay("highway=residential", new Node(new LatLon(39.0994972, -108.5027182)),
-                new Node(new LatLon(39.0994869, -108.4985298)));
+        final var neSidewalk = newWay("highway=footway footway=sidewalk", 39.0995956, -108.5016914, 39.0995628,
+                -108.5016756, 39.0995459, -108.501632);
+        final var nwSidewalk = newWay("highway=footway footway=sidewalk", 39.0995904, -108.5018225, 39.0995591,
+                -108.5018476, 39.0995466, -108.5018838);
+        final var swSidewalk = newWay("highway=footway footway=sidewalk", 39.099448, -108.5018858, 39.0994309,
+                -108.5018433, 39.0993986, -108.5018265);
+        final var seSidewalk = newWay("highway=footway footway=sidewalk", 39.0994007, -108.5016987, 39.0994319,
+                -108.5016816, 39.0994465, -108.5016357);
+        final var nsHighway = newWay("highway=residential", 39.0991704, -108.5017607, 39.0994965, -108.5017631,
+                39.0995913, -108.5017581);
+        final var weHighway = newWay("highway=residential", 39.0994972, -108.5027182, 39.0994869, -108.4985298);
         for (OsmPrimitive p : Arrays.asList(neSidewalk, nwSidewalk, swSidewalk, seSidewalk, nsHighway, weHighway)) {
             this.ds.addPrimitiveRecursive(p);
         }
@@ -293,9 +281,8 @@ class SidewalkModeTest {
     @Test
     void testUndoRedoActionsNoChildCommands() {
         // Check tag change
-        final var neSidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
-                new Node(new LatLon(39.0995956, -108.5016914)), new Node(new LatLon(39.0995628, -108.5016756)),
-                new Node(new LatLon(39.0995459, -108.501632)));
+        final var neSidewalk = newWay("highway=footway footway=sidewalk", 39.0995956, -108.5016914, 39.0995628,
+                -108.5016756, 39.0995459, -108.501632);
         this.ds.addPrimitiveRecursive(neSidewalk);
         UndoRedoHandler.getInstance().add(new ChangePropertyCommand(neSidewalk, "surface", "concrete"));
         assertDoesNotThrow(() -> this.action.mouseReleased(mouseClickAt(neSidewalk.getNode(1))));
@@ -303,10 +290,9 @@ class SidewalkModeTest {
 
     @Test
     void testCrossingNodeNoWay() {
-        final var alley = TestUtils.newWay("highway=service service=alley",
-                new Node(new LatLon(38.5683524, -121.4924243)), new Node(new LatLon(38.5679984, -121.4910983)));
-        final var sidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
-                new Node(new LatLon(38.5675992, -121.491466)), new Node(new LatLon(38.567585, -121.4914197)));
+        final var alley = newWay("highway=service service=alley", 38.5683524, -121.4924243, 38.5679984, -121.4910983);
+        final var sidewalk = newWay("highway=footway footway=sidewalk", 38.5675992, -121.491466, 38.567585,
+                -121.4914197);
         this.ds.addPrimitiveRecursive(alley);
         this.ds.addPrimitiveRecursive(sidewalk);
         clickAt(38.567585, -121.4914197);
@@ -319,10 +305,9 @@ class SidewalkModeTest {
 
     @Test
     void testClosedSidewalkLoopWithCrossing() {
-        final var highway = TestUtils.newWay("highway=residential", new Node(new LatLon(47.6959017, -122.1157234)),
-                new Node(new LatLon(47.6958032, -122.1156135)));
-        final var sidewalk = TestUtils.newWay("highway=footway footway=sidewalk",
-                new Node(new LatLon(47.6957785, -122.1158262)), new Node(new LatLon(47.6957082, -122.1155322)));
+        final var highway = newWay("highway=residential", 47.6959017, -122.1157234, 47.6958032, -122.1156135);
+        final var sidewalk = newWay("highway=footway footway=sidewalk", 47.6957785, -122.1158262, 47.6957082,
+                -122.1155322);
         final var originalNodes = sidewalk.getNodes();
         this.ds.addPrimitiveRecursive(highway);
         this.ds.addPrimitiveRecursive(sidewalk);
@@ -342,15 +327,13 @@ class SidewalkModeTest {
 
     @Test
     void testDontAddKerbsInMiddleOfSidewalk() {
-        final var sidewalk1 = TestUtils.newWay("highway=footway footway=sidewalk",
-                new Node(new LatLon(47.6956969, -122.1190318)), new Node(new LatLon(47.6956808, -122.1189738)));
+        final var sidewalk1 = newWay("highway=footway footway=sidewalk", 47.6956969, -122.1190318, 47.6956808,
+                -122.1189738);
         final var sidewalk2 = TestUtils.newWay("highway=footway footway=sidewalk", sidewalk1.lastNode(),
                 new Node(new LatLon(47.6956658, -122.118944)));
-        final var sidewalk3 = TestUtils.newWay("highway=footway footway=sidewalk",
-                new Node(new LatLon(47.6956331, -122.1187476)), new Node(new LatLon(47.6956663, -122.1187291)),
-                new Node(new LatLon(47.695686, -122.1187006)));
-        final var highway = TestUtils.newWay("highway=residential", new Node(new LatLon(47.6957655, -122.1188517)),
-                new Node(new LatLon(47.6945597, -122.1186691)));
+        final var sidewalk3 = newWay("highway=footway footway=sidewalk", 47.6956331, -122.1187476, 47.6956663,
+                -122.1187291, 47.695686, -122.1187006);
+        final var highway = newWay("highway=residential", 47.6957655, -122.1188517, 47.6945597, -122.1186691);
         this.ds.addPrimitiveRecursive(sidewalk1);
         this.ds.addPrimitiveRecursive(sidewalk2);
         this.ds.addPrimitiveRecursive(sidewalk3);

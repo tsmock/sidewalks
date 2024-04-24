@@ -171,6 +171,10 @@ public @interface MapWithAIStreetLevelConfigAnnotation {
     class WiremockUrlClass extends WireMockExtension implements IUrls {
         private String wiremockUrl;
 
+        protected WiremockUrlClass() {
+            super(WireMockExtension.extensionOptions());
+        }
+
         @Override
         protected void onBeforeEach(WireMockRuntimeInfo wireMockRuntimeInfo) {
             super.onBeforeEach(wireMockRuntimeInfo);

@@ -5,8 +5,10 @@ package org.openstreetmap.josm.plugins.mapwithai.street_level.data;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.openstreetmap.josm.plugins.mapwithai.street_level.testutils.SidewalkTestUtils.newWay;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,4 +57,20 @@ class CrossingCommandListenerTest {
                 () -> assertEquals("ladder", crossingWay.get("crossing:markings")));
     }
 
+    @Test
+    void testDontAddCrossingTagsToSidewalk() {
+        final var footway = newWay("highway=footway", 39.0704491, -108.5592382, 39.0704478, -108.5583329, 39.0704474,
+                -108.5577837);
+        final var service = newWay("highway=service", 39.0703209, -108.5583331, 39.070803, -108.5583324);
+        final var ds = new DataSet();
+        final var undoRedo = UndoRedoHandler.getInstance();
+        final var crossing = footway.getNode(1);
+        ds.addPrimitiveRecursive(footway);
+        ds.addPrimitiveRecursive(service);
+        service.addNode(1, crossing);
+        crossing.put("highway", "crossing");
+        undoRedo.add(new ChangePropertyCommand(crossing, "crossing", "unmarked"));
+        assertFalse(footway.hasKey("crossing"));
+        assertFalse(footway.hasTag("footway", "crossing"));
+    }
 }
