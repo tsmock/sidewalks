@@ -9,14 +9,14 @@ import java.util.jar.Attributes;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.PluginException;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.testutils.JOSMTestRules;
 import org.openstreetmap.josm.testutils.annotations.BasicPreferences;
+import org.openstreetmap.josm.testutils.annotations.Main;
+import org.openstreetmap.josm.testutils.annotations.Projection;
 
 /**
  * Test class for {@link MapWithAIStreetLevelPlugin}
@@ -24,9 +24,9 @@ import org.openstreetmap.josm.testutils.annotations.BasicPreferences;
  * @author Taylor Smock
  */
 @BasicPreferences
+@Main
+@Projection
 class MapWithAIStreetLevelPluginTest {
-    @RegisterExtension
-    static JOSMTestRules josmTestRules = new JOSMTestRules().main().projection();
 
     static PluginInformation pluginInformation;
 

@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.openstreetmap.josm.plugins.mapwithai.street_level.testutils.SidewalkTestUtils.assertLatLonEquals;
 import static org.openstreetmap.josm.plugins.mapwithai.street_level.testutils.SidewalkTestUtils.newWay;
 
 import java.awt.event.MouseEvent;
@@ -425,19 +426,5 @@ class SidewalkModeTest {
     private static String convertToUriTags(Tagged tagged) {
         return tagged.getKeys().entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue())
                 .collect(Collectors.joining("%7C"));
-    }
-
-    private static void assertLatLonEquals(ILatLon expected, ILatLon actual) {
-        assertLatLonEquals(expected.lat(), expected.lon(), actual.lat(), actual.lon());
-    }
-
-    private static void assertLatLonEquals(double expectedLat, double expectedLon, double actualLat, double actualLon) {
-        assertLatLonEquals(expectedLat, expectedLon, actualLat, actualLon, ILatLon.MAX_SERVER_PRECISION);
-    }
-
-    private static void assertLatLonEquals(double expectedLat, double expectedLon, double actualLat, double actualLon,
-            double delta) {
-        assertAll("Expected " + expectedLat + "," + expectedLon + " but was " + actualLat + "," + actualLon,
-                () -> assertEquals(expectedLat, actualLat, delta), () -> assertEquals(expectedLon, actualLon, delta));
     }
 }

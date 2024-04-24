@@ -58,13 +58,13 @@ public final class ParallelSidewalkCreation {
             width = 11.5f; // 8.5m for road, another 3m for sidewalk
         }
         List<N> nodes = way.getNodes();
-        Map<Options, List<LatLon>> sidewalkLatLons = new EnumMap<>(Options.class);
+        Map<Options, List<ILatLon>> sidewalkLatLons = new EnumMap<>(Options.class);
         if (Arrays.asList(options).contains(Options.RIGHT)) {
-            sidewalkLatLons.put(Options.RIGHT, createParallelNodes(nodes, width / 2));
+            sidewalkLatLons.put(Options.RIGHT, createParallelNodes(nodes, width / 2, way.isClosed()));
         }
         if (Arrays.asList(options).contains(Options.LEFT)) {
             Collections.reverse(nodes);
-            sidewalkLatLons.put(Options.LEFT, createParallelNodes(nodes, width / 2));
+            sidewalkLatLons.put(Options.LEFT, createParallelNodes(nodes, width / 2, way.isClosed()));
         }
 
         // Suppress "unchecked" warnings here, since these are already typed
@@ -73,16 +73,21 @@ public final class ParallelSidewalkCreation {
         @SuppressWarnings("unchecked")
         Class<W> wayClass = (Class<W>) way.getClass();
         try {
+            final var nodeConstructor = nodeClass.getConstructor();
+            final var wayConstructor = wayClass.getConstructor();
             Map<Options, W> sidewalkList = new EnumMap<>(Options.class);
-            nodeClass.getConstructor().newInstance();
-            for (Map.Entry<Options, List<LatLon>> sidewalk : sidewalkLatLons.entrySet()) {
+            for (Map.Entry<Options, List<ILatLon>> sidewalk : sidewalkLatLons.entrySet()) {
                 List<N> tWayNodes = new ArrayList<>(sidewalk.getValue().size());
-                for (LatLon latLon : sidewalk.getValue()) {
-                    N tNode = nodeClass.getConstructor().newInstance();
-                    tNode.setCoor(latLon);
+                for (ILatLon latLon : sidewalk.getValue()) {
+                    N tNode = nodeConstructor.newInstance();
+                    tNode.setCoor(latLon instanceof LatLon ll ? ll : new LatLon(latLon.lat(), latLon.lon()));
                     tWayNodes.add(tNode);
                 }
-                W tWay = wayClass.getConstructor().newInstance();
+                if (tWayNodes.get(0).equalsEpsilon(tWayNodes.get(tWayNodes.size() - 1))) {
+                    tWayNodes.remove(tWayNodes.size() - 1);
+                    tWayNodes.add(tWayNodes.get(0));
+                }
+                W tWay = wayConstructor.newInstance();
                 tWay.setNodes(tWayNodes);
                 sidewalkList.put(sidewalk.getKey(), tWay);
             }
@@ -126,35 +131,53 @@ public final class ParallelSidewalkCreation {
     /**
      * Create a list of parallel nodes
      *
-     * @param nodes The nodes to create a parallel list (right)
-     * @param <N>   The node type
+     * @param nodes  The nodes to create a parallel list (right)
+     * @param <N>    The node type
+     * @param closed If the nodes are "closed"
      * @return The parallel nodes
      */
-    private static <N extends INode> List<LatLon> createParallelNodes(final List<N> nodes, final float offset) {
-        final List<LatLon> latLons = new ArrayList<>(nodes.size());
+    private static <N extends INode> List<ILatLon> createParallelNodes(final List<N> nodes, final float offset,
+            final boolean closed) {
+        final List<ILatLon> latLons = new ArrayList<>(nodes.size());
 
         double angle = nodes.get(0).getEastNorth().heading(nodes.get(1).getEastNorth()) + Math.PI / 2;
         latLons.add(getLatLon(nodes.get(0).getCoor(), angle, offset));
         // Every node beside first/last need three other nodes
         for (int i = 1; i < nodes.size() - 1; i++) {
-            // Note: getCornerAngle is (node1, commonNode, node2), angleIsClockwise is
-            // (commonNode, node1, node2)
-            final double cornerAngle = Geometry.getCornerAngle(nodes.get(i - 1).getEastNorth(),
-                    nodes.get(i).getEastNorth(), nodes.get(i + 1).getEastNorth());
-            final boolean isClockwise = Geometry.angleIsClockwise(nodes.get(i), nodes.get(i - 1), nodes.get(i + 1));
-            final double lastAngle = nodes.get(i).getEastNorth().heading(nodes.get(i + 1).getEastNorth());
-            if (isClockwise) {
-                angle = lastAngle + (2 * Math.PI - cornerAngle) / 2;
-            } else {
-                angle = lastAngle - cornerAngle / 2;
-            }
-            latLons.add(getLatLon(nodes.get(i).getCoor(), angle, offset));
+            latLons.add(generateLatLon(offset, nodes.get(i - 1), nodes.get(i), nodes.get(i + 1)));
         }
-        angle = nodes.get(nodes.size() - 2).getEastNorth().heading(nodes.get(nodes.size() - 1).getEastNorth())
-                + Math.PI / 2;
-        latLons.add(getLatLon(nodes.get(nodes.size() - 1).getCoor(), angle, offset));
+        if (!closed || latLons.size() < 3) {
+            angle = nodes.get(nodes.size() - 2).getEastNorth().heading(nodes.get(nodes.size() - 1).getEastNorth())
+                    + Math.PI / 2;
+            latLons.add(getLatLon(nodes.get(nodes.size() - 1).getCoor(), angle, offset));
+        } else {
+            latLons.remove(0);
+            final var first = nodes.get(nodes.size() - 2);
+            final var second = nodes.get(0);
+            final var third = nodes.get(1);
+
+            latLons.add(0, generateLatLon(offset, first, second, third));
+            latLons.add(latLons.get(0));
+        }
 
         return latLons;
+    }
+
+    private static ILatLon generateLatLon(final float offset, final INode first, final INode second,
+            final INode third) {
+        final double angle;
+        // Note: getCornerAngle is (node1, commonNode, node2), angleIsClockwise is
+        // (commonNode, node1, node2)
+        final double cornerAngle = Geometry.getCornerAngle(first.getEastNorth(), second.getEastNorth(),
+                third.getEastNorth());
+        final boolean isClockwise = Geometry.angleIsClockwise(second, first, third);
+        final double lastAngle = second.getEastNorth().heading(third.getEastNorth());
+        if (isClockwise) {
+            angle = lastAngle + (2 * Math.PI - cornerAngle) / 2;
+        } else {
+            angle = lastAngle - cornerAngle / 2;
+        }
+        return getLatLon(second, angle, offset);
     }
 
     /**

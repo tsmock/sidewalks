@@ -4,35 +4,29 @@
 package org.openstreetmap.josm.plugins.mapwithai.street_level.data.osm;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.openstreetmap.josm.plugins.mapwithai.street_level.testutils.SidewalkTestUtils.assertLatLonEquals;
+import static org.openstreetmap.josm.plugins.mapwithai.street_level.testutils.SidewalkTestUtils.newWay;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.testutils.JOSMTestRules;
+import org.openstreetmap.josm.testutils.annotations.Projection;
 
 /**
  * Test class for {@link ParallelSidewalkCreation}
  *
  * @author Taylor Smock
  */
+@Projection
 class ParallelSidewalkCreationTest {
-    @RegisterExtension
-    JOSMTestRules josmTestRules = new JOSMTestRules().projection();
 
     @Test
     void testFirstHorizontal() {
-        Node node1 = new Node(new LatLon(39.1693132, -108.7186835));
-        Node node2 = new Node(new LatLon(39.1693101, -108.7175632));
-        Node node3 = new Node(new LatLon(39.1693223, -108.7166861));
-        Way way1 = new Way();
-        way1.setNodes(Arrays.asList(node1, node2, node3));
+        Way way1 = newWay("", 39.1693132, -108.7186835, 39.1693101, -108.7175632, 39.1693223, -108.7166861);
         Map<ParallelSidewalkCreation.Options, Way> parallelSidewalks = ParallelSidewalkCreation
                 .createParallelSidewalks(way1, ParallelSidewalkCreation.Options.LEFT);
         assertEquals(1, parallelSidewalks.size());
@@ -51,11 +45,7 @@ class ParallelSidewalkCreationTest {
 
     @Test
     void testMiddleHorizontal() {
-        Node node1 = new Node(new LatLon(39.1693132, -108.7186835));
-        Node node2 = new Node(new LatLon(39.1693101, -108.7175632));
-        Node node3 = new Node(new LatLon(39.1693223, -108.7166861));
-        Way way1 = new Way();
-        way1.setNodes(Arrays.asList(node1, node2, node3));
+        Way way1 = newWay("", 39.1693132, -108.7186835, 39.1693101, -108.7175632, 39.1693223, -108.7166861);
         Map<ParallelSidewalkCreation.Options, Way> parallelSidewalks = ParallelSidewalkCreation
                 .createParallelSidewalks(way1, ParallelSidewalkCreation.Options.LEFT);
         assertEquals(1, parallelSidewalks.size());
@@ -74,11 +64,7 @@ class ParallelSidewalkCreationTest {
 
     @Test
     void testLastHorizontal() {
-        Node node1 = new Node(new LatLon(39.1693132, -108.7186835));
-        Node node2 = new Node(new LatLon(39.1693101, -108.7175632));
-        Node node3 = new Node(new LatLon(39.1693223, -108.7166861));
-        Way way1 = new Way();
-        way1.setNodes(Arrays.asList(node1, node2, node3));
+        Way way1 = newWay("", 39.1693132, -108.7186835, 39.1693101, -108.7175632, 39.1693223, -108.7166861);
         Map<ParallelSidewalkCreation.Options, Way> parallelSidewalks = ParallelSidewalkCreation
                 .createParallelSidewalks(way1, ParallelSidewalkCreation.Options.LEFT);
         assertEquals(1, parallelSidewalks.size());
@@ -93,5 +79,26 @@ class ParallelSidewalkCreationTest {
                 .heading(way1.lastNode().getEastNorth()));
         assertTrue(degrees > 358 || degrees < 2,
                 MessageFormat.format("Expected degrees to be {0} but was {1}", "> 358 or < 2", degrees));
+    }
+
+    @Test
+    void testClosedWay() {
+        Way way1 = newWay("", 39.0680771, -108.5655669, 39.0679765, -108.5655681, 39.0679718, -108.5652099, 39.0680968,
+                -108.5652026);
+        way1.addNode(way1.firstNode());
+
+        Map<ParallelSidewalkCreation.Options, Way> parallelSidewalks = ParallelSidewalkCreation
+                .createParallelSidewalks(way1, ParallelSidewalkCreation.Options.LEFT);
+        assertEquals(1, parallelSidewalks.size());
+        var sidewalk = parallelSidewalks.values().iterator().next();
+        assertSame(sidewalk.firstNode(), sidewalk.lastNode());
+        assertLatLonEquals(39.0680417, -108.5655185, sidewalk.firstNode().lat(), sidewalk.firstNode().lon());
+
+        parallelSidewalks = ParallelSidewalkCreation.createParallelSidewalks(way1,
+                ParallelSidewalkCreation.Options.RIGHT);
+        assertEquals(1, parallelSidewalks.size());
+        sidewalk = parallelSidewalks.values().iterator().next();
+        assertSame(sidewalk.firstNode(), sidewalk.lastNode());
+        assertLatLonEquals(39.0681125, -108.5656153, sidewalk.firstNode().lat(), sidewalk.firstNode().lon());
     }
 }
