@@ -15,11 +15,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.openstreetmap.josm.actions.mapmode.DrawAction;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
@@ -102,8 +104,10 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         }
     }
 
-    private static final String HIGHWAY = "highway";
+    private static final String CROSSING = "crossing";
     private static final String FOOTWAY = "footway";
+    private static final String HIGHWAY = "highway";
+    private static final String SIDEWALK = "sidewalk";
     private static final String SURFACE = "surface";
     private final DrawActionCustom drawAction = new DrawActionCustom();
     private boolean entered;
@@ -115,7 +119,7 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         super(tr("Sidewalk mode"), "presets/transport/way/way_pedestrian.svg", tr("Draw sidewalks more efficiently"),
                 Shortcut.registerShortcut("sidewalk:sidewalk", tr("Sidewalk mode"), KeyEvent.CHAR_UNDEFINED,
                         Shortcut.NONE),
-                ImageProvider.getCursor("crosshair", "sidewalk"));
+                ImageProvider.getCursor("crosshair", SIDEWALK));
         new ImageProvider("presets/transport/way/way_pedestrian.svg").setOptional(true).getResource()
                 .attachImageIcon(this);
         MapFrame.addMapModeChangeListener(this);
@@ -202,10 +206,10 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         // the tag add.
         if (way.getNodesCount() == 2 && !way.hasKeys() && (!undoRedoHandler.hasRedoCommands()
                 || !(undoRedoHandler.getRedoCommands().get(0) instanceof ChangePropertyCommand changePropertyCommand
-                        && Map.of(HIGHWAY, FOOTWAY, FOOTWAY, "sidewalk").equals(changePropertyCommand.getTags())
+                        && Map.of(HIGHWAY, FOOTWAY, FOOTWAY, SIDEWALK).equals(changePropertyCommand.getTags())
                         && changePropertyCommand.getParticipatingPrimitives().contains(way)))) {
-            undoRedoHandler.add(new ChangePropertyCommand(Collections.singleton(way),
-                    Map.of(HIGHWAY, FOOTWAY, FOOTWAY, "sidewalk")));
+            undoRedoHandler.add(
+                    new ChangePropertyCommand(Collections.singleton(way), Map.of(HIGHWAY, FOOTWAY, FOOTWAY, SIDEWALK)));
         }
         final var forwardDirection = way.lastNode().equals(addedNode);
 
@@ -302,7 +306,7 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                         && possibleCrossing.hasTag("service", "alley", "drive-through", "driveway",
                                 "emergency_access"));
         crossingWay.put(HIGHWAY, FOOTWAY);
-        crossingWay.put(FOOTWAY, isCrossing ? "crossing" : "sidewalk");
+        crossingWay.put(FOOTWAY, isCrossing ? CROSSING : SIDEWALK);
         if (possibleCrossing.hasTag(SURFACE)) {
             crossingWay.put(SURFACE, possibleCrossing.get(SURFACE));
         } else if (way.hasTag(SURFACE)) {
@@ -326,11 +330,10 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                             .collect(Collectors.toMap(Tag::getKey, Tag::getValue))));
         }
         if (isCrossing) {
-            undoRedoHandler.add(new ChangePropertyCommand(intersection, HIGHWAY, "crossing"));
+            undoRedoHandler.add(new ChangePropertyCommand(intersection, HIGHWAY, CROSSING));
         }
         // Needed to continue drawing. It would be nice to pass the original footway
-        // tags on, but that isn't
-        // currently possible.
+        // tags on, but that isn't currently possible.
         way.getDataSet().setSelected(forwardDirection ? crossingWay.lastNode() : crossingWay.firstNode());
         this.drawAction.updateKeyModifiers(new MouseEvent(MainApplication.getMap(),
                 Long.hashCode(System.currentTimeMillis()), System.currentTimeMillis(),
@@ -371,10 +374,40 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         final var intersection = Geometry.addIntersections(Arrays.asList(possibleCrossing, crossingWay), false,
                 intersectionCommands);
         if (intersection.size() == 1) {
-            final var node = intersection.iterator().next();
-            // The crossing way isn't part of the dataset yet, and we add it by "saving" the
-            // crossing way.
+            var node = intersection.iterator().next();
+            final var crossingSegment = Geometry.getClosestWaySegment(possibleCrossing, node);
+            final var maxCrossingDistance = Config.getPref().getDouble("sidewalk.crossing.node.maxdistance", 6);
+            // Check if the crossing segment has a node with crossing tags already
+            final var closestCrossing = Stream.of(crossingSegment.getFirstNode(), crossingSegment.getSecondNode())
+                    .filter(n -> n.hasTag(HIGHWAY, CROSSING) && n.getParentWays().size() == 1)
+                    .min(Comparator.comparingDouble(node::distanceSq));
+            boolean changeNodes = false;
+            if (closestCrossing.isPresent() && node.greatCircleDistance(closestCrossing.get()) < maxCrossingDistance) {
+                node = closestCrossing.get();
+                changeNodes = true;
+            } else {
+                // Then check for a very close node
+                final var dupeNodeDistance = Config.getPref().getDouble("sidewalk.crossing.node.dupedistance", 1);
+                final var closestNode = Stream.of(crossingSegment.getFirstNode(), crossingSegment.getSecondNode())
+                        .min(Comparator.comparingDouble(node::distanceSq)).orElseThrow();
+                if (node.greatCircleDistance(closestNode) < dupeNodeDistance) {
+                    node = closestNode;
+                    changeNodes = true;
+                }
+            }
+            if (changeNodes) {
+                final var nodes = new ArrayList<>(crossingWay.getNodes());
+                nodes.add(Geometry.getClosestWaySegment(crossingWay, node).getUpperIndex(), node);
+                intersectionCommands.clear();
+                if (crossingWay.getDataSet() != null) {
+                    intersectionCommands.add(new ChangeNodesCommand(crossingWay, nodes));
+                }
+                intersection.clear();
+                intersection.add(node);
+            }
             if (crossingWay.getDataSet() == null) {
+                // The crossing way isn't part of the dataset yet, and we add it by "saving" the
+                // crossing way.
                 crossingWay.addNode(Geometry.getClosestWaySegment(crossingWay, node).getUpperIndex(), node);
                 intersectionCommands.removeIf(command -> command.getParticipatingPrimitives().contains(crossingWay));
             }

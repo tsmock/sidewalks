@@ -35,12 +35,14 @@ This just creates parallel ways to a highway. It is recommended to check the
 geometry of the highway before using this tool.
 
 ## Advanced preferences
-| Preference                    | Default value | Description                                                                |
-|:------------------------------|:-------------:|:---------------------------------------------------------------------------|
-| `sidewalk.crossing.maxlength` |     `30`      | The maximum length for a crossing way                                      |
-| `sidewalk.crossing.sync`      |    `true`     | If `true`, synchronize tags between the crossing way and the crossing node |
-| `sidewalk.crossing.kerb`      |    `true`     | If `true`, add `kerb` tags to crossing nodes connected to sidewalks        |
-| `sidewalk.crossing.kerb.tags` |    `[{}]`     | Any additional tags to add to the `kerb` node                              |
+| Preference                            | Default value | Description                                                                                           |
+|:--------------------------------------|:-------------:|:------------------------------------------------------------------------------------------------------|
+| `sidewalk.crossing.kerb.tags`         |    `[{}]`     | Any additional tags to add to the `kerb` node                                                         |
+| `sidewalk.crossing.kerb`              |    `true`     | If `true`, add `kerb` tags to crossing nodes connected to sidewalks                                   |
+| `sidewalk.crossing.maxlength`         |     `30`      | The maximum length for a crossing way                                                                 |
+| `sidewalk.crossing.node.maxdistance`  |      `6`      | Attempt to merge nodes with crossing tags at most this distance (m) away when creating crossing nodes |
+| `sidewalk.crossing.node.dupedistance` |      `1`      | Attempt to merge nodes at most this distance (m) away when creating crossing nodes                    |
+| `sidewalk.crossing.sync`              |    `true`     | If `true`, synchronize tags between the crossing way and the crossing node                            |
 
 ## License
 GPLv2 or any later version

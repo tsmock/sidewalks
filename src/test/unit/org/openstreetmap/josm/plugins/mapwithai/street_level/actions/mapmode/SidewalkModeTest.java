@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.actions.ReverseWayAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
@@ -343,6 +346,47 @@ class SidewalkModeTest {
         clickAt(sidewalk3.getNode(1));// Finish sidewalk
         assertFalse(sidewalk3.getNode(1).hasKeys());
         assertFalse(sidewalk1.lastNode().hasKeys());
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = { true, false })
+    void testMergeExistingCrosswalk(boolean tooFar) {
+        final var highway = newWay("highway=residential", 39.0692698, -108.5661303, 39.0692697, -108.5660189, 39.069269,
+                -108.56514);
+        final var crossingNode = highway.getNode(1);
+        crossingNode.put("highway", "crossing");
+        if (tooFar) {
+            crossingNode.setCoor(new LatLon(39.0692697, -108.5659494));
+        }
+        this.ds.addPrimitiveRecursive(highway);
+        clickAt(39.0693705, -108.5660188);
+        clickAt(39.0691728, -108.566019);
+        clickAt(39.0691728, -108.566019); // Finish drawing
+        final var crossing = this.ds.getLastSelectedWay();
+        assertEquals(Map.of("highway", "footway", "footway", "crossing"), crossing.getKeys());
+        assertEquals(!tooFar, crossing.containsNode(crossingNode));
+        assertEquals(3, crossing.getNodesCount());
+        assertEquals(tooFar ? 4 : 3, highway.getNodesCount());
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = { true, false })
+    void testMergeExistingNode(boolean tooFar) {
+        final var highway = newWay("highway=residential", 39.0692698, -108.5661303, 39.0692697, -108.5660081, 39.069269,
+                -108.56514);
+        final var crossingNode = highway.getNode(1);
+        if (tooFar) {
+            crossingNode.setCoor(new LatLon(39.0692697, -108.5659864));
+        }
+        this.ds.addPrimitiveRecursive(highway);
+        clickAt(39.0693705, -108.5660188);
+        clickAt(39.0691728, -108.566019);
+        clickAt(39.0691728, -108.566019); // Finish drawing
+        final var crossing = this.ds.getLastSelectedWay();
+        assertEquals(Map.of("highway", "footway", "footway", "crossing"), crossing.getKeys());
+        assertEquals(!tooFar, crossing.containsNode(crossingNode));
+        assertEquals(3, crossing.getNodesCount());
+        assertEquals(tooFar ? 4 : 3, highway.getNodesCount());
     }
 
     private void clickAt(double lat, double lon) {
