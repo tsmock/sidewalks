@@ -37,6 +37,7 @@ import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.ILatLon;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tagged;
@@ -409,7 +410,7 @@ class SidewalkModeTest {
         clickAt(39.0672264, -108.5508622);
         clickAt(39.0672264, -108.5508622); // Finish drawing
         final var crossing = this.ds.getWays().stream().filter(w -> !Arrays.asList(highwayOne, highwayTwo).contains(w))
-                .findFirst().orElseThrow();
+                .filter(not(IPrimitive::isDeleted)).findFirst().orElseThrow();
         assertAll(() -> assertEquals("footway", crossing.get("highway")),
                 () -> assertEquals("crossing", crossing.get("footway")),
                 () -> assertEquals(3, crossing.getNodesCount()));
