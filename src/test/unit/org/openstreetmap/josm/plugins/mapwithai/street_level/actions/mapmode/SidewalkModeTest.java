@@ -322,11 +322,13 @@ class SidewalkModeTest {
         assertEquals(3, sidewalk.getNodesCount());
         assertSame(originalNodes.get(0), sidewalk.firstNode());
         assertSame(originalNodes.get(1), sidewalk.getNode(1));
+        final var lastNode = sidewalk.lastNode();
+        assertNotNull(lastNode);
         // Relevant XKCD: https://xkcd.com/2170/
         // Note that we aren't as precise as I would like here since we are clicking on
         // the map, and the UI decides to put the point at a slightly different position
         // from where we clicked.
-        assertLatLonEquals(47.6959489, -122.1155503, sidewalk.lastNode().lat(), sidewalk.lastNode().lon(), 1e-6);
+        assertLatLonEquals(47.6959489, -122.1155503, lastNode.lat(), lastNode.lon(), 1e-6);
     }
 
     @Test
@@ -346,7 +348,7 @@ class SidewalkModeTest {
         clickAt(sidewalk3.getNode(1));
         clickAt(sidewalk3.getNode(1));// Finish sidewalk
         assertFalse(sidewalk3.getNode(1).hasKeys());
-        assertFalse(sidewalk1.lastNode().hasKeys());
+        assertFalse(Objects.requireNonNull(sidewalk1.lastNode()).hasKeys());
     }
 
     @ParameterizedTest
@@ -388,6 +390,34 @@ class SidewalkModeTest {
         assertEquals(!tooFar, crossing.containsNode(crossingNode));
         assertEquals(3, crossing.getNodesCount());
         assertEquals(tooFar ? 4 : 3, highway.getNodesCount());
+    }
+
+    /**
+     * We want to avoid merging to a crossing node near a road intersection, like in
+     * a roundabout. See <a href="https://github.com/tsmock/sidewalks/issues/9">GH
+     * #9</a> for further details.
+     */
+    @Test
+    void testCrossingNearIntersection() {
+        final var highwayOne = newWay("highway=residential", 39.0673069, -108.5518113, 39.0673068, -108.5508516);
+        final var highwayTwo = newWay("highway=residential junction=roundabout", 39.0673552, -108.5508056, 39.0672551,
+                -108.5508058);
+        this.ds.addPrimitiveRecursive(highwayOne);
+        this.ds.addPrimitiveRecursive(highwayTwo);
+        highwayTwo.addNode(1, highwayOne.lastNode());
+        clickAt(39.0673799, -108.5508617);
+        clickAt(39.0672264, -108.5508622);
+        clickAt(39.0672264, -108.5508622); // Finish drawing
+        final var crossing = this.ds.getWays().stream().filter(w -> !Arrays.asList(highwayOne, highwayTwo).contains(w))
+                .findFirst().orElseThrow();
+        assertAll(() -> assertEquals("footway", crossing.get("highway")),
+                () -> assertEquals("crossing", crossing.get("footway")),
+                () -> assertEquals(3, crossing.getNodesCount()));
+        assertEquals(3, highwayTwo.getNodesCount());
+        assertEquals(3, highwayOne.getNodesCount());
+        final var crossingNode = highwayOne.getNode(1);
+        assertAll(() -> assertSame(crossingNode, crossing.getNode(1)),
+                () -> assertEquals("crossing", crossingNode.get("highway")));
     }
 
     private void clickAt(double lat, double lon) {

@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
@@ -349,8 +350,9 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                     .flatMap(Collection::stream)
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (old, n) -> n, TreeMap::new));
             tagMap.putIfAbsent("barrier", "kerb");
-            final var changingNodes = Arrays.asList(crossingWay.firstNode(), crossingWay.lastNode()).stream()
-                    .filter(node -> !inMiddleOfSidewalk(originalWay, crossingWay, node)).toList();
+            final var changingNodes = Stream.of(crossingWay.firstNode(), crossingWay.lastNode())
+                    .filter(Objects::nonNull).filter(node -> !inMiddleOfSidewalk(originalWay, crossingWay, node))
+                    .toList();
             if (!changingNodes.isEmpty()) {
                 usuallyRightCommands.add(new ChangePropertyCommand(changingNodes, tagMap));
             }
@@ -389,8 +391,9 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                 // Then check for a very close node
                 final var dupeNodeDistance = Config.getPref().getDouble("sidewalk.crossing.node.dupedistance", 1);
                 final var closestNode = Stream.of(crossingSegment.getFirstNode(), crossingSegment.getSecondNode())
-                        .min(Comparator.comparingDouble(node::distanceSq)).orElseThrow();
-                if (node.greatCircleDistance(closestNode) < dupeNodeDistance) {
+                        .filter(n -> n.getParentWays().size() == 1).min(Comparator.comparingDouble(node::distanceSq))
+                        .orElse(null);
+                if (closestNode != null && node.greatCircleDistance(closestNode) < dupeNodeDistance) {
                     node = closestNode;
                     changeNodes = true;
                 }
