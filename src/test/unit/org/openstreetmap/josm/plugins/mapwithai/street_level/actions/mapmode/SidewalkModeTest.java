@@ -420,6 +420,31 @@ class SidewalkModeTest {
                 () -> assertEquals("crossing", crossingNode.get("highway")));
     }
 
+    @Test
+    void testDontContinueCrossingSurfaceTagging() {
+        final var highwayOne = newWay("highway=residential surface=asphalt", 39.0673069, -108.5518113, 39.0673063,
+                -108.5507395);
+        final var highwayTwo = newWay("highway=residential", 39.0674262, -108.5507393, 39.0671796, -108.5507402);
+        final var sidewalkOne = newWay("highway=footway footway=sidewalk", 39.0671798, -108.5508623, 39.0672264,
+                -108.5508622);
+        final var sidewalkTwo = newWay("highway=footway footway=sidewalk", 39.0674294, -108.5523571, 39.0674263,
+                -108.5507985);
+        final var originalWays = Arrays.asList(highwayOne, highwayTwo, sidewalkOne, sidewalkTwo);
+        originalWays.forEach(this.ds::addPrimitiveRecursive);
+        highwayTwo.addNode(1, highwayOne.lastNode());
+        clickAt(39.0672264, -108.5508622);
+        clickAt(39.0673799, -108.5508617);
+        clickAt(39.0674264, -108.5508615);
+        clickAt(39.0674264, -108.5508615);
+        final var crossing = sidewalkOne.lastNode().getParentWays().stream().filter(not(originalWays::contains))
+                .findFirst().orElseThrow();
+        final var newSidewalk = crossing.lastNode().getParentWays().stream().filter(not(crossing::equals))
+                .filter(not(originalWays::contains)).findFirst().orElseThrow();
+        assertFalse(newSidewalk.hasTag("surface"));
+        assertEquals(3, sidewalkTwo.getNodesCount());
+        assertEquals(2, newSidewalk.lastNode().getParentWays().size());
+    }
+
     private void clickAt(double lat, double lon) {
         clickAt(new LatLon(lat, lon));
     }
@@ -434,7 +459,7 @@ class SidewalkModeTest {
 
     private MouseEvent mouseClickAt(ILatLon location) {
         final var mapView = MainApplication.getMap().mapView;
-        mapView.zoomToFactor(0.005);
+        mapView.zoomTo(mapView.getCenter(), 0.005);
         mapView.zoomTo(location);
         final var point = mapView.getPoint(location);
         return new MouseEvent(MainApplication.getMap(), Long.hashCode(System.currentTimeMillis()),

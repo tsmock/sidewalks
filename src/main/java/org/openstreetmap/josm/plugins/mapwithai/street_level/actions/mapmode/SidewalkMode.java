@@ -195,7 +195,8 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
             return;
         }
         final var way = undoRedoHandler.getLastCommand().getParticipatingPrimitives().stream()
-                .filter(Way.class::isInstance).map(Way.class::cast).findFirst().orElse(null);
+                .filter(Way.class::isInstance).map(Way.class::cast).reduce((w1, w2) -> w1.isSelected() ? w1 : w2)
+                .orElse(null);
         if (way == null || way.firstNode() == null) {
             return;
         }
