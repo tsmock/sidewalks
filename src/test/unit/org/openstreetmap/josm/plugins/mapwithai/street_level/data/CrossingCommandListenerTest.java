@@ -12,20 +12,25 @@ import static org.openstreetmap.josm.plugins.mapwithai.street_level.testutils.Si
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.testutils.annotations.ThreadSync;
 
 /**
  * Test class for {@link CrossingCommandListener}
  */
 class CrossingCommandListenerTest {
+    @RegisterExtension
+    ThreadSync.ThreadSyncExtension threadSyncExtension = new ThreadSync.ThreadSyncExtension();
+
     @BeforeEach
     void setup() {
+        UndoRedoHandler.getInstance().clean();
         UndoRedoHandler.getInstance().addCommandQueuePreciseListener(new CrossingCommandListener());
     }
 
@@ -42,8 +47,7 @@ class CrossingCommandListenerTest {
         highway.addNode(1, crossingNode);
         final var changePropertyCommand = new ChangePropertyCommand(crossingNode, "crossing:markings", "ladder");
         UndoRedoHandler.getInstance().add(changePropertyCommand);
-        GuiHelper.runInEDTAndWait(() -> {
-            /* Sync UI thread */ });
+        threadSyncExtension.threadSync();
         assertNotSame(changePropertyCommand, UndoRedoHandler.getInstance().getLastCommand());
         assertSame(changePropertyCommand, UndoRedoHandler.getInstance().getUndoCommands().get(0));
         assertAll(() -> assertEquals(3, crossingNode.getNumKeys(), crossingNode.toString()),
@@ -70,7 +74,20 @@ class CrossingCommandListenerTest {
         service.addNode(1, crossing);
         crossing.put("highway", "crossing");
         undoRedo.add(new ChangePropertyCommand(crossing, "crossing", "unmarked"));
+        threadSyncExtension.threadSync();
         assertFalse(footway.hasKey("crossing"));
         assertFalse(footway.hasTag("footway", "crossing"));
+    }
+
+    @Test
+    void testDontAddHighwayFootwayToCrossing() {
+        final var way = newWay("", 39.1021966, -108.5542965, 39.1022497, -108.5542973, 39.1023111, -108.5542982);
+        final var ds = new DataSet();
+        final var crossing = way.getNode(1);
+        ds.addPrimitiveRecursive(way);
+        crossing.put("highway", "crossing");
+        UndoRedoHandler.getInstance().add(new ChangePropertyCommand(way, "highway", "footway"));
+        threadSyncExtension.threadSync();
+        assertEquals("crossing", crossing.get("highway"));
     }
 }

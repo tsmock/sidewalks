@@ -60,16 +60,9 @@ public class CrossingCommandListener implements UndoRedoHandler.CommandQueuePrec
             newTags.putAll(getCommonCrossingTags(changed.getKeys()));
             final Collection<OsmPrimitive> linked;
             if (changed instanceof Way footway) {
-                if (newTags.containsKey(FOOTWAY))
-                    newTags.put(HIGHWAY, newTags.remove(FOOTWAY));
-                linked = footway.getNodes().stream().filter(node -> node.hasTag(HIGHWAY, CROSSING))
-                        .collect(Collectors.toSet());
+                linked = processWay(newTags, footway);
             } else if (changed instanceof Node crossing) {
-                if (newTags.containsKey(HIGHWAY))
-                    newTags.put(FOOTWAY, newTags.remove(HIGHWAY));
-                linked = crossing.getParentWays().stream()
-                        .filter(way -> way.hasTag(HIGHWAY, FOOTWAY) && way.hasTag(FOOTWAY, CROSSING))
-                        .collect(Collectors.toSet());
+                linked = processNode(newTags, crossing);
             } else {
                 // Relations are not supported for syncing crossing tags
                 return null;
@@ -80,6 +73,23 @@ public class CrossingCommandListener implements UndoRedoHandler.CommandQueuePrec
             }
         }
         return null;
+    }
+
+    private static Collection<OsmPrimitive> processWay(Map<String, String> newTags, Way footway) {
+        if (newTags.containsKey(FOOTWAY)) {
+            newTags.put(HIGHWAY, newTags.remove(FOOTWAY));
+        } else {
+            newTags.remove(HIGHWAY); // Don't copy the highway tag over
+        }
+        return footway.getNodes().stream().filter(node -> node.hasTag(HIGHWAY, CROSSING)).collect(Collectors.toSet());
+    }
+
+    private static Collection<OsmPrimitive> processNode(Map<String, String> newTags, Node crossing) {
+        if (newTags.containsKey(HIGHWAY))
+            newTags.put(FOOTWAY, newTags.remove(HIGHWAY));
+        return crossing.getParentWays().stream()
+                .filter(way -> way.hasTag(HIGHWAY, FOOTWAY) && way.hasTag(FOOTWAY, CROSSING))
+                .collect(Collectors.toSet());
     }
 
     private static Map<String, String> getCommonCrossingTags(Map<String, String> object) {
