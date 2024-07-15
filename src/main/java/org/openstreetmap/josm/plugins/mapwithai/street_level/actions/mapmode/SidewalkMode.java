@@ -322,7 +322,10 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         } else if (way.hasTag(SURFACE)) {
             crossingWay.put(SURFACE, way.get(SURFACE));
         }
-        newNodes.remove(forwardDirection ? newNodes.size() - 1 : 0);
+        // This is necessary when we are crossing _multiple_ ways
+        if (Geometry.getDistanceWayWay(way, possibleCrossing) == 0) {
+            newNodes.remove(forwardDirection ? newNodes.size() - 1 : 0);
+        }
         if (newNodes.isEmpty() || newNodes.size() == 1) {
             usuallyRightCommands.add(DeleteCommand.delete(Collections.singleton(way), false, true));
         } else {

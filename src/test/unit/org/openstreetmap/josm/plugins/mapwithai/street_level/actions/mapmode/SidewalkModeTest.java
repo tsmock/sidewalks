@@ -446,6 +446,30 @@ class SidewalkModeTest {
         assertEquals(2, newSidewalk.lastNode().getParentWays().size());
     }
 
+    /**
+     * Ensure that crossing a highway and a footway does not delete the last segment from the footway being drawn
+     * See <a href="https://github.com/tsmock/sidewalks/issues/20">GH #20</a> for details.
+     */
+    @Test
+    void testCrossingHighwayAndFootway() {
+        final var highwayOne = newWay("highway=residential", 39.062895, -108.5228415, 39.0624124, -108.5228448);
+        final var footwayOne = newWay("highway=footway", 39.0626661, -108.5227671, 39.0624119, -108.5227586);
+        final var originalWays = Arrays.asList(highwayOne, footwayOne);
+        originalWays.forEach(this.ds::addPrimitiveRecursive);
+        clickAt(39.0624641, -108.5234194);
+        clickAt(39.0624616, -108.5229965);
+        clickAt(39.0624743, -108.5229272);
+        clickAt(39.0624717, -108.5227507);
+        final var footway = this.ds.getWays().stream().filter(not(originalWays::contains))
+                // The crossing way will have three nodes with additional parents; the target footway will only have 1.
+                .filter(w -> w.getNodes().stream().mapToInt(n -> n.getParentWays().size() - 1).sum() == 1).findFirst()
+                .orElseThrow();
+        assertEquals(3, footway.getNodesCount());
+        assertLatLonEquals(new LatLon(39.0624641, -108.5234194), footway.getNode(0));
+        assertLatLonEquals(new LatLon(39.0624616, -108.5229965), footway.getNode(1));
+        assertLatLonEquals(new LatLon(39.0624743, -108.5229272), footway.getNode(2));
+    }
+
     private void clickAt(double lat, double lon) {
         clickAt(new LatLon(lat, lon));
     }
