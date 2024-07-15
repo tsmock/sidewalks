@@ -24,6 +24,8 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.actions.mapmode.DrawAction;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.AddCommand;
@@ -42,7 +44,9 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.spi.preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.tools.Geometry;
@@ -142,6 +146,10 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         MapFrame map = MainApplication.getMap();
         map.mapView.addMouseListener(this);
         map.mapView.addMouseMotionListener(this);
+        new Notification(tr("How to exit {0}:<br/>Enter {1} mode twice (shortcut {2}).",
+                this.getValue(NAME), this.drawAction.getValue(NAME), this.drawAction.getShortcut().toString()))
+                .setIcon(JOptionPane.INFORMATION_MESSAGE)
+                .show();
     }
 
     @Override
