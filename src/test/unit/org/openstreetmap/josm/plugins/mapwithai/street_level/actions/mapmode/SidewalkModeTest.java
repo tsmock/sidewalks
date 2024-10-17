@@ -1,6 +1,4 @@
 // License: GPL. For details, see LICENSE file.
-// SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2024 Taylor Smock <tsmock@fb.com>
 package org.openstreetmap.josm.plugins.mapwithai.street_level.actions.mapmode;
 
 import static java.util.function.Predicate.not;
@@ -419,6 +417,32 @@ class SidewalkModeTest {
         final var crossingNode = highwayOne.getNode(1);
         assertAll(() -> assertSame(crossingNode, crossing.getNode(1)),
                 () -> assertEquals("crossing", crossingNode.get("highway")));
+    }
+
+    /**
+     * Don't reuse nodes that have existing non-crossing tags
+     */
+    @Test
+    void testDontUseDifferentTaggedNodes() {
+        final var highway = newWay("highway=residential", 39.0619158, -108.4891703, 39.0619153, -108.4877406,
+                39.0619153, -108.4876649);
+        this.ds.addPrimitiveRecursive(highway);
+        final var stopNode = highway.getNode(1);
+        assertNotNull(stopNode);
+        stopNode.put("highway", "crossing");
+        clickAt(39.0618571, -108.4877409);
+        clickAt(39.0619774, -108.487738);
+        clickAt(39.0619774, -108.487738);
+        assertEquals(2, stopNode.getParentWays().size(), "The stop node should be close enough to be used");
+        while (UndoRedoHandler.getInstance().hasUndoCommands()) {
+            UndoRedoHandler.getInstance().undo();
+        }
+        stopNode.put("highway", "stop");
+        clickAt(39.0618571, -108.4877409);
+        clickAt(39.0619774, -108.487738);
+        clickAt(39.0619774, -108.487738);
+        assertEquals(1, stopNode.getParentWays().size(),
+                "The stop node should not be used if it doesn't have crossing tags");
     }
 
     @Test

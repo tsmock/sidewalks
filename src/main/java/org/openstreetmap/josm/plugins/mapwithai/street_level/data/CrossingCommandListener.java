@@ -1,6 +1,4 @@
 // License: GPL. For details, see LICENSE file.
-// SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2024 Taylor Smock <tsmock@fb.com>
 package org.openstreetmap.josm.plugins.mapwithai.street_level.data;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -37,9 +35,9 @@ public class CrossingCommandListener implements UndoRedoHandler.CommandQueuePrec
             return;
         }
         final Command command;
-        if (e.getCommand() instanceof ChangePropertyCommand changePropertyCommand) {
+        if (e.getCommand()instanceof ChangePropertyCommand changePropertyCommand) {
             command = processChangePropertyCommand(changePropertyCommand);
-        } else if (e.getCommand() instanceof SequenceCommand sequenceCommand) {
+        } else if (e.getCommand()instanceof SequenceCommand sequenceCommand) {
             final var commands = sequenceCommand.getChildren().stream().filter(ChangePropertyCommand.class::isInstance)
                     .map(ChangePropertyCommand.class::cast).map(CrossingCommandListener::processChangePropertyCommand)
                     .filter(Objects::nonNull).toList();

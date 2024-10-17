@@ -1,10 +1,10 @@
 // License: GPL. For details, see LICENSE file.
-// SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2024 Taylor Smock <tsmock@fb.com>
 package org.openstreetmap.josm.plugins.mapwithai.street_level.actions.mapmode;
 
 import static java.util.function.Predicate.not;
 import static org.openstreetmap.josm.tools.I18n.tr;
+
+import javax.swing.JOptionPane;
 
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
@@ -23,8 +23,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.actions.mapmode.DrawAction;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
@@ -46,7 +44,6 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.spi.preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.tools.Geometry;
@@ -146,10 +143,9 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         MapFrame map = MainApplication.getMap();
         map.mapView.addMouseListener(this);
         map.mapView.addMouseMotionListener(this);
-        new Notification(tr("How to exit {0}:<br/>Enter {1} mode twice (shortcut {2}).",
-                this.getValue(NAME), this.drawAction.getValue(NAME), this.drawAction.getShortcut().toString()))
-                .setIcon(JOptionPane.INFORMATION_MESSAGE)
-                .show();
+        new Notification(tr("How to exit {0}:<br/>Enter {1} mode twice (shortcut {2}).", this.getValue(NAME),
+                this.drawAction.getValue(NAME), this.drawAction.getShortcut().toString()))
+                        .setIcon(JOptionPane.INFORMATION_MESSAGE).show();
     }
 
     @Override
@@ -215,7 +211,7 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         // Add sidewalk keys to a *new* way, but not if the user has explicitly undone
         // the tag add.
         if (way.getNodesCount() == 2 && !way.hasKeys() && (!undoRedoHandler.hasRedoCommands()
-                || !(undoRedoHandler.getRedoCommands().get(0) instanceof ChangePropertyCommand changePropertyCommand
+                || !(undoRedoHandler.getRedoCommands().get(0)instanceof ChangePropertyCommand changePropertyCommand
                         && Map.of(HIGHWAY, FOOTWAY, FOOTWAY, SIDEWALK).equals(changePropertyCommand.getTags())
                         && changePropertyCommand.getParticipatingPrimitives().contains(way)))) {
             undoRedoHandler.add(
@@ -343,7 +339,11 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                             .collect(Collectors.toMap(Tag::getKey, Tag::getValue))));
         }
         if (isCrossing) {
-            undoRedoHandler.add(new ChangePropertyCommand(intersection, HIGHWAY, CROSSING));
+            intersection.stream().filter(n -> n.getDataSet() == null).forEach(n -> n.put(HIGHWAY, CROSSING));
+            intersection.removeIf(n -> n.getDataSet() == null);
+            if (!intersection.isEmpty()) {
+                undoRedoHandler.add(new ChangePropertyCommand(intersection, HIGHWAY, CROSSING));
+            }
         }
         // Needed to continue drawing. It would be nice to pass the original footway
         // tags on, but that isn't currently possible.
@@ -400,11 +400,11 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                 node = closestCrossing.get();
                 changeNodes = true;
             } else {
-                // Then check for a very close node
+                // Then check for a very close node ''without'' other tags
                 final var dupeNodeDistance = Config.getPref().getDouble("sidewalk.crossing.node.dupedistance", 1);
                 final var closestNode = Stream.of(crossingSegment.getFirstNode(), crossingSegment.getSecondNode())
-                        .filter(n -> n.getParentWays().size() == 1).min(Comparator.comparingDouble(node::distanceSq))
-                        .orElse(null);
+                        .filter(n -> n.getParentWays().size() == 1 && !n.isTagged())
+                        .min(Comparator.comparingDouble(node::distanceSq)).orElse(null);
                 if (closestNode != null && node.greatCircleDistance(closestNode) < dupeNodeDistance) {
                     node = closestNode;
                     changeNodes = true;
