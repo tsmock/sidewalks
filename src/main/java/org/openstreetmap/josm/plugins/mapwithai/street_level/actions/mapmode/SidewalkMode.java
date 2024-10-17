@@ -109,6 +109,7 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
 
     private static final String CROSSING = "crossing";
     private static final String FOOTWAY = "footway";
+    private static final String STEPS = "steps";
     private static final String HIGHWAY = "highway";
     private static final String SIDEWALK = "sidewalk";
     private static final String SURFACE = "surface";
@@ -306,12 +307,11 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
         final var undoRedoHandler = UndoRedoHandler.getInstance();
         final var newNodes = new ArrayList<>(way.getNodes());
         final var usuallyRightCommands = new ArrayList<Command>(6);
-        final boolean isCrossing = !possibleCrossing.hasTag(HIGHWAY, "pedestrian", FOOTWAY, "path")
+        final boolean isCrossing = !possibleCrossing.hasTag(HIGHWAY, "pedestrian", FOOTWAY, "path", STEPS)
                 && !(possibleCrossing.hasTag(HIGHWAY, "service")
                         // Service roads with these "common" tags are often small and don't have a real
                         // crossing from a pedestrian perspective. We do want to add crossing
-                        // information
-                        // when there is no service information.
+                        // information when there is no service information.
                         && possibleCrossing.hasTag("service", "alley", "drive-through", "driveway",
                                 "emergency_access"));
         crossingWay.put(HIGHWAY, FOOTWAY);

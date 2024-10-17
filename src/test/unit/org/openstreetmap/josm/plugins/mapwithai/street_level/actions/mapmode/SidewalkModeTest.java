@@ -269,6 +269,18 @@ class SidewalkModeTest {
     }
 
     @Test
+    void testCrossingSteps() {
+        final var steps = newWay("highway=steps", 42.983577, -70.9456852, 42.9836648, -70.9454839);
+        this.ds.addPrimitiveRecursive(steps);
+        clickAt(42.9833574, -70.9452684);
+        clickAt(42.9835067, -70.9453736);
+        clickAt(42.9836879, -70.9455033);
+        clickAt(42.9836879, -70.9455033);
+        assertFalse(steps.lastNode().isTagged());
+        assertEquals(2, steps.lastNode().getParentWays().size());
+    }
+
+    @Test
     void testFourWayIntersectionCrossing() {
         final var neSidewalk = newWay("highway=footway footway=sidewalk", 39.0995956, -108.5016914, 39.0995628,
                 -108.5016756, 39.0995459, -108.501632);
