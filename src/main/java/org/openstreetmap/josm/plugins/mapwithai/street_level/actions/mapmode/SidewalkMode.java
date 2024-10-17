@@ -36,6 +36,7 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmDataManager;
+import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
@@ -234,8 +235,10 @@ public class SidewalkMode extends MapMode implements MapFrame.MapModeChangeListe
                     .orElse(OsmDataManager.getInstance().getEditDataSet()).searchWays(crossingWay.getBBox()));
             possibleWays.remove(way);
             possibleWays.removeIf(w -> !w.hasKey(HIGHWAY));
+            final var sidewalkLayer = OsmUtils.getLayer(way);
             for (var possibleCrossing : possibleWays) {
-                if (Geometry.getDistanceWayWay(possibleCrossing, crossingWay) == 0
+                if (Objects.equals(OsmUtils.getLayer(possibleCrossing), sidewalkLayer)
+                        && Geometry.getDistanceWayWay(possibleCrossing, crossingWay) == 0
                         && !possibleCrossing.containsNode(crossingWay.firstNode())
                         && !possibleCrossing.containsNode(crossingWay.lastNode())) {
                     // Lanes are somewhere around 3.6m; most roads are going to be less than 3 lanes

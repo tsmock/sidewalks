@@ -134,6 +134,40 @@ class SidewalkModeTest {
     }
 
     @Test
+    void testLayer() {
+        final var highway = newWay("highway=residential layer=1", 39.0619158, -108.4891703, 39.0619153, -108.4876649);
+        this.ds.addPrimitiveRecursive(highway);
+        clickAt(39.0618571, -108.4877409);
+        clickAt(39.0619774, -108.487738);
+        clickAt(39.0619774, -108.487738);
+        final Way footway = this.ds.getWays().stream()
+                .filter(w -> w.hasTag("highway", "footway") && !w.hasTag("footway", "crossing")).findFirst()
+                .orElseThrow();
+        assertEquals(2, footway.getNodes().size());
+        assertEquals(1, footway.firstNode().getParentWays().size());
+        assertEquals(1, footway.lastNode().getParentWays().size());
+    }
+
+    @Test
+    void testSameLayer() {
+        final var highway = newWay("highway=residential layer=1", 39.0619158, -108.4891703, 39.0619153, -108.4876649);
+        final var footway = newWay("highway=footway footway=sidewalk layer=1", 39.0618648, -108.4890442, 39.0618658,
+                -108.487786, 39.0618571, -108.4877409);
+        this.ds.addPrimitiveRecursive(highway);
+        this.ds.addPrimitiveRecursive(footway);
+        clickAt(39.0618571, -108.4877409);
+        clickAt(39.0619774, -108.487738);
+        clickAt(39.0619774, -108.487738);
+        final Way crossing = this.ds.getWays().stream()
+                .filter(w -> w.hasTag("highway", "footway") && w.hasTag("footway", "crossing")).findFirst()
+                .orElseThrow();
+        assertEquals(3, crossing.getNodes().size());
+        assertEquals(2, crossing.firstNode().getParentWays().size());
+        assertEquals(1, crossing.lastNode().getParentWays().size());
+        assertEquals(2, crossing.getNode(1).getParentWays().size());
+    }
+
+    @Test
     void testValidWaysNonProblematic() {
         final var highway = newWay("highway=residential", 39.0700657, -108.4654122, 39.0701854, -108.4654118);
         this.ds.addPrimitiveRecursive(highway);
